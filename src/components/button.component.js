@@ -5,13 +5,13 @@ class ButtonComponent extends LitElement{
     constructor(){
         super();
 
-        this.buttonName = '';
+        this.displayName = '';
         this.className = ''
     }
 
     static get properties() {
         return {
-            buttonName: String,
+            displayName: String,
             className: String
         }
     }
@@ -32,7 +32,7 @@ class ButtonComponent extends LitElement{
     render(){
         return html`
 
-            <button class="${this.className}">${this.buttonName}</button>`;
+            <button class="${this.className}">${this.displayName}</button>`;
 
     }
 }

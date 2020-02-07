@@ -2,7 +2,7 @@ import {html,LitElement, css} from 'lit-element';
 import "./button.component";
 import "./input.component";
 
-class SigninComponent extends LitElement {
+class SignupComponent extends LitElement {
     constructor()
     {
         super();
@@ -52,15 +52,16 @@ class SigninComponent extends LitElement {
         return html `
             
         <div  id="wrapper">
-            <p id="signin"> Sign In </p>
-            <p class="green"> Need an account </p>
+            <p id="signin"> Sign up </p>
+            <p class="green"> Already have an account </p>
             <form>
+            <input-tag placeholder="Username"></input-tag>
             <input-tag placeholder="Email"></input-tag>
             <input-tag placeholder="Password"></input-tag>
             <div id="btn-wrapper">
-            <btn-tag displayName="Sign in" className="btn"></btn-tag>
+            <btn-tag displayName="Sign up" className="btn"></btn-tag>
             </form> 
-             </div>
+            </div>
 
         </div>
         `;
@@ -70,4 +71,4 @@ class SigninComponent extends LitElement {
     
 
 }
-customElements.define('signincomponent-tag', SigninComponent);
+customElements.define('signupcomponent-tag', SignupComponent);

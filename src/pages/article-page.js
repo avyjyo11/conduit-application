@@ -1,5 +1,7 @@
 import { LitElement, html } from "lit-element";
 import "../components/navigation.component.js";
+import "../components/button.component.js";
+import "../components/input.component.js"
 
 class ArticlePage extends LitElement {
   constructor() {

@@ -2,7 +2,7 @@ import { LitElement, html, css } from "lit-element";
 import "./pages/home-page";
 
 class ConduitApp extends LitElement {
-  render() {    
+  render() {
     return html``;
   }
 }

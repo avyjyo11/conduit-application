@@ -1,5 +1,4 @@
 import { html, LitElement, css } from "lit-element";
-
 class ButtonComponent extends LitElement {
   constructor() {
     super();

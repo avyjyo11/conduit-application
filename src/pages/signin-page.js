@@ -1,25 +1,17 @@
-import {html,LitElement} from 'lit-element';
+import { html, LitElement } from "lit-element";
 import "../components/navigation.component";
-import "../components/signin.component"
+import "../components/signin.component";
 
 class Signin extends LitElement {
-    constructor()
-    {
-        super();
+  constructor() {
+    super();
+  }
 
-    }
-
-    render()
-    {
-        return html `
-        <navigation-tag></navigation-tag>
-        <signincomponent-tag></signincomponent-tag>
-
-        `;
-    }
-
-
-    
-
+  render() {
+    return html`
+      <navigation-tag></navigation-tag>
+      <signincomponent-tag></signincomponent-tag>
+    `;
+  }
 }
-customElements.define('signin-tag', Signin);
+customElements.define("signin-tag", Signin);

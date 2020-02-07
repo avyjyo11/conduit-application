@@ -1,9 +1,10 @@
-import { LitElement, html, css } from "lit-element";
+import { LitElement, html } from "lit-element";
+import '../pages/article-page.js';
 
 class ConduitApp extends LitElement {
   render() {
     return html`
-      <h1>Hello World</h1>
+      <article-page></article-page>
     `;
   }
 }

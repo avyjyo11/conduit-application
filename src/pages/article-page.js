@@ -25,7 +25,7 @@ class ArticlePage extends LitElement{
                 <input-tag placeholder="Article Title"></input-tag>
                 <input-tag placeholder="What is you article about?"></input-tag>
                 <input-tag placeholder="Write you article(in markdown)"></input-tag>
-                <btn-tag displayName="Publish Article" class="right"></btn-tag>
+                <btn-tag buttonName="Publish Article" class="right"></btn-tag>
             </form>
     </div>
         `;

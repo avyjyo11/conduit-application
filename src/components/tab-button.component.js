@@ -7,6 +7,7 @@ class TabButtonComponent extends LitElement{
         this.buttonName = this.getAttribute('displayName');
         this.route = this.getAttribute('route'); 
     }
+    
     render(){
         return html`
             <style>

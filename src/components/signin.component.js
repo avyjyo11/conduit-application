@@ -1,4 +1,4 @@
-import {html,LitElement, css} from 'lit-element';
+import { html, LitElement, css } from "lit-element";
 import "./button.component";
 import "./input.component";
 
@@ -64,10 +64,6 @@ class SigninComponent extends LitElement {
 
         </div>
         `;
-    }
-
-
-    
-
+  }
 }
-customElements.define('signincomponent-tag', SigninComponent);
+customElements.define("signincomponent-tag", SigninComponent);

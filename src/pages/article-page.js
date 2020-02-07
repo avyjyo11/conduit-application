@@ -1,23 +1,21 @@
-import {LitElement,html} from 'lit-element';
-import '../components/navigation.component.js';
+import { LitElement, html } from "lit-element";
+import "../components/navigation.component.js";
 
-class ArticlePage extends LitElement{
-    constructor(){
-        super();
-    }
-    render(){
-        return html`
-        <style>
-            .form-container{
-                width:50%;
-                margin:0 auto;
-              
-            }
-            .right{
-                float:right;
-            }
-
-        </style>
+class ArticlePage extends LitElement {
+  constructor() {
+    super();
+  }
+  render() {
+    return html`
+      <style>
+        .form-container {
+          width: 50%;
+          margin: 0 auto;
+        }
+        .right {
+          float: right;
+        }
+      </style>
             
             <div class="container">
             <navigation-tag></navigation-tag>
@@ -31,4 +29,4 @@ class ArticlePage extends LitElement{
         `;
     }
 }
-window.customElements.define('article-page',ArticlePage);
+window.customElements.define("article-page", ArticlePage);

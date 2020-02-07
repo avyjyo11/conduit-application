@@ -1,12 +1,11 @@
 import {html,LitElement} from 'lit-element';
 
 class ButtonComponent extends LitElement{
+
     constructor(){
         super();
         this.buttonName = this.getAttribute('displayName');
-       
-    
-        
+        this.route = this.getAttribute('route'); 
     }
     render(){
         return html`
@@ -18,9 +17,10 @@ class ButtonComponent extends LitElement{
                     border-radius:5px;
                     font-size:20px;
                     padding:10px;
+                    cursor:pointer;
                 }
             </style>
-            <button class="btn">${this.buttonName}</button>`;
+            <button class="btn" @click=${()=>this.handleClick()}>${this.buttonName}</button>`;
     }
 }
 window.customElements.define('btn-tag',ButtonComponent);

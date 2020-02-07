@@ -1,4 +1,5 @@
 import {LitElement,html} from 'lit-element';
+import '../components/navigation.component.js';
 
 class ArticlePage extends LitElement{
     constructor(){
@@ -6,7 +7,7 @@ class ArticlePage extends LitElement{
     }
     render(){
         return html`
-            <div>roshan</div>
+            <navigation-tag></navigation-tag>
         `;
     }
 }

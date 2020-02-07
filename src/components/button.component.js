@@ -4,7 +4,7 @@ class ButtonComponent extends LitElement{
     constructor(){
         super();
         this.buttonName = this.getAttribute('displayName');
-        this.className = this.getAttribute('className');
+       
     
         
     }
@@ -20,7 +20,7 @@ class ButtonComponent extends LitElement{
                     padding:10px;
                 }
             </style>
-            <button class="${this.className}">${this.buttonName}</button>`;
+            <button class="btn">${this.buttonName}</button>`;
     }
 }
 window.customElements.define('btn-tag',ButtonComponent);

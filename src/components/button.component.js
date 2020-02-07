@@ -29,7 +29,7 @@ class ButtonComponent extends LitElement {
   }
   render() {
     return html`
-      <button class="${this.className}">${this.buttonName}</button>
+      <button class="btn">${this.buttonName}</button>
     `;
   }
 }

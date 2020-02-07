@@ -18,6 +18,7 @@ class Navigation extends LitElement{
             nav ul li{
                 display:inline-block;
                 padding:10px;
+                cursor: pointer;
                 
             }
         </style>

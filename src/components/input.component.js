@@ -11,11 +11,10 @@ class InputComponent extends LitElement{
         return html`
             <style>
                .textbox{
-                width:calc(100% - 40px);
+                width:calc(100% - 20px);
                    padding:10px;
-                   margin:10px;
-                   
-                   font-size:20px;
+                   margin:10px 0;
+                   font-size:15px;
                    border:1px solid grey;
                    border-radius:5px;
                }

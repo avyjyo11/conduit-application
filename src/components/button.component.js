@@ -1,8 +1,10 @@
 import {html,LitElement,css} from 'lit-element';
 
 class ButtonComponent extends LitElement{
+
     constructor(){
         super();
+
         this.buttonName = '';
         this.className = ''
     }
@@ -31,6 +33,7 @@ class ButtonComponent extends LitElement{
         return html`
 
             <button class="${this.className}">${this.buttonName}</button>`;
+
     }
 }
 window.customElements.define('btn-tag',ButtonComponent);

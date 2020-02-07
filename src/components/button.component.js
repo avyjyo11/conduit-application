@@ -1,26 +1,35 @@
-import {html,LitElement} from 'lit-element';
+import { html, LitElement, css } from "lit-element";
 
-class ButtonComponent extends LitElement{
-    constructor(){
-        super();
-        this.buttonName = this.getAttribute('displayName');
-        this.className = this.getAttribute('className');
-    
-        
-    }
-    render(){
-        return html`
-            <style>
-                .btn{
-                    background-color:green;
-                    color:white;
-                    border: 1px solid green;
-                    border-radius:5px;
-                    font-size:20px;
-                    padding:10px;
-                }
-            </style>
-            <button class="${this.className}">${this.buttonName}</button>`;
-    }
+class ButtonComponent extends LitElement {
+  constructor() {
+    super();
+    this.displayName = "";
+    this.className = "";
+  }
+
+  static get properties() {
+    return {
+      displayName: { type: String },
+      className: { type: String }
+    };
+  }
+
+  static get styles() {
+    return css`
+      .btn {
+        background-color: green;
+        color: white;
+        border: 1px solid green;
+        border-radius: 5px;
+        font-size: 20px;
+        padding: 10px;
+      }
+    `;
+  }
+  render() {
+    return html`
+      <button class="${this.className}">${this.displayName}</button>
+    `;
+  }
 }
-window.customElements.define('btn-tag',ButtonComponent);
+window.customElements.define("btn-tag", ButtonComponent);

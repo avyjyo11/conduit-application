@@ -7,7 +7,25 @@ class ArticlePage extends LitElement {
   }
   render() {
     return html`
-      <navigation-tag></navigation-tag>
+      <style>
+        .form-container {
+          width: 50%;
+          margin: 0 auto;
+        }
+        .right {
+          float: right;
+        }
+      </style>
+
+      <div class="container">
+        <navigation-tag></navigation-tag>
+        <form class="form-container">
+          <input-tag placeholder="Article Title"></input-tag>
+          <input-tag placeholder="What is you article about?"></input-tag>
+          <input-tag placeholder="Write you article(in markdown)"></input-tag>
+          <btn-tag displayName="Publish Article" class="right"></btn-tag>
+        </form>
+      </div>
     `;
   }
 }

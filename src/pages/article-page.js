@@ -1,23 +1,27 @@
-import { LitElement, html } from "lit-element";
+import { LitElement, html ,css} from "lit-element";
 import "../components/navigation.component.js";
 import "../components/button.component.js";
 import "../components/input.component.js"
 
 class ArticlePage extends LitElement {
+  static get styles(){
+    return css `
+      .form-container {
+        width: 50%;
+        margin: 0 auto;
+      }
+      .right {
+        float: right;
+      }
+    `;
+  }
+
   constructor() {
     super();
   }
   render() {
     return html`
-      <style>
-        .form-container {
-          width: 50%;
-          margin: 0 auto;
-        }
-        .right {
-          float: right;
-        }
-      </style>
+    
             
             <div class="container">
             <navigation-tag></navigation-tag>

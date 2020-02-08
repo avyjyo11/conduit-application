@@ -13,7 +13,7 @@ class Signup extends LitElement {
     {
         return html `
         <navigation-tag></navigation-tag>
-        <signupcomponent-tag></signincomponent-tag>
+        <signupcomponent-tag></signupcomponent-tag>
 
         `;
     }

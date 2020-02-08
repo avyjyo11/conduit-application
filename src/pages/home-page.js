@@ -1,6 +1,7 @@
 import { LitElement, html, css } from "lit-element";
 import "../components/navigation.component";
 
+
 class HomePage extends LitElement {
   static get styles() {
     return css`
@@ -41,7 +42,9 @@ class HomePage extends LitElement {
       <div class="jumbotron center">
         <h2>conduit</h2>
         <p>A place to share your knowledge</p>
+        
       </div>
+      
     `;
 
     return html`

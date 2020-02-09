@@ -25,8 +25,8 @@ class Navigation extends LitElement {
         <nav>
           <ul>
             <li><a href="/">Home</a> </li>
-            <li><a href="/signin">Sign in</a> </li>
-            <li><a href="/signup">Sign up</a> </li>
+            <li><a href="/sign-in">Sign in</a> </li>
+            <li><a href="/sign-up">Sign up</a> </li>
           </ul>
         </nav>
       </div>

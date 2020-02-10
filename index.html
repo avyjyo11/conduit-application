@@ -7,26 +7,23 @@
     <title>Conduit</title>
     <style>
       * {
-        margin: 0px;
-        padding: 0px;
-        font: 1em;
+        padding: 0;
+        margin: 0;
+        font-size: 1em;
         font-family: Arial, Helvetica, sans-serif;
+        box-sizing: border-box;
       }
     </style>
   </head>
-  <style>
-    * {
-      padding: 0;
-      margin: 0;
-      font-size: 1em;
-      font-family: Arial, Helvetica, sans-serif;
-      box-sizing: border-box;
-    }
-  </style>
+  
   <body>
-    <conduit-app></conduit-app>
+    <!-- <conduit-app></conduit-app> -->
+    <main></main>
+    <!-- <a href="/sign-in">Sign in</a> -->
+
 
     <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module" src="src/conduit-app.js"></script>
+    <script src="./app.js" type="module"></script>
   </body>
 </html>

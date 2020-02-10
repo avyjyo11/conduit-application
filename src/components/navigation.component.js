@@ -24,9 +24,9 @@ class Navigation extends LitElement {
         <div class="logo-holder">LOGO</div>
         <nav>
           <ul>
-            <li>Home</li>
-            <li>Sign in</li>
-            <li>Sign up</li>
+            <li><a href="/">Home</a> </li>
+            <li><a href="/sign-in">Sign in</a> </li>
+            <li><a href="/sign-up">Sign up</a> </li>
           </ul>
         </nav>
       </div>

@@ -17,7 +17,13 @@ class Navigation extends LitElement {
           padding: 10px;
         }
 
-        .logo-holder {
+        nav a {
+          text-decoration: none;
+          color: #777;
+        }
+
+        .logo-holder a {
+          text-decoration: none;
           color: var(--theme-color);
           font-size: 1.4em;
           font-weight: bold;
@@ -30,7 +36,7 @@ class Navigation extends LitElement {
     return html`
       <div class="wrapper">
         <div class="navigation-bar">
-          <div class="logo-holder">conduit</div>
+          <div class="logo-holder"><a href="/">conduit</a></div>
           <nav>
             <ul>
               <li><a href="/">Home</a></li>

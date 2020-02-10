@@ -1,3 +1,4 @@
+
 import { html, LitElement, css } from "lit-element";
 
 class ButtonComponent extends LitElement {
@@ -6,14 +7,12 @@ class ButtonComponent extends LitElement {
 
     this.buttonName = "";
     this.className = "";
-    this.type = "submit";
   }
 
   static get properties() {
     return {
       buttonName: String,
-      className: String,
-      type: String
+      className: String
     };
   }
 
@@ -26,14 +25,17 @@ class ButtonComponent extends LitElement {
         border-radius: 5px;
         font-size: 20px;
         padding: 10px;
-        cursor: pointer;
+        cursor:pointer;
       }
     `;
   }
   render() {
+    console.log("button render");
+    
     return html`
-      <button class="btn">${this.buttonName}</button>
+      <button class="btn" @click="${this.handleClick}">${this.buttonName}</button>
     `;
   }
 }
 window.customElements.define("btn-tag", ButtonComponent);
+

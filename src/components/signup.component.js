@@ -1,7 +1,14 @@
+
 import {html,LitElement, css} from 'lit-element';
 import "./button.component";
 import "./input.component";
 
+/**
+ *
+ *
+ * @class SignupComponent
+ * @extends {LitElement}
+ */
 class SignupComponent extends LitElement {
     constructor()
     {
@@ -71,4 +78,5 @@ class SignupComponent extends LitElement {
     
 
 }
+
 customElements.define('signupcomponent-tag', SignupComponent);

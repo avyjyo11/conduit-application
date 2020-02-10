@@ -5,11 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Conduit</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        font-size: 1em;
+        font-family: Arial, Helvetica, sans-serif;
+        box-sizing: border-box;
+      }
+    </style>
   </head>
+
   <body>
-    <conduit-app></conduit-app>
+    <!-- <conduit-app></conduit-app> -->
+    <main></main>
+    <!-- <a href="/sign-in">Sign in</a> -->
 
     <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script type="module" src="src/components/conduit-app.js"></script>
+    <script type="module" src="src/conduit-app.js"></script>
+    <script src="./app.js" type="module"></script>
   </body>
 </html>

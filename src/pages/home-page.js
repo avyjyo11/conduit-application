@@ -6,6 +6,7 @@ import "../components/footer.component";
 import "../components/article-preview.component";
 import { cssStyles } from "../styles/cssStyles";
 
+
 class HomePage extends LitElement {
   constructor() {
     super();
@@ -127,7 +128,9 @@ class HomePage extends LitElement {
       <div class="jumbotron center">
         <h2>conduit</h2>
         <p>A place to share your knowledge</p>
+        
       </div>
+      
     `;
 
     const tagSection = html`

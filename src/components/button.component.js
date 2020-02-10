@@ -6,13 +6,18 @@ class ButtonComponent extends LitElement {
     super();
 
     this.buttonName = "";
-    this.className = "";
+    this.className = "btn";
+    
   }
 
   static get properties() {
     return {
       buttonName: String,
-      className: String
+      className: String,
+      handleClick: {
+        type: Function,
+      },
+     
     };
   }
 
@@ -33,7 +38,7 @@ class ButtonComponent extends LitElement {
     console.log("button render");
     
     return html`
-      <button class="btn" @click="${this.handleClick}">${this.buttonName}</button>
+      <button @click="${this.handleClick}"  class="${this.className}">${this.buttonName}</button>
     `;
   }
 }

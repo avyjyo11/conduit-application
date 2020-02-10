@@ -2,9 +2,12 @@ import { html, LitElement, css } from "lit-element";
 import "./button.component";
 import "./input.component";
 
+
 class SigninComponent extends LitElement {
   constructor() {
     super();
+    this._api='https://conduit.productionready.io/api';
+    this._signin=this._signin.bind(this);
   }
 
   static get styles() {
@@ -42,22 +45,23 @@ class SigninComponent extends LitElement {
 
   render() {
     return html`
-      <div id="wrapper">
-        <p id="signin">Sign In</p>
-        <p class="green">Need an account</p>
-        <form>
-          <input-tag placeholder="Email"></input-tag>
-          <input-tag placeholder="Password"></input-tag>
-          <div id="btn-wrapper">
-            <btn-tag
-              type="submit"
-              buttonName="Sign in"
-              className="btn"
-            ></btn-tag>
+        <div  id="wrapper">
+            <p id="signin"> Sign In </p>
+            <p class="green"> Need an account </p>
+            <form>
+            <input-tag placeholder="Email"></input-tag>
+            <input-tag placeholder="Password"></input-tag>
+            <div id="btn-wrapper">
+            <btn-tag .signIn="${this._signin}" buttonName="Sign in" className="btn"></btn-tag>
           </div>
-        </form>
-      </div>
-    `;
+        </form> 
+        </div>
+        `;
+  }
+
+  _signin(e)
+  {
+    
   }
 }
 customElements.define("signincomponent-tag", SigninComponent);

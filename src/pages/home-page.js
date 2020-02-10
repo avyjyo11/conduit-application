@@ -8,21 +8,14 @@ import { cssStyles } from "../styles/cssStyles";
 class HomePage extends LitElement {
   constructor() {
     super();
-    this.myArr = [
-      "hello",
-      "hello",
-      "hello",
-      "hello",
-      "hello",
-      "hello",
-      "hello"
-    ];
-    this.blogs = [];
+    this.tags = [];
+    this.articles = [];
   }
 
   static get properties() {
     return {
-      blogs: { type: Array }
+      articles: { type: Array },
+      tags: { type: Array }
     };
   }
 
@@ -30,9 +23,17 @@ class HomePage extends LitElement {
     fetch("https://conduit.productionready.io/api/articles?limit=10")
       .then(res => res.json())
       .then(data => {
-        this.blogs = [...data.articles];
-        console.log(this.blogs);
-      });
+        this.articles = [...data.articles];
+        console.log(this.articles);
+      })
+      .catch(err => console.log(err));
+
+    fetch("https://conduit.productionready.io/api/tags?limit=20")
+      .then(res => res.json())
+      .then(data => {
+        this.tags = [...data.tags];
+      })
+      .catch(err => console.log(err));
   }
 
   static get styles() {
@@ -132,7 +133,7 @@ class HomePage extends LitElement {
       <div class="tag-section">
         <div>
           <h4>Popular tags</h4>
-          ${this.myArr.map(
+          ${this.tags.map(
             val =>
               html`
                 <tag-button name=${val}></tag-button>
@@ -147,20 +148,14 @@ class HomePage extends LitElement {
         <button class="feed-button">Global Feed</button>
         <hr />
         <div>
-          <div>
-            <user-tag username="Avyshek Jyo Shrestha"></user-tag>
-            <article-preview-tag
-              title="Hello article"
-              description="hello from the other side."
-            ></article-preview-tag>
-          </div>
-          ${this.blogs.map(value => {
+          ${this.articles.map(value => {
             return html`
               <div>
                 <user-tag
                   username=${value.author.username}
                   postDate=${value.updatedAt}
                   userImg=${value.author.image}
+                  hearts=${value.favoritesCount}
                 ></user-tag>
                 <article-preview-tag
                   title=${value.title}

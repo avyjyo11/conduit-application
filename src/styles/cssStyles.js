@@ -2,7 +2,7 @@ import { css } from "lit-element";
 
 export const cssStyles = css`
   :host {
-    --theme-color: #31c43e;
+    --theme-color: #3eac47;
   }
 
   .wrapper {

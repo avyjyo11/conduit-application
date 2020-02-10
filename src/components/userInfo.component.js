@@ -1,42 +1,96 @@
 import { html, LitElement, css } from "lit-element";
+import { cssStyles } from "../styles/cssStyles";
+import "fa-icons";
 class UserInfo extends LitElement {
   constructor() {
     super();
+    this.username = "";
+    this.postDate = new Date().toString();
+    this.userImg = "http://pngimg.com/uploads/smiley/smiley_PNG36233.png";
+    this.hearts = 0;
+  }
+
+  static get properties() {
+    return {
+      username: String,
+      postDate: String,
+      userImg: String,
+      hearts: Number
+    };
   }
 
   static get styles() {
-    return css`
-      img {
-        width: 100%;
-        border-radius: 50%;
-      }
-      .article-holder {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        width: 200px;
-      }
-      .user-image-holder {
-        width: 50px;
-        margin: 0 auto;
-      }
-      .article-left {
-        width: 30%;
-      }
-      .article-right {
-        width: 70%;
-      }
-      .username {
-        display: block;
-        font-size: 15px;
-        color: green;
-      }
-      .post-date {
-        display: block;
-        color: grey;
-        font-size: 15px;
-      }
-    `;
+    return [
+      cssStyles,
+      css`
+        img {
+          width: 100%;
+          border-radius: 50%;
+        }
+        .article-holder {
+          display: flex;
+          position: relative;
+          width: 100%;
+        }
+        .user-image-holder {
+          width: 40px;
+          height: 40px;
+          margin: 0 auto;
+        }
+        .article-left {
+          width: 5%;
+          padding-right: 10px;
+        }
+        .article-right {
+          padding: 4px 0px;
+          width: 95%;
+        }
+        .username {
+          display: block;
+          font-size: 1em;
+          color: var(--theme-color);
+        }
+        .post-date {
+          display: block;
+          color: #a5a5a5;
+          font-size: 0.8em;
+        }
+
+        .heart-toggler {
+          border: 1px solid var(--theme-color);
+          color: var(--theme-color);
+          position: absolute;
+          z-index: 10;
+          padding: 5px 10px;
+          top: 0;
+          right: 0;
+        }
+
+        .heart-toggler:hover {
+          background-color: var(--theme-color);
+          color: #fff;
+        }
+
+        .heart-toggler:hover .heart-counter {
+          color: #fff;
+        }
+
+        .heart-toggler fa-icon {
+          margin: 0;
+          padding: 0;
+        }
+
+        .heart-counter {
+          cursor: pointer;
+          margin: 0;
+          padding: 0;
+          display: inline-block;
+          font-size: 1.1em;
+          z-index: 20;
+          color: var(--theme-color);
+        }
+      `
+    ];
   }
 
   render() {
@@ -44,12 +98,16 @@ class UserInfo extends LitElement {
       <div class="article-holder">
         <div class="article-left">
           <div class="user-image-holder">
-            <img src="../images/userImage.jpeg" />
+            <img src=${this.userImg} />
           </div>
         </div>
         <div class="article-right">
-          <span class="username">Roshan shrestha</span>
-          <span class="post-date">Tue Feb 06 2020 </span>
+          <span class="username">${this.username}</span>
+          <span class="post-date">${this.postDate}</span>
+        </div>
+        <div class="heart-toggler">
+          <fa-icon class="fas fa-heart"></fa-icon>
+          <span class="heart-counter">${this.hearts}</span>
         </div>
       </div>
     `;

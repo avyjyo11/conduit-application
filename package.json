@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "conduit-app",
   "version": "1.0.0",
@@ -25,3 +26,32 @@
     "reselect": "^4.0.0"
   }
 }
+=======
+{
+  "name": "conduit-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "so": "polymer serve --open",
+    "start": "polymer serve",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@polymer/polymer": "^3.1.0",
+    "@vaadin/router": "^1.6.0",
+    "@webcomponents/webcomponentsjs": "^2.2.4",
+    "fa-icons": "^0.1.9",
+    "lit-element": "^2.2.1",
+    "lit-element-router": "^2.0.0-rc.16",
+    "lit-html": "^1.1.2",
+    "pwa-helpers": "^0.9.0",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0"
+  }
+}
+>>>>>>> 0ecd81bbfa2158b783e2da3961d7a9661b5a5c24

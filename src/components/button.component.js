@@ -1,3 +1,4 @@
+
 import { html, LitElement, css } from "lit-element";
 
 class ButtonComponent extends LitElement {
@@ -34,9 +35,16 @@ class ButtonComponent extends LitElement {
     `;
   }
   render() {
+    console.log("button render");
+    
     return html`
+<<<<<<< HEAD
       <button @click="${this.handleClick}"  class="${this.className}">${this.buttonName}</button>
+=======
+      <button class="btn" @click="${this.handleClick}">${this.buttonName}</button>
+>>>>>>> 0ecd81bbfa2158b783e2da3961d7a9661b5a5c24
     `;
   }
 }
 window.customElements.define("btn-tag", ButtonComponent);
+

@@ -1,6 +1,7 @@
 import { LitElement, html, css, TemplateResult } from "lit-element";
 import "./pages/home-page";
 import "./pages/signin-page";
+import "./pages/signup-page";
 
 class ConduitApp extends LitElement {
   constructor() {
@@ -29,6 +30,12 @@ class ConduitApp extends LitElement {
       case "signin":
         this.page = html`
           <signin-tag></signin-tag>
+        `;
+        console.log("clicked", this.page);
+        break;
+      case "signup":
+        this.page = html`
+          <signup-tag></signup-tag>
         `;
         console.log("clicked", this.page);
         break;

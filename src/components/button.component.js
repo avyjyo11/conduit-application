@@ -38,11 +38,7 @@ class ButtonComponent extends LitElement {
     console.log("button render");
     
     return html`
-<<<<<<< HEAD
       <button @click="${this.handleClick}"  class="${this.className}">${this.buttonName}</button>
-=======
-      <button class="btn" @click="${this.handleClick}">${this.buttonName}</button>
->>>>>>> 0ecd81bbfa2158b783e2da3961d7a9661b5a5c24
     `;
   }
 }

@@ -155,9 +155,4 @@ class SignupComponent extends LitElement {
   }
     }
 
-<<<<<<< HEAD
-=======
-}
-
->>>>>>> 0ecd81bbfa2158b783e2da3961d7a9661b5a5c24
 customElements.define('signupcomponent-tag', SignupComponent);

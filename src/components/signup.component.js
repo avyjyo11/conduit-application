@@ -59,7 +59,7 @@ class SignupComponent extends LitElement {
             <input-tag placeholder="Email"></input-tag>
             <input-tag placeholder="Password"></input-tag>
             <div id="btn-wrapper">
-            <btn-tag displayName="Sign up" className="btn"></btn-tag>
+            <btn-tag buttonName="Sign up" className="btn"></btn-tag>
             </form> 
             </div>
 

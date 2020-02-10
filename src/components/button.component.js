@@ -24,6 +24,7 @@ class ButtonComponent extends LitElement {
         border-radius: 5px;
         font-size: 20px;
         padding: 10px;
+        cursor:pointer;
       }
     `;
   }

@@ -2,6 +2,12 @@ import {html,LitElement, css} from 'lit-element';
 import "./button.component";
 import "./input.component";
 
+/**
+ *
+ *
+ * @class SignupComponent
+ * @extends {LitElement}
+ */
 class SignupComponent extends LitElement {
     constructor()
     {

@@ -16,6 +16,11 @@ class ArticlePage extends LitElement {
       }
     `;
   }
+  connectedCallback(){
+    fetch('http://localhost:3000/api')
+    .then(response => response.json())
+    .then(data => console.log("data is: ",data))
+  }
 
   constructor() {
     super();
@@ -26,7 +31,7 @@ class ArticlePage extends LitElement {
             
             <div class="container">
             <navigation-tag></navigation-tag>
-            <form class="form-container">
+            <form class="form-container" action="post">
                 <input-tag placeholder="Article Title"></input-tag>
                 <input-tag placeholder="What is you article about?"></input-tag>
                 <textarea-tag></textarea-tag>

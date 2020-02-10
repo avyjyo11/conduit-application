@@ -2,6 +2,7 @@ import { LitElement, html, css } from "lit-element";
 import "../components/navigation.component";
 import "../components/tag-button.component";
 import "../components/userInfo.component";
+import "../components/footer.component";
 import "../components/article-preview.component";
 import { cssStyles } from "../styles/cssStyles";
 
@@ -176,8 +177,12 @@ class HomePage extends LitElement {
       </div>
     `;
 
+    const footer = html`
+      <footer-section></footer-section>
+    `;
+
     return html`
-      ${navbar} ${banner} ${allContent}
+      ${navbar} ${banner} ${allContent} ${footer}
     `;
   }
 }

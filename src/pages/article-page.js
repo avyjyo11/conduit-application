@@ -3,7 +3,7 @@ import { LitElement, html ,css} from "lit-element";
 import "../components/navigation.component.js";
 import "../components/button.component.js";
 import "../components/input.component.js"
-import "../components/texrarea.component";
+import "../components/texrarea.component.js";
 
 class ArticlePage extends LitElement {
   static get styles(){

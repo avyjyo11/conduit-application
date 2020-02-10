@@ -1,18 +1,21 @@
 import { html, LitElement, css } from "lit-element";
 import { cssStyles } from "../styles/cssStyles";
+import "fa-icons";
 class UserInfo extends LitElement {
   constructor() {
     super();
     this.username = "";
     this.postDate = new Date().toString();
     this.userImg = "http://pngimg.com/uploads/smiley/smiley_PNG36233.png";
+    this.hearts = 0;
   }
 
   static get properties() {
     return {
       username: String,
       postDate: String,
-      userImg: String
+      userImg: String,
+      hearts: Number
     };
   }
 
@@ -26,7 +29,8 @@ class UserInfo extends LitElement {
         }
         .article-holder {
           display: flex;
-          width: 500px;
+          position: relative;
+          width: 100%;
         }
         .user-image-holder {
           width: 40px;
@@ -34,12 +38,12 @@ class UserInfo extends LitElement {
           margin: 0 auto;
         }
         .article-left {
-          width: 8%;
+          width: 5%;
           padding-right: 10px;
         }
         .article-right {
           padding: 4px 0px;
-          width: 92%;
+          width: 95%;
         }
         .username {
           display: block;
@@ -50,6 +54,40 @@ class UserInfo extends LitElement {
           display: block;
           color: #a5a5a5;
           font-size: 0.8em;
+        }
+
+        .heart-toggler {
+          border: 1px solid var(--theme-color);
+          color: var(--theme-color);
+          position: absolute;
+          z-index: 10;
+          padding: 5px 10px;
+          top: 0;
+          right: 0;
+        }
+
+        .heart-toggler:hover {
+          background-color: var(--theme-color);
+          color: #fff;
+        }
+
+        .heart-toggler:hover .heart-counter {
+          color: #fff;
+        }
+
+        .heart-toggler fa-icon {
+          margin: 0;
+          padding: 0;
+        }
+
+        .heart-counter {
+          cursor: pointer;
+          margin: 0;
+          padding: 0;
+          display: inline-block;
+          font-size: 1.1em;
+          z-index: 20;
+          color: var(--theme-color);
         }
       `
     ];
@@ -66,6 +104,10 @@ class UserInfo extends LitElement {
         <div class="article-right">
           <span class="username">${this.username}</span>
           <span class="post-date">${this.postDate}</span>
+        </div>
+        <div class="heart-toggler">
+          <fa-icon class="fas fa-heart"></fa-icon>
+          <span class="heart-counter">${this.hearts}</span>
         </div>
       </div>
     `;

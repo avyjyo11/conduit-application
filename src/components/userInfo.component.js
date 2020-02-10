@@ -1,42 +1,58 @@
 import { html, LitElement, css } from "lit-element";
+import { cssStyles } from "../styles/cssStyles";
 class UserInfo extends LitElement {
   constructor() {
     super();
+    this.username = "";
+    this.postDate = new Date().toString();
+    this.userImg = "http://pngimg.com/uploads/smiley/smiley_PNG36233.png";
+  }
+
+  static get properties() {
+    return {
+      username: String,
+      postDate: String,
+      userImg: String
+    };
   }
 
   static get styles() {
-    return css`
-      img {
-        width: 100%;
-        border-radius: 50%;
-      }
-      .article-holder {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        width: 200px;
-      }
-      .user-image-holder {
-        width: 50px;
-        margin: 0 auto;
-      }
-      .article-left {
-        width: 30%;
-      }
-      .article-right {
-        width: 70%;
-      }
-      .username {
-        display: block;
-        font-size: 15px;
-        color: green;
-      }
-      .post-date {
-        display: block;
-        color: grey;
-        font-size: 15px;
-      }
-    `;
+    return [
+      cssStyles,
+      css`
+        img {
+          width: 100%;
+          border-radius: 50%;
+        }
+        .article-holder {
+          display: flex;
+          width: 500px;
+        }
+        .user-image-holder {
+          width: 40px;
+          height: 40px;
+          margin: 0 auto;
+        }
+        .article-left {
+          width: 8%;
+          padding-right: 10px;
+        }
+        .article-right {
+          padding: 4px 0px;
+          width: 92%;
+        }
+        .username {
+          display: block;
+          font-size: 1em;
+          color: var(--theme-color);
+        }
+        .post-date {
+          display: block;
+          color: #a5a5a5;
+          font-size: 0.8em;
+        }
+      `
+    ];
   }
 
   render() {
@@ -44,12 +60,12 @@ class UserInfo extends LitElement {
       <div class="article-holder">
         <div class="article-left">
           <div class="user-image-holder">
-            <img src="../images/userImage.jpeg" />
+            <img src=${this.userImg} />
           </div>
         </div>
         <div class="article-right">
-          <span class="username">Roshan shrestha</span>
-          <span class="post-date">Tue Feb 06 2020 </span>
+          <span class="username">${this.username}</span>
+          <span class="post-date">${this.postDate}</span>
         </div>
       </div>
     `;

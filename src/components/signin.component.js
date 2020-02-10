@@ -42,20 +42,22 @@ class SigninComponent extends LitElement {
 
   render() {
     return html`
-            
-        <div  id="wrapper">
-            <p id="signin"> Sign In </p>
-            <p class="green"> Need an account </p>
-            <form>
-            <input-tag placeholder="Email"></input-tag>
-            <input-tag placeholder="Password"></input-tag>
-            <div id="btn-wrapper">
-            <btn-tag buttonName="Sign in" className="btn"></btn-tag>
-            </form> 
-             </div>
-
-        </div>
-        `;
+      <div id="wrapper">
+        <p id="signin">Sign In</p>
+        <p class="green">Need an account</p>
+        <form>
+          <input-tag placeholder="Email"></input-tag>
+          <input-tag placeholder="Password"></input-tag>
+          <div id="btn-wrapper">
+            <btn-tag
+              type="submit"
+              buttonName="Sign in"
+              className="btn"
+            ></btn-tag>
+          </div>
+        </form>
+      </div>
+    `;
   }
 }
 customElements.define("signincomponent-tag", SigninComponent);

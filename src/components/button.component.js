@@ -6,12 +6,14 @@ class ButtonComponent extends LitElement {
 
     this.buttonName = "";
     this.className = "";
+    this.type = "submit";
   }
 
   static get properties() {
     return {
       buttonName: String,
-      className: String
+      className: String,
+      type: String
     };
   }
 
@@ -24,7 +26,7 @@ class ButtonComponent extends LitElement {
         border-radius: 5px;
         font-size: 20px;
         padding: 10px;
-        cursor:pointer;
+        cursor: pointer;
       }
     `;
   }

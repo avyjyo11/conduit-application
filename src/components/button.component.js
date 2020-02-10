@@ -1,3 +1,4 @@
+
 import { html, LitElement, css } from "lit-element";
 
 class ButtonComponent extends LitElement {
@@ -37,3 +38,4 @@ class ButtonComponent extends LitElement {
   }
 }
 window.customElements.define("btn-tag", ButtonComponent);
+

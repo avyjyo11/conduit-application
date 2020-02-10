@@ -1,3 +1,4 @@
+
 import {Router} from '@vaadin/router';
 import './src/pages/signin-page';
 import './src/pages/home-page';
@@ -11,4 +12,5 @@ router.setRoutes([
     {path:'/sign-in', component:'signin-tag'},
     {path:'/sign-up', component:'signup-tag'},
     {path:'/publish-article', component:'article-page'}
+
 ]);

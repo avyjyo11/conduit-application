@@ -1,3 +1,4 @@
+
 import { html, LitElement, css } from "lit-element";
 
 class InputComponent extends LitElement {
@@ -35,3 +36,4 @@ class InputComponent extends LitElement {
 }
 
 window.customElements.define("input-tag", InputComponent);
+

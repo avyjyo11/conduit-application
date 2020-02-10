@@ -4,11 +4,13 @@ class InputComponent extends LitElement {
   constructor() {
     super();
     this.placeholder = "";
+    this.name= "";
   }
 
   static get properties() {
     return {
-      placeholder: { type: String }
+      placeholder: { type: String },
+      name:{type:String}
     };
   }
 
@@ -18,7 +20,6 @@ class InputComponent extends LitElement {
         width: calc(100% - 40px);
         padding: 10px;
         margin: 10px;
-
         font-size: 20px;
         border: 1px solid grey;
         border-radius: 5px;
@@ -28,7 +29,7 @@ class InputComponent extends LitElement {
 
   render() {
     return html`
-      <input type="text" placeholder=${this.placeholder} class="textbox" />
+      <input type="text" placeholder=${this.placeholder} class="textbox" @input="${this.setValue}" name="${this.name}"/>
     `;
   }
 }

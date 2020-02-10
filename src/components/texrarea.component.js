@@ -3,6 +3,12 @@ import {LitElement,html,css} from 'lit-element';
 class TextArea extends LitElement{
     constructor(){
         super();
+        this.name="";
+    }
+    static get properties(){
+        return {
+            name:{type:String}
+        }
     }
     static get styles(){
         return css `
@@ -19,7 +25,7 @@ class TextArea extends LitElement{
     }
     render(){
         return html`
-            <textarea  rows="5" placeholder="Write your article(in markdown)"></textarea>
+            <textarea  rows="5" placeholder="Write your article(in markdown)" name="${this.name}" @input=${this.setValue}></textarea>
         `;
     }
 }

@@ -5,6 +5,7 @@ import '../components/texrarea.component';
 import '../components/navigation.component';
 import '../components/userInfo.component';
 import { Router } from '@vaadin/router';
+
 class ArticleView extends LitElement{
 
 
@@ -32,10 +33,29 @@ class ArticleView extends LitElement{
 
     static get styles(){
         return css `
-            .article-title-container{
+            .article-info-container{
                 background-color:#333333;
+            }
+            .article-title-container{
+                
                 color:white;
                 padding:10px;
+                width:80%;
+                margin: 0 auto;
+                
+            }
+            .article-body-container{
+                border-bottom:1px solid grey;
+                width:80%;
+                margin:0 auto;
+                padding: 10px 0 50px 0;
+            }
+            .comment-section{
+                width:80%;
+                margin:0 auto;
+            }
+            .right{
+                float:right;
             }
         `;
     }
@@ -53,7 +73,9 @@ class ArticleView extends LitElement{
         return html` 
         
         <navigation-tag></navigation-tag>
-        <div class="article-title-container">
+        
+        <div class="article-info-container">
+            <div class="article-title-container">
             <h1>${this.data.article.title}</h1>
             <user-tag
                   username=${this.data.article.author.username}
@@ -61,6 +83,23 @@ class ArticleView extends LitElement{
                   userImg=${this.data.article.author.image}
                   hearts=${this.data.article.favoritesCount}
                 ></user-tag>
+            </div>
+            
+        </div>
+        <div class="article-body-container">
+            <p>${this.data.article.body}</p>
+        </div>
+
+        <div class="comment-section">
+            <textarea-tag
+                placeholder="Write a comment"
+            ></textarea-tag>
+            <btn-tag
+            buttonName="post comment"
+            class="right"
+          
+          ></btn-tag>
+        
         </div>
         `;
          

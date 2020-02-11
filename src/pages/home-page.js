@@ -106,14 +106,19 @@ class HomePage extends LitElement {
           margin-right: 20px;
         }
 
-        .content-section .feed-button {
+        .feed-buttons button {
           margin: 0;
           padding: 16px;
-          color: var(--theme-color);
+          color: grey;
+          border-bottom: 2px solid #fff;
           border: none;
           font-size: 1em;
           background-color: #fff;
+        }
+
+        .feed-buttons .active {
           border-bottom: 2px solid var(--theme-color);
+          color: var(--theme-color);
         }
 
         .content-section hr {
@@ -143,6 +148,7 @@ class HomePage extends LitElement {
       .then(res => res.json())
       .then(data => {
         this.articles = data.articles;
+        window.scrollTo(0, 0);
       })
       .catch(err => console.log(err));
   }
@@ -181,12 +187,14 @@ class HomePage extends LitElement {
 
     const contentSection = html`
       <div class="content-section">
-        ${this.isToken
-          ? html`
-              <button class="feed-button">Your Feed</button>
-            `
-          : null}
-        <button class="feed-button active">Global Feed</button>
+        <div class="feed-buttons">
+          ${this.isToken
+            ? html`
+                <button>Your Feed</button>
+              `
+            : null}
+          <button class="active">Global Feed</button>
+        </div>
         <hr />
         <div>
           ${this.articles.map(value => {

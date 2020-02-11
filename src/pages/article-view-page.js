@@ -5,7 +5,8 @@ import '../components/texrarea.component';
 import { Router } from '@vaadin/router';
 class ArticleView extends LitElement{
 
-    firstUpdated(){
+    connectedCallback(){
+        super.connectedCallback();
         const slug = this.location.params.slug;
         fetch('https://conduit.productionready.io/api/articles/'+slug,{
             method:'GET',

@@ -4,6 +4,8 @@ import "../components/navigation.component.js";
 import "../components/button.component.js";
 import "../components/input.component.js"
 import "../components/texrarea.component.js";
+import {Router} from '@vaadin/router';
+
 
 class ArticlePage extends LitElement {
   static get styles(){
@@ -39,9 +41,16 @@ class ArticlePage extends LitElement {
   insertData(){
     
   }
-  handleSubmit(){
-  console.log(this.title)
-    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ODM5MDMsInVzZXJuYW1lIjoiYWFhYWZzZGFhIiwiZXhwIjoxNTg2NTAwOTg4fQ.CL5pxuJXsG2Wpv3rNrTmd2oeQ2gHa9FeTrqtb8rB2X4';
+
+  /**
+   *
+   *this function is called when the user press the Publish Article Button,
+   handleSubmit handle the fetch, and routing
+   * @memberof ArticlePage
+   */
+  handleSubmit(){ 
+    const token = localStorage.getItem('token');
+    console.log("token",token)
     const data = {
      "article":{
        "title":this.title,
@@ -59,22 +68,29 @@ class ArticlePage extends LitElement {
       if(!response.ok) throw response;
       return response.json()
     })
-    .then(data => console.log("data is: ",data))
+    .then(data => {
+      Router.go(`/view-article/${data.article.slug}`); //redirect to the article page
+
+      
+    })
     .catch((error)=> console.error("Error",error)
      )
     
   }
+
+
+  /**
+   *
+   *this function is called everytime when input value is changed
+   * @param {*} e event
+   * @memberof ArticlePage
+   */
   handleChange(e){
-    this[e.target.name]= e.target.value;   
-    console.log("akjshdas");
-    
-         
+    this[e.target.name]= e.target.value;        
   }
   render() {
 
     return html`
-    
-            
             <div class="container">
             <navigation-tag></navigation-tag>
             <form class="form-container" action="post">

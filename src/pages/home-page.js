@@ -282,7 +282,7 @@ class HomePage extends LitElement {
                 <article-preview-tag
                   title=${value.title}
                   description=${value.description}
-                ></article-preview-tag>
+                ></article-preview-tag></a>
               </div>
             `;
           })}

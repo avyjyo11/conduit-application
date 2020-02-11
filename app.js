@@ -15,5 +15,5 @@ router.setRoutes([
   { path: "/sign-up", component: "signup-tag" },
   { path: "/new-post", component: "article-page" },
   { path: "/setting", component: "yoursetting-tag" },
-    {path:'/view-article/:slug',component:'view-article'}
+  {path: "/view-article/:slug",component:"view-article"}
 ]);

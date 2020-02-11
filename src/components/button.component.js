@@ -1,4 +1,3 @@
-
 import { html, LitElement, css } from "lit-element";
 
 class ButtonComponent extends LitElement {
@@ -7,7 +6,6 @@ class ButtonComponent extends LitElement {
 
     this.buttonName = "";
     this.className = "btn";
-    
   }
 
   static get properties() {
@@ -15,9 +13,8 @@ class ButtonComponent extends LitElement {
       buttonName: String,
       className: String,
       handleClick: {
-        type: Function,
-      },
-     
+        type: Function
+      }
     };
   }
 
@@ -30,7 +27,7 @@ class ButtonComponent extends LitElement {
         border-radius: 5px;
         font-size: 20px;
         padding: 10px;
-        cursor:pointer;
+        cursor: pointer;
       }
       .btn-logout {
         background-color: transparent;
@@ -39,7 +36,7 @@ class ButtonComponent extends LitElement {
         border-radius: 5px;
         font-size: 20px;
         padding: 10px;
-        cursor:pointer;
+        cursor: pointer;
       }
       .btn-logout:hover {
         background-color: #b85c5c;
@@ -48,17 +45,16 @@ class ButtonComponent extends LitElement {
         border-radius: 5px;
         font-size: 20px;
         padding: 10px;
-        cursor:pointer;
+        cursor: pointer;
       }
     `;
   }
   render() {
-    console.log("button render");
-    
     return html`
-      <button @click="${this.handleClick}"  class="${this.className}">${this.buttonName}</button>
+      <button @click="${this.handleClick}" class="${this.className}">
+        ${this.buttonName}
+      </button>
     `;
   }
 }
 window.customElements.define("btn-tag", ButtonComponent);
-

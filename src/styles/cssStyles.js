@@ -10,9 +10,9 @@ export const cssStyles = css`
     margin: 0 auto;
   }
 
-  @media only screen and(max-width: 800px) {
+  @media only screen and (max-width: 800px) {
     .wrapper {
-      width: 96%;
+      width: 90%;
     }
   }
 `;

@@ -1,6 +1,24 @@
 import { html, LitElement, css } from "lit-element";
 import { cssStyles } from "../styles/cssStyles";
 class Navigation extends LitElement {
+  constructor() {
+    super();
+    this.username = "username";
+    this.userImage=null;
+    this.isToken =
+      window.localStorage.getItem("token") === null ||
+      window.localStorage.getItem("token") === ""
+        ? false
+        : true;
+  }
+
+  static get properties() {
+    return {
+      isToken: { type: Boolean },
+      username: String
+    };
+  }
+
   static get styles() {
     return [
       cssStyles,
@@ -20,6 +38,20 @@ class Navigation extends LitElement {
         nav a {
           text-decoration: none;
           color: #777;
+          padding-left: 2px;
+          padding-right: 2px;
+        }
+
+        nav a:hover {
+          font-weight: bold;
+          padding: 0;
+        }
+
+        .avatar {
+          vertical-align: middle;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
         }
 
         .logo-holder a {
@@ -32,6 +64,26 @@ class Navigation extends LitElement {
     ];
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.isToken) {
+      fetch(`https://conduit.productionready.io/api/user`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": `Token ${window.localStorage.getItem("token")}`
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          this.username = data.user.username;
+          this.userImage = data.user.image
+        })
+        .catch(err => console.log(err));
+    }
+  }
+
   render() {
     return html`
       <div class="wrapper">
@@ -39,9 +91,18 @@ class Navigation extends LitElement {
           <div class="logo-holder"><a href="/">conduit</a></div>
           <nav>
             <ul>
-              <li><a href="/">Home</a></li>
-              <li><a href="/sign-in">Sign in</a></li>
-              <li><a href="/sign-up">Sign up</a></li>
+              ${!this.isToken
+                ? html`
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/sign-in">Sign in</a></li>
+                    <li><a href="/sign-up">Sign up</a></li>
+                  `
+                : html`
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/new-post">New Post</a></li>
+                    <li><a href="/setting">Setting</a></li>
+                    <li><a href="/user"> <img src= ${this.userImage||"https://www.w3schools.com/howto/img_avatar.png"} alt="Avatar" class="avatar"> ${this.username}</a></li>
+                  `}
             </ul>
           </nav>
         </div>

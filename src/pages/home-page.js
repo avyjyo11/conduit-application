@@ -2,31 +2,56 @@ import { LitElement, html, css } from "lit-element";
 import "../components/navigation.component";
 import "../components/tag-button.component";
 import "../components/userInfo.component";
-import "../components/footer.component";
 import "../components/article-preview.component";
+import "../components/page-indicator.component";
+import "../components/footer.component";
+import "../components/heart-toggler";
 import { cssStyles } from "../styles/cssStyles";
-
 
 class HomePage extends LitElement {
   constructor() {
     super();
+    this.activeTab = "global";
     this.tags = [];
+    this.globalFeeds = [];
+    this.yourFeeds = [];
     this.articles = [];
+    this.globalPages = 0;
+    this.yourPages = 0;
+    this.pages = 0;
+    this.username = "username";
+    this.pageChange = this.pageChange.bind(this);
+    this.likePost = this.likePost.bind(this);
+
+    this.isToken =
+      window.localStorage.getItem("token") === null ||
+      window.localStorage.getItem("token") === ""
+        ? false
+        : true;
   }
 
   static get properties() {
     return {
       articles: { type: Array },
-      tags: { type: Array }
+      yourFeeds: { type: Array },
+      tags: { type: Array },
+      pages: Number,
+      yourPages: Number,
+      activeTab: String,
+      isToken: { type: Boolean }
     };
   }
 
-  firstUpdated(changedProperties) {
+  connectedCallback() {
+    super.connectedCallback();
+
     fetch("https://conduit.productionready.io/api/articles?limit=10")
       .then(res => res.json())
       .then(data => {
-        this.articles = [...data.articles];
-        console.log(this.articles);
+        this.globalFeeds = [...data.articles];
+        this.globalPages = data.articlesCount / 10;
+        this.articles = this.globalFeeds;
+        this.pages = this.globalPages;
       })
       .catch(err => console.log(err));
 
@@ -36,6 +61,30 @@ class HomePage extends LitElement {
         this.tags = [...data.tags];
       })
       .catch(err => console.log(err));
+
+    if (this.isToken) {
+      fetch(`https://conduit.productionready.io/api/user`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": `Token ${window.localStorage.getItem("token")}`
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          this.username = data.user.username;
+          return fetch(
+            `https://conduit.productionready.io/api/articles?author=${this.username}&limit=10`
+          );
+        })
+        .then(res => res.json())
+        .then(data => {
+          this.yourPages = data.articlesCount / 10;
+          this.yourFeeds = [...data.articles];
+        })
+        .catch(err => console.log(err));
+    }
   }
 
   static get styles() {
@@ -95,14 +144,23 @@ class HomePage extends LitElement {
           margin-right: 20px;
         }
 
-        .content-section .feed-button {
+        .feed-buttons button {
           margin: 0;
           padding: 16px;
-          color: var(--theme-color);
+          color: grey;
+          border-bottom: 2px solid #fff;
           border: none;
           font-size: 1em;
           background-color: #fff;
+        }
+
+        .feed-buttons button:focus {
+          outline: none;
+        }
+
+        .feed-buttons .active {
           border-bottom: 2px solid var(--theme-color);
+          color: var(--theme-color);
         }
 
         .content-section hr {
@@ -114,12 +172,64 @@ class HomePage extends LitElement {
         user-tag {
           padding: 0px 24px;
         }
+
+        .pages-div {
+          margin-top: 5px;
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        .article-div {
+          position: relative;
+        }
       `
     ];
   }
 
+  tabsChange(e) {
+    let buttons = e.target.parentNode.children;
+    buttons[0].classList.remove("active");
+    buttons[1].classList.remove("active");
+    e.target.classList.add("active");
+
+    if (e.target.innerText === "Global Feed") {
+      this.articles = this.globalFeeds;
+      this.pages = this.globalPages;
+      this.activeTab = "global";
+    } else {
+      if (this.isToken) {
+        this.articles = this.yourFeeds;
+        this.pages = this.yourPages;
+        this.activeTab = "your";
+      }
+    }
+  }
+
+  pageChange(e) {
+    let offset = (e.target.innerText - 1) * 10;
+    const fetchURL =
+      this.activeTab === "global"
+        ? `https://conduit.productionready.io/api/articles?limit=10&offset=${offset}`
+        : `https://conduit.productionready.io/api/articles?author=${this.username}&limit=10&offset=${offset}`;
+    fetch(fetchURL)
+      .then(res => res.json())
+      .then(data => {
+        this.articles = [...data.articles];
+        window.scrollTo(0, 0);
+      })
+      .catch(err => console.log(err));
+  }
+
+  likePost(e) {
+    console.log("like post haha");
+  }
+
   render() {
-    console.log("rendered");
+    const pagesArr = [];
+    for (var i = 1; i <= this.pages; i++) {
+      pagesArr.push(i);
+    }
+
     const navbar = html`
       <navigation-tag></navigation-tag>
     `;
@@ -128,9 +238,7 @@ class HomePage extends LitElement {
       <div class="jumbotron center">
         <h2>conduit</h2>
         <p>A place to share your knowledge</p>
-        
       </div>
-      
     `;
 
     const tagSection = html`
@@ -149,25 +257,46 @@ class HomePage extends LitElement {
 
     const contentSection = html`
       <div class="content-section">
-        <button class="feed-button">Global Feed</button>
+        <div class="feed-buttons">
+          ${this.isToken
+            ? html`
+                <button class="" @click=${this.tabsChange}>Your Feed</button>
+              `
+            : null}
+          <button class="active" @click=${this.tabsChange}>Global Feed</button>
+        </div>
         <hr />
         <div>
           ${this.articles.map(value => {
             return html`
-              <div>
+              <div class="article-div">
                 <user-tag
                   username=${value.author.username}
                   postDate=${value.updatedAt}
                   userImg=${value.author.image}
-                  hearts=${value.favoritesCount}
                 ></user-tag>
+                <heart-toggler
+                  .click=${this.likePost}
+                  hearts=${value.favoritesCount}
+                ></heart-toggler>
                 <article-preview-tag
                   title=${value.title}
                   description=${value.description}
-                ></article-preview-tag>
+                ></article-preview-tag></a>
               </div>
             `;
           })}
+        </div>
+        <div class="pages-div">
+          ${pagesArr.map(
+            val =>
+              html`
+                <page-indicator
+                  .pageChange=${this.pageChange}
+                  value=${val}
+                ></page-indicator>
+              `
+          )}
         </div>
       </div>
     `;

@@ -6,11 +6,13 @@ class TextArea extends LitElement{
         super();
         this.name="";
         this.placeholder="";
+        this.value="";
     }
     static get properties(){
         return {
             name:{type:String},
             placeholder: { type: String },
+            value:{ type:String}
         }
     }
     static get styles(){
@@ -28,7 +30,7 @@ class TextArea extends LitElement{
     }
     render(){
         return html`
-            <textarea  rows="5" placeholder=${this.placeholder} name="${this.name}" @input="${this.setValue}"></textarea>
+            <textarea rows="5" placeholder=${this.placeholder} name="${this.name}" @input="${this.setValue}">${this.value}</textarea>
         `;
     }
 }

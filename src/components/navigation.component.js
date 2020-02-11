@@ -20,6 +20,13 @@ class Navigation extends LitElement {
         nav a {
           text-decoration: none;
           color: #777;
+          padding-left: 2px;
+          padding-right: 2px;
+        }
+
+        nav a:hover {
+          font-weight: bold;
+          padding: 0;
         }
 
         .logo-holder a {

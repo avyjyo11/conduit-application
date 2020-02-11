@@ -2,6 +2,7 @@
 import {html,LitElement, css} from 'lit-element';
 import "./button.component";
 import "./input.component";
+import {Router} from '@vaadin/router';
 
 /**
  *
@@ -35,6 +36,17 @@ class SignupComponent extends LitElement {
           
         };
       }
+
+    getFormValidationError(errorObject) {
+      const errorList=[];
+
+      Object.keys(errorObject).forEach(key => {
+        errorObject[key].forEach(errorMessage => {
+          errorList.push(`${key + " "+errorMessage}`)
+        })
+      })
+      return errorList;
+    }
 
     static get styles() {
         return css`
@@ -77,6 +89,9 @@ class SignupComponent extends LitElement {
         `;
     }
 
+
+    
+
     render()
     {   
         
@@ -84,16 +99,8 @@ class SignupComponent extends LitElement {
         <div  id="wrapper">
             <p id="signin"> Sign up </p>
             <p class="green"> Already have an account </p>
-              ${this.showError?this._errors.map(
-                 ( array,index) => {
-                    if(index==0)
-                return array.map(msg => html`<li> Email : ${msg}</li>`)
-                if(index==1)
-                return array.map(msg => html`<li> Password : ${msg}</li>`)
-                if(index==2)
-                return array.map(msg => html`<li> UserName : ${msg}</li>`)
-                 }
-                  )
+              ${this.showError?this.getFormValidationError(this._errors)
+                .map(msg => html`<li>  ${msg}</li>`)
                   :null}
             <form>
             <input-tag .setValue="${this._handleChange}"  placeholder="Username" name="_userName"></input-tag>
@@ -145,11 +152,13 @@ class SignupComponent extends LitElement {
     .then((data) => {
       console.log('Success:', data.user.token);
      localStorage.setItem('token', data.user.token);
+     Router.go('/');
     })
     .catch((error) => {
         this.showError=true;
-        this._errors= Object.values(error.errors);
         console.log(error.errors);
+        // this._errors= Object.entries(error.errors);
+        this._errors = error && error.errors;
       console.log('Error:', this._errors);
     });
   }

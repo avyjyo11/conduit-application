@@ -55,6 +55,17 @@ class Navigation extends LitElement {
     ];
   }
 
+  firstUpdated(changedProperties) {
+    if (this.isToken) {
+      fetch("https://conduit.productionready.io/api/user", {
+        headers: {
+          "Content-Type": "application/json",
+          "Authentication": "Token " + window.localStorage.getItem("token")
+        }
+      });
+    }
+  }
+
   render() {
     return html`
       <div class="wrapper">

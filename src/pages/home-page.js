@@ -32,17 +32,11 @@ class HomePage extends LitElement {
   }
 
   firstUpdated(changedProperties) {
-    // localStorage.setItem(
-    //   "token",
-    //   "alskhlkjfahslkfhaoihgihwi1h90u3092184hlkwwhjlk"
-    // );
-    //localStorage.clear();
     fetch("https://conduit.productionready.io/api/articles?limit=10")
       .then(res => res.json())
       .then(data => {
         this.articles = [...data.articles];
         this.pages = data.articlesCount / 10;
-        console.log(this.articles);
       })
       .catch(err => console.log(err));
 

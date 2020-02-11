@@ -14,17 +14,29 @@ class HomePage extends LitElement {
     this.articles = [];
     this.pages = 0;
     this.pageChange = this.pageChange.bind(this);
+
+    this.isToken =
+      window.localStorage.getItem("token") === null ||
+      window.localStorage.getItem("token") === ""
+        ? false
+        : true;
   }
 
   static get properties() {
     return {
       articles: { type: Array },
       tags: { type: Array },
-      pages: Number
+      pages: Number,
+      isToken: { type: Boolean }
     };
   }
 
   firstUpdated(changedProperties) {
+    // localStorage.setItem(
+    //   "token",
+    //   "alskhlkjfahslkfhaoihgihwi1h90u3092184hlkwwhjlk"
+    // );
+    localStorage.clear();
     fetch("https://conduit.productionready.io/api/articles?limit=10")
       .then(res => res.json())
       .then(data => {
@@ -174,7 +186,12 @@ class HomePage extends LitElement {
 
     const contentSection = html`
       <div class="content-section">
-        <button class="feed-button">Global Feed</button>
+        ${this.isToken
+          ? html`
+              <button class="feed-button">Your Feed</button>
+            `
+          : null}
+        <button class="feed-button active">Global Feed</button>
         <hr />
         <div>
           ${this.articles.map(value => {

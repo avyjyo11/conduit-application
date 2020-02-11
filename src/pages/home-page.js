@@ -143,6 +143,7 @@ class HomePage extends LitElement {
       .then(res => res.json())
       .then(data => {
         this.articles = data.articles;
+        window.scrollTo(0, 0);
       })
       .catch(err => console.log(err));
   }

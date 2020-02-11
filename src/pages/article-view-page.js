@@ -51,7 +51,7 @@ class ArticleView extends LitElement{
                 padding: 10px 0 50px 0;
             }
             .comment-section{
-                width:80%;
+                width:50%;
                 margin:0 auto;
             }
             .right{

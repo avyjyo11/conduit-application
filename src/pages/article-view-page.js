@@ -8,11 +8,10 @@ import { Router } from '@vaadin/router';
 
 class ArticleView extends LitElement{
 
-
     connectedCallback(){
         super.connectedCallback();
-        const slug = this.location.params.slug;
-        fetch('https://conduit.productionready.io/api/articles/'+slug,{
+        this.slug = this.location.params.slug;
+        fetch('https://conduit.productionready.io/api/articles/'+this.slug,{
             method:'GET',
             headers:{'Content-Type':'application/json','Accept':'appication/json'},
         })
@@ -20,7 +19,9 @@ class ArticleView extends LitElement{
         .then(data => {
             this.data = data;
             this.dataLoaded = true;
-            console.log("data loaded");
+            this.fetchComment();
+          
+            
             
         });
         
@@ -29,6 +30,10 @@ class ArticleView extends LitElement{
         super();
         this.dataLoaded=false;
         this.data = '';
+        this.comment= '';
+        this.displayComment = '';
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     static get styles(){
@@ -51,7 +56,7 @@ class ArticleView extends LitElement{
                 padding: 10px 0 50px 0;
             }
             .comment-section{
-                width:80%;
+                width:50%;
                 margin:0 auto;
             }
             .right{
@@ -65,6 +70,61 @@ class ArticleView extends LitElement{
             dataLoaded: {type:Boolean}
         }
     }
+    handleChange(e){
+       this[e.target.name] = e.target.value;
+    }
+    fetchComment(){
+        fetch(`https://conduit.productionready.io/api/articles/${this.slug}/comments`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "appication/json",
+              "Authorization": `Token ${localStorage.getItem('token')}`
+            },
+        
+            
+          })
+          .then(response => {
+            if (!response.ok) throw response;
+            return response.json();
+          })
+          .then(data => {
+            console.log("comment added");
+            this.displayComment = data;
+            
+            ; //redirect to the article page
+          })
+          .catch(error => console.error("Error", error))
+    }
+    handleSubmit(){
+        const commentData = {
+            "comment":{
+                "body":this.comment
+            }
+        }
+        
+        fetch(`https://conduit.productionready.io/api/articles/${this.slug}/comments`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "appication/json",
+              "Authorization": `Token ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(commentData)
+            
+          })
+          .then(response => {
+            if (!response.ok) throw response;
+            return response.json();
+          })
+          .then(data => {
+            console.log("comment loaded");
+            console.log(data);
+            
+            ; //redirect to the article page
+          })
+          .catch(error => console.error("Error", error))
+    }
 
     render(){        
         if(this.dataLoaded){
@@ -74,33 +134,37 @@ class ArticleView extends LitElement{
         
         <navigation-tag></navigation-tag>
         
-        <div class="article-info-container">
-            <div class="article-title-container">
-            <h1>${this.data.article.title}</h1>
-            <user-tag
-                  username=${this.data.article.author.username}
-                  postDate=${this.data.article.updatedAt}
-                  userImg=${this.data.article.author.image}
-                  hearts=${this.data.article.favoritesCount}
-                ></user-tag>
+            <div class="article-info-container">
+                <div class="article-title-container">
+                <h1>${this.data.article.title}</h1>
+                <user-tag
+                    username=${this.data.article.author.username}
+                    postDate=${this.data.article.updatedAt}
+                    userImg=${this.data.article.author.image}
+                    hearts=${this.data.article.favoritesCount}
+                    ></user-tag>
+                </div>
+                
+            </div>
+            <div class="article-body-container">
+                <p>${this.data.article.body}</p>
+            </div>
+
+            <div class="comment-section">
+                <textarea-tag
+                    placeholder="Write a comment"
+                    .setValue = ${this.handleChange}
+                    name="comment"
+                ></textarea-tag>
+                <btn-tag
+                    buttonName="post comment"
+                    class="right"
+                    .handleClick = ${this.handleSubmit}
+            
+            ></btn-tag>
+            
             </div>
             
-        </div>
-        <div class="article-body-container">
-            <p>${this.data.article.body}</p>
-        </div>
-
-        <div class="comment-section">
-            <textarea-tag
-                placeholder="Write a comment"
-            ></textarea-tag>
-            <btn-tag
-            buttonName="post comment"
-            class="right"
-          
-          ></btn-tag>
-        
-        </div>
         `;
          
         }else{

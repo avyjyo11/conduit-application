@@ -55,8 +55,8 @@ class HomePage extends LitElement {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Token ${window.localStorage.getItem("token")}`
+          "Accept": "application/json",
+          "Authorization": `Token ${window.localStorage.getItem("token")}`
         }
       })
         .then(res => res.json())

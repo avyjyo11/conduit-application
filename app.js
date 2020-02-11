@@ -3,12 +3,6 @@ import "./src/pages/signin-page";
 import "./src/pages/home-page";
 import "./src/pages/signup-page";
 import "./src/pages/article-page";
-
-import { Router } from "@vaadin/router";
-import "./src/pages/signin-page";
-import "./src/pages/home-page";
-import "./src/pages/signup-page";
-import "./src/pages/article-page";
 import "./src/pages/yoursetting-page";
 
 const outlet = document.querySelector("main");

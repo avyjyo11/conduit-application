@@ -31,7 +31,8 @@ class HomePage extends LitElement {
     };
   }
 
-  firstUpdated(changedProperties) {
+  connectedCallback() {
+    super.connectedCallback();
     fetch("https://conduit.productionready.io/api/articles?limit=10")
       .then(res => res.json())
       .then(data => {

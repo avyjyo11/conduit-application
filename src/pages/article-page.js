@@ -33,15 +33,13 @@ class ArticlePage extends LitElement {
     this.body='';
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-   
-    
   }
   insertData(){
     
   }
   handleSubmit(){
   console.log(this.title)
-    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ODM5MDMsInVzZXJuYW1lIjoiYWFhYWZzZGFhIiwiZXhwIjoxNTg2NTAwOTg4fQ.CL5pxuJXsG2Wpv3rNrTmd2oeQ2gHa9FeTrqtb8rB2X4';
+    const token = window.localStorage.getItem('token');
     const data = {
      "article":{
        "title":this.title,
@@ -65,10 +63,7 @@ class ArticlePage extends LitElement {
     
   }
   handleChange(e){
-    this[e.target.name]= e.target.value;   
-    console.log("akjshdas");
-    
-         
+    this[e.target.name]= e.target.value;  
   }
   render() {
 

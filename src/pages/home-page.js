@@ -206,10 +206,10 @@ class HomePage extends LitElement {
                   userImg=${value.author.image}
                   hearts=${value.favoritesCount}
                 ></user-tag>
-                <article-preview-tag
+                <a href="/view-article/${value.slug}"><article-preview-tag
                   title=${value.title}
                   description=${value.description}
-                ></article-preview-tag>
+                ></article-preview-tag></a>
               </div>
             `;
           })}

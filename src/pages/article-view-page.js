@@ -2,8 +2,11 @@ import { LitElement,html,css } from 'lit-element';
 import '../components/navigation.component';
 import '../components/button.component';
 import '../components/texrarea.component';
+import '../components/navigation.component';
+import '../components/userInfo.component';
 import { Router } from '@vaadin/router';
 class ArticleView extends LitElement{
+
 
     connectedCallback(){
         super.connectedCallback();
@@ -25,12 +28,15 @@ class ArticleView extends LitElement{
         super();
         this.dataLoaded=false;
         this.data = '';
-        
     }
 
     static get styles(){
         return css `
-        
+            .article-title-container{
+                background-color:#333333;
+                color:white;
+                padding:10px;
+            }
         `;
     }
 
@@ -40,11 +46,28 @@ class ArticleView extends LitElement{
         }
     }
 
-    render(){
-        console.log(this.data);
-        
+    render(){        
         if(this.dataLoaded){
-            return html` <h1>this is working</h1>`;
+            console.log(this.data);
+            
+        return html` 
+        
+        <navigation-tag></navigation-tag>
+        <div class="article-title-container">
+            <h1>${this.data.article.title}</h1>
+            <user-tag
+                  username=${this.data.article.author.username}
+                  postDate=${this.data.article.updatedAt}
+                  userImg=${this.data.article.author.image}
+                  hearts=${this.data.article.favoritesCount}
+                ></user-tag>
+        </div>
+        `;
+         
+        }else{
+            return html `
+                <h1>Loading..</h1>
+            `;
         }
         
     }

@@ -5,10 +5,12 @@ class TextArea extends LitElement{
     constructor(){
         super();
         this.name="";
+        this.placeholder="";
     }
     static get properties(){
         return {
-            name:{type:String}
+            name:{type:String},
+            placeholder: { type: String },
         }
     }
     static get styles(){
@@ -26,7 +28,7 @@ class TextArea extends LitElement{
     }
     render(){
         return html`
-            <textarea  rows="5" placeholder="Write your article(in markdown)" name="${this.name}" @input=${this.setValue}></textarea>
+            <textarea  rows="5" placeholder=${this.placeholder} name="${this.name}" @input="${this.setValue}"></textarea>
         `;
     }
 }

@@ -32,6 +32,24 @@ class ButtonComponent extends LitElement {
         padding: 10px;
         cursor:pointer;
       }
+      .btn-logout {
+        background-color: transparent;
+        color: #b85c5c;
+        border: 1px solid #b85c5c;
+        border-radius: 5px;
+        font-size: 20px;
+        padding: 10px;
+        cursor:pointer;
+      }
+      .btn-logout:hover {
+        background-color: #b85c5c;
+        color: white;
+        border: 1px solid #b85c5c;
+        border-radius: 5px;
+        font-size: 20px;
+        padding: 10px;
+        cursor:pointer;
+      }
     `;
   }
   render() {

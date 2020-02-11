@@ -35,8 +35,6 @@ class ArticlePage extends LitElement {
     this.body='';
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-   
-    
   }
   insertData(){
     
@@ -50,7 +48,6 @@ class ArticlePage extends LitElement {
    */
   handleSubmit(){ 
     const token = localStorage.getItem('token');
-    console.log("token",token)
     const data = {
      "article":{
        "title":this.title,
@@ -86,7 +83,11 @@ class ArticlePage extends LitElement {
    * @memberof ArticlePage
    */
   handleChange(e){
+<<<<<<< HEAD
     this[e.target.name]= e.target.value;        
+=======
+    this[e.target.name]= e.target.value;  
+>>>>>>> fbd419b7beb212a7274fe50f00b50d518d0ff0e7
   }
   render() {
 

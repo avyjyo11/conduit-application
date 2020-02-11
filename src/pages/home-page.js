@@ -2,31 +2,42 @@ import { LitElement, html, css } from "lit-element";
 import "../components/navigation.component";
 import "../components/tag-button.component";
 import "../components/userInfo.component";
-import "../components/footer.component";
 import "../components/article-preview.component";
+import "../components/page-indicator.component";
+import "../components/footer.component";
 import { cssStyles } from "../styles/cssStyles";
-
 
 class HomePage extends LitElement {
   constructor() {
     super();
     this.tags = [];
     this.articles = [];
+    this.pages = 0;
+    this.pageChange = this.pageChange.bind(this);
+
+    this.isToken =
+      window.localStorage.getItem("token") === null ||
+      window.localStorage.getItem("token") === ""
+        ? false
+        : true;
   }
 
   static get properties() {
     return {
       articles: { type: Array },
-      tags: { type: Array }
+      tags: { type: Array },
+      pages: Number,
+      isToken: { type: Boolean }
     };
   }
 
-  firstUpdated(changedProperties) {
+  connectedCallback() {
+    super.connectedCallback();
     fetch("https://conduit.productionready.io/api/articles?limit=10")
       .then(res => res.json())
       .then(data => {
         this.articles = [...data.articles];
-        console.log(this.articles);
+        this.pages = data.articlesCount / 10;
       })
       .catch(err => console.log(err));
 
@@ -114,11 +125,34 @@ class HomePage extends LitElement {
         user-tag {
           padding: 0px 24px;
         }
+
+        .pages-div {
+          margin-top: 5px;
+          display: flex;
+          flex-wrap: wrap;
+        }
       `
     ];
   }
 
+  pageChange(e) {
+    let offset = (e.target.innerText - 1) * 10;
+    fetch(
+      `https://conduit.productionready.io/api/articles?limit=10&offset=${offset}`
+    )
+      .then(res => res.json())
+      .then(data => {
+        this.articles = data.articles;
+      })
+      .catch(err => console.log(err));
+  }
+
   render() {
+    const pagesArr = [];
+    for (var i = 1; i <= this.pages; i++) {
+      pagesArr.push(i);
+    }
+
     console.log("rendered");
     const navbar = html`
       <navigation-tag></navigation-tag>
@@ -128,9 +162,7 @@ class HomePage extends LitElement {
       <div class="jumbotron center">
         <h2>conduit</h2>
         <p>A place to share your knowledge</p>
-        
       </div>
-      
     `;
 
     const tagSection = html`
@@ -149,7 +181,12 @@ class HomePage extends LitElement {
 
     const contentSection = html`
       <div class="content-section">
-        <button class="feed-button">Global Feed</button>
+        ${this.isToken
+          ? html`
+              <button class="feed-button">Your Feed</button>
+            `
+          : null}
+        <button class="feed-button active">Global Feed</button>
         <hr />
         <div>
           ${this.articles.map(value => {
@@ -168,6 +205,17 @@ class HomePage extends LitElement {
               </div>
             `;
           })}
+        </div>
+        <div class="pages-div">
+          ${pagesArr.map(
+            val =>
+              html`
+                <page-indicator
+                  .pageChange=${this.pageChange}
+                  value=${val}
+                ></page-indicator>
+              `
+          )}
         </div>
       </div>
     `;

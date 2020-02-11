@@ -36,7 +36,7 @@ class HomePage extends LitElement {
     //   "token",
     //   "alskhlkjfahslkfhaoihgihwi1h90u3092184hlkwwhjlk"
     // );
-    localStorage.clear();
+    //localStorage.clear();
     fetch("https://conduit.productionready.io/api/articles?limit=10")
       .then(res => res.json())
       .then(data => {

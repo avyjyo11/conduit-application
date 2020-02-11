@@ -1,6 +1,22 @@
 import { html, LitElement, css } from "lit-element";
 import { cssStyles } from "../styles/cssStyles";
 class Navigation extends LitElement {
+  constructor() {
+    super();
+
+    this.isToken =
+      window.localStorage.getItem("token") === null ||
+      window.localStorage.getItem("token") === ""
+        ? false
+        : true;
+  }
+
+  static get properties() {
+    return {
+      isToken: { type: Boolean }
+    };
+  }
+
   static get styles() {
     return [
       cssStyles,
@@ -20,6 +36,13 @@ class Navigation extends LitElement {
         nav a {
           text-decoration: none;
           color: #777;
+          padding-left: 2px;
+          padding-right: 2px;
+        }
+
+        nav a:hover {
+          font-weight: bold;
+          padding: 0;
         }
 
         .logo-holder a {
@@ -39,9 +62,18 @@ class Navigation extends LitElement {
           <div class="logo-holder"><a href="/">conduit</a></div>
           <nav>
             <ul>
-              <li><a href="/">Home</a></li>
-              <li><a href="/sign-in">Sign in</a></li>
-              <li><a href="/sign-up">Sign up</a></li>
+              ${!this.isToken
+                ? html`
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/sign-in">Sign in</a></li>
+                    <li><a href="/sign-up">Sign up</a></li>
+                  `
+                : html`
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/new-post">New Post</a></li>
+                    <li><a href="/setting">Setting</a></li>
+                    <li><a href="/user">username</a></li>
+                  `}
             </ul>
           </nav>
         </div>

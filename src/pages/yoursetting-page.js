@@ -32,6 +32,11 @@ class YourSetting extends LitElement
         };
       }
 
+      getuser()
+      {
+          
+      }
+
       getFormValidationError(errorObject) {
         const errorList=[];
   

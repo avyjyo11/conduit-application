@@ -12,7 +12,7 @@ router.setRoutes([
     {path:'/', component:'home-page'},
     {path:'/sign-in', component:'signin-tag'},
     {path:'/sign-up', component:'signup-tag'},
-    {path:'/publish-article', component:'article-page'},
+    {path:'/new-post', component:'article-page'},
     {path:'/setting',component:'yoursetting-tag'}
 
 ]);

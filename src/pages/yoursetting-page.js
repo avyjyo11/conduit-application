@@ -11,31 +11,62 @@ class YourSetting extends LitElement {
     super();
     this._api = "https://conduit.productionready.io/api";
 
+    this._update = this._update.bind(this);
+    this._handleChange = this._handleChange.bind(this);
+
     this._imagelink = "";
     this._userName = "";
     this._userbio = "";
     this._email = "";
-    this._password = "";
+    this._newPassword = null;
 
     this.showError = false;
     this._errors;
+
+    this.isToken =
+      window.localStorage.getItem("token") === null ||
+      window.localStorage.getItem("token") === ""
+        ? false
+        : true;
   }
   static get properties() {
     return {
       showError: { type: Boolean },
-      _errors: { type: Array }
+      _errors: { type: Array },
+      isToken: { type: Boolean },
+      _imagelink: { type: String },
+      _userName: { type: String },
+      _userbio: { type: String },
+      _email: { type: String },
+      _newPassword: { type: String }
     };
   }
 
-  getFormValidationError(errorObject) {
-    const errorList = [];
+  connectedCallback() {
+    super.connectedCallback();
+    this.getuser();
+  }
 
-    Object.keys(errorObject).forEach(key => {
-      errorObject[key].forEach(errorMessage => {
-        errorList.push(`${key + " " + errorMessage}`);
-      });
-    });
-    return errorList;
+  getuser() {
+    if (this.isToken) {
+      fetch(`https://conduit.productionready.io/api/user`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": `Token ${window.localStorage.getItem("token")}`
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          this._userbio = data.user.bio || "";
+          this._imagelink = data.user.image || "";
+          this._userName = data.user.username;
+          this._email = data.user.email;
+        })
+        .catch(err => console.log(err));
+    }
   }
 
   static get styles() {
@@ -89,30 +120,35 @@ class YourSetting extends LitElement {
           : null}
         <form>
           <input-tag
+            value=${this._imagelink}
             .setValue="${this._handleChange}"
             placeholder="URL of profile picture"
             name="_imagelink"
           ></input-tag>
           <input-tag
+            value=${this._userName}
             .setValue="${this._handleChange}"
             placeholder="username"
             name="_userName"
           ></input-tag>
           <textarea-tag
+            value=${this._userbio}
             .setValue="${this._handleChange}"
             placeholder="Short bio about you"
             name="_userbio"
           ></textarea-tag>
 
           <input-tag
+            value=${this._email}
             .setValue="${this._handleChange}"
             placeholder="Email"
             name="_email"
           ></input-tag>
           <input-tag
+            value=${this._newPassword || ""}
             .setValue="${this._handleChange}"
-            placeholder="Password"
-            name="_password"
+            placeholder="New Password"
+            name="_newPassword"
           ></input-tag>
           <div id="btn-wrapper">
             <btn-tag
@@ -136,6 +172,7 @@ class YourSetting extends LitElement {
   }
 
   _logOut(e) {
+    console.log("logout");
     localStorage.clear();
     Router.go("/");
   }
@@ -144,7 +181,48 @@ class YourSetting extends LitElement {
     this[e.target.name] = e.target.value;
   }
 
-  _update(e) {}
+  _update(e) {
+    console.log("update >> ", this._newPassword);
+    const data = {
+      user: {
+        username: this._userName,
+        email: this._email,
+        password: this._newpassword == "" ? null : this._newPassword,
+        bio: this._userbio,
+        image: this._imagelink
+      }
+    };
+
+    fetch(`https://conduit.productionready.io/api/user`, {
+      method: "PUT", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${window.localStorage.getItem("token")}`
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(error => {
+            throw error;
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log("Success:", data.user.token);
+        localStorage.setItem("token", data.user.token);
+        Router.go("/");
+      })
+      .catch(error => {
+        console.log(error.errors);
+
+        this._errors = error && error.errors;
+        console.log("Error:", this._errors);
+        this.showError = true;
+      });
+  }
 }
 
 customElements.define("yoursetting-tag", YourSetting);

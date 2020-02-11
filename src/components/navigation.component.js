@@ -4,6 +4,7 @@ class Navigation extends LitElement {
   constructor() {
     super();
     this.username = "username";
+    this.userImage=null;
     this.isToken =
       window.localStorage.getItem("token") === null ||
       window.localStorage.getItem("token") === ""
@@ -46,6 +47,13 @@ class Navigation extends LitElement {
           padding: 0;
         }
 
+        .avatar {
+          vertical-align: middle;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+        }
+
         .logo-holder a {
           text-decoration: none;
           color: var(--theme-color);
@@ -69,7 +77,9 @@ class Navigation extends LitElement {
       })
         .then(res => res.json())
         .then(data => {
+          console.log(data);
           this.username = data.user.username;
+          this.userImage = data.user.image
         })
         .catch(err => console.log(err));
     }
@@ -92,7 +102,8 @@ class Navigation extends LitElement {
                     <li><a href="/">Home</a></li>
                     <li><a href="/new-post">New Post</a></li>
                     <li><a href="/setting">Setting</a></li>
-                    <li><a href="/user">${this.username}</a></li>
+                   
+                    <li><a href="/user"> <img src= ${this.userImage||"https://www.w3schools.com/howto/img_avatar.png"} alt="Avatar" class="avatar"> ${this.username}</a></li>
                   `}
             </ul>
           </nav>

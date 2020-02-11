@@ -1,21 +1,18 @@
 import { html, LitElement, css } from "lit-element";
 import { cssStyles } from "../styles/cssStyles";
-import "fa-icons";
 class UserInfo extends LitElement {
   constructor() {
     super();
     this.username = "";
     this.postDate = new Date().toString();
     this.userImg = "http://pngimg.com/uploads/smiley/smiley_PNG36233.png";
-    this.hearts = 0;
   }
 
   static get properties() {
     return {
       username: String,
       postDate: String,
-      userImg: String,
-      hearts: Number
+      userImg: String
     };
   }
 
@@ -104,10 +101,6 @@ class UserInfo extends LitElement {
         <div class="article-right">
           <span class="username">${this.username}</span>
           <span class="post-date">${this.postDate}</span>
-        </div>
-        <div class="heart-toggler">
-          <fa-icon class="fas fa-heart"></fa-icon>
-          <span class="heart-counter">${this.hearts}</span>
         </div>
       </div>
     `;

@@ -2,22 +2,25 @@ import { LitElement, html, css } from "lit-element";
 import "../components/navigation.component";
 import "../components/tag-button.component";
 import "../components/userInfo.component";
-import "../components/footer.component";
 import "../components/article-preview.component";
+import "../components/page-indicator.component";
+import "../components/footer.component";
 import { cssStyles } from "../styles/cssStyles";
-
 
 class HomePage extends LitElement {
   constructor() {
     super();
     this.tags = [];
     this.articles = [];
+    this.pages = 0;
+    this.pageChange = this.pageChange.bind(this);
   }
 
   static get properties() {
     return {
       articles: { type: Array },
-      tags: { type: Array }
+      tags: { type: Array },
+      pages: Number
     };
   }
 
@@ -26,6 +29,7 @@ class HomePage extends LitElement {
       .then(res => res.json())
       .then(data => {
         this.articles = [...data.articles];
+        this.pages = data.articlesCount / 10;
         console.log(this.articles);
       })
       .catch(err => console.log(err));
@@ -114,11 +118,34 @@ class HomePage extends LitElement {
         user-tag {
           padding: 0px 24px;
         }
+
+        .pages-div {
+          margin-top: 5px;
+          display: flex;
+          flex-wrap: wrap;
+        }
       `
     ];
   }
 
+  pageChange(e) {
+    let offset = (e.target.innerText - 1) * 10;
+    fetch(
+      `https://conduit.productionready.io/api/articles?limit=10&offset=${offset}`
+    )
+      .then(res => res.json())
+      .then(data => {
+        this.articles = data.articles;
+      })
+      .catch(err => console.log(err));
+  }
+
   render() {
+    const pagesArr = [];
+    for (var i = 1; i <= this.pages; i++) {
+      pagesArr.push(i);
+    }
+
     console.log("rendered");
     const navbar = html`
       <navigation-tag></navigation-tag>
@@ -128,9 +155,7 @@ class HomePage extends LitElement {
       <div class="jumbotron center">
         <h2>conduit</h2>
         <p>A place to share your knowledge</p>
-        
       </div>
-      
     `;
 
     const tagSection = html`
@@ -168,6 +193,17 @@ class HomePage extends LitElement {
               </div>
             `;
           })}
+        </div>
+        <div class="pages-div">
+          ${pagesArr.map(
+            val =>
+              html`
+                <page-indicator
+                  .pageChange=${this.pageChange}
+                  value=${val}
+                ></page-indicator>
+              `
+          )}
         </div>
       </div>
     `;

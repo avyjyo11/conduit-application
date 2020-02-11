@@ -3,7 +3,7 @@ import { cssStyles } from "../styles/cssStyles";
 class Navigation extends LitElement {
   constructor() {
     super();
-
+    this.username = "username";
     this.isToken =
       window.localStorage.getItem("token") === null ||
       window.localStorage.getItem("token") === ""
@@ -13,7 +13,8 @@ class Navigation extends LitElement {
 
   static get properties() {
     return {
-      isToken: { type: Boolean }
+      isToken: { type: Boolean },
+      username: String
     };
   }
 
@@ -55,6 +56,25 @@ class Navigation extends LitElement {
     ];
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.isToken) {
+      fetch(`https://conduit.productionready.io/api/user`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": `Token ${window.localStorage.getItem("token")}`
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          this.username = data.user.username;
+        })
+        .catch(err => console.log(err));
+    }
+  }
+
   render() {
     return html`
       <div class="wrapper">
@@ -72,7 +92,7 @@ class Navigation extends LitElement {
                     <li><a href="/">Home</a></li>
                     <li><a href="/new-post">New Post</a></li>
                     <li><a href="/setting">Setting</a></li>
-                    <li><a href="/user">username</a></li>
+                    <li><a href="/user">${this.username}</a></li>
                   `}
             </ul>
           </nav>

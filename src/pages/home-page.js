@@ -13,6 +13,7 @@ class HomePage extends LitElement {
     this.tags = [];
     this.articles = [];
     this.pages = 0;
+    this.username = "username";
     this.pageChange = this.pageChange.bind(this);
 
     this.isToken =
@@ -33,6 +34,7 @@ class HomePage extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
+
     fetch("https://conduit.productionready.io/api/articles?limit=10")
       .then(res => res.json())
       .then(data => {
@@ -47,6 +49,22 @@ class HomePage extends LitElement {
         this.tags = [...data.tags];
       })
       .catch(err => console.log(err));
+
+    if (this.isToken) {
+      fetch(`https://conduit.productionready.io/api/user`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": `Token ${window.localStorage.getItem("token")}`
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          this.username = data.user.username;
+        })
+        .catch(err => console.log(err));
+    }
   }
 
   static get styles() {
@@ -140,6 +158,36 @@ class HomePage extends LitElement {
     ];
   }
 
+  tabsChange(e) {
+    let buttons = e.target.parentNode.children;
+    buttons[0].classList.remove("active");
+    buttons[1].classList.remove("active");
+    e.target.classList.add("active");
+
+    if (e.target.innerText === "Global Feed") {
+      console.log("global feed pressed");
+      fetch("https://conduit.productionready.io/api/articles?limit=10")
+        .then(res => res.json())
+        .then(data => {
+          this.pages = data.articlesCount / 10;
+          this.articles = [...data.articles];
+        })
+        .catch(err => console.log(err));
+    } else {
+      if (this.isToken) {
+        fetch(
+          `https://conduit.productionready.io/api/articles?author=${this.username}&limit=10`
+        )
+          .then(res => res.json())
+          .then(data => {
+            this.pages = data.articlesCount / 10;
+            this.articles = [...data.articles];
+          })
+          .catch(err => console.log(err));
+      }
+    }
+  }
+
   pageChange(e) {
     let offset = (e.target.innerText - 1) * 10;
     fetch(
@@ -147,7 +195,7 @@ class HomePage extends LitElement {
     )
       .then(res => res.json())
       .then(data => {
-        this.articles = data.articles;
+        this.articles = [...data.articles];
         window.scrollTo(0, 0);
       })
       .catch(err => console.log(err));
@@ -159,7 +207,6 @@ class HomePage extends LitElement {
       pagesArr.push(i);
     }
 
-    console.log("rendered");
     const navbar = html`
       <navigation-tag></navigation-tag>
     `;
@@ -190,10 +237,10 @@ class HomePage extends LitElement {
         <div class="feed-buttons">
           ${this.isToken
             ? html`
-                <button>Your Feed</button>
+                <button class="" @click=${this.tabsChange}>Your Feed</button>
               `
             : null}
-          <button class="active">Global Feed</button>
+          <button class="active" @click=${this.tabsChange}>Global Feed</button>
         </div>
         <hr />
         <div>

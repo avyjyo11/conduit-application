@@ -22,7 +22,7 @@ class InputComponent extends LitElement {
         width: calc(100% - 40px);
         padding: 10px;
         margin: 10px;
-        font-size: 20px;
+        font-size: 15px;
         border: 1px solid grey;
         border-radius: 5px;
       }

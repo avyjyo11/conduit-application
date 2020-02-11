@@ -97,6 +97,7 @@ class ArticlePage extends LitElement {
           <textarea-tag
             .setValue=${this.handleChange}
             name="body"
+            placeholder="Write your article (in markdown)"
           ></textarea-tag>
           <input-tag
             placeholder="Enter tags"

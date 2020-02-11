@@ -20,7 +20,7 @@ class TextArea extends LitElement{
                 padding: 10px;
                 margin: 10px;
 
-                font-size: 20px;
+                font-size: 15px;
                 border: 1px solid grey;
                 border-radius: 5px;
             }

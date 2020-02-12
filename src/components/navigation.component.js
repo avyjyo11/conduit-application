@@ -77,7 +77,6 @@ class Navigation extends LitElement {
       })
         .then(res => res.json())
         .then(data => {
-          console.log(data);
           this.username = data.user.username;
           this.userImage = data.user.image
         })
@@ -102,7 +101,6 @@ class Navigation extends LitElement {
                     <li><a href="/">Home</a></li>
                     <li><a href="/new-post">New Post</a></li>
                     <li><a href="/setting">Setting</a></li>
-                   
                     <li><a href="/profile"> <img src= ${this.userImage||"https://www.w3schools.com/howto/img_avatar.png"} alt="Avatar" class="avatar"> ${this.username}</a></li>
                   `}
             </ul>

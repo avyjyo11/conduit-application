@@ -2,13 +2,6 @@ import { html, LitElement, css } from "lit-element";
 import "./button.component";
 import "./input.component";
 import { Router } from "@vaadin/router";
-
-/**
- *
- *
- * @class SignupComponent
- * @extends {LitElement}
- */
 class SignupComponent extends LitElement {
   constructor() {
     super();

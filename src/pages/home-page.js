@@ -5,16 +5,23 @@ import "../components/userInfo.component";
 import "../components/article-preview.component";
 import "../components/page-indicator.component";
 import "../components/footer.component";
+import "../components/heart-toggler";
 import { cssStyles } from "../styles/cssStyles";
 
 class HomePage extends LitElement {
   constructor() {
     super();
+    this.activeTab = "global";
     this.tags = [];
+    this.globalFeeds = [];
+    this.yourFeeds = [];
     this.articles = [];
+    this.globalPages = 0;
+    this.yourPages = 0;
     this.pages = 0;
     this.username = "username";
     this.pageChange = this.pageChange.bind(this);
+    this.likePost = this.likePost.bind(this);
 
     this.isToken =
       window.localStorage.getItem("token") === null ||
@@ -26,8 +33,11 @@ class HomePage extends LitElement {
   static get properties() {
     return {
       articles: { type: Array },
+      yourFeeds: { type: Array },
       tags: { type: Array },
       pages: Number,
+      yourPages: Number,
+      activeTab: String,
       isToken: { type: Boolean }
     };
   }
@@ -38,8 +48,10 @@ class HomePage extends LitElement {
     fetch("https://conduit.productionready.io/api/articles?limit=10")
       .then(res => res.json())
       .then(data => {
-        this.articles = [...data.articles];
-        this.pages = data.articlesCount / 10;
+        this.globalFeeds = [...data.articles];
+        this.globalPages = data.articlesCount / 10;
+        this.articles = this.globalFeeds;
+        this.pages = this.globalPages;
       })
       .catch(err => console.log(err));
 
@@ -62,6 +74,14 @@ class HomePage extends LitElement {
         .then(res => res.json())
         .then(data => {
           this.username = data.user.username;
+          return fetch(
+            `https://conduit.productionready.io/api/articles?author=${this.username}&limit=10`
+          );
+        })
+        .then(res => res.json())
+        .then(data => {
+          this.yourPages = data.articlesCount / 10;
+          this.yourFeeds = [...data.articles];
         })
         .catch(err => console.log(err));
     }
@@ -134,6 +154,10 @@ class HomePage extends LitElement {
           background-color: #fff;
         }
 
+        .feed-buttons button:focus {
+          outline: none;
+        }
+
         .feed-buttons .active {
           border-bottom: 2px solid var(--theme-color);
           color: var(--theme-color);
@@ -154,6 +178,10 @@ class HomePage extends LitElement {
           display: flex;
           flex-wrap: wrap;
         }
+
+        .article-div {
+          position: relative;
+        }
       `
     ];
   }
@@ -165,40 +193,35 @@ class HomePage extends LitElement {
     e.target.classList.add("active");
 
     if (e.target.innerText === "Global Feed") {
-      console.log("global feed pressed");
-      fetch("https://conduit.productionready.io/api/articles?limit=10")
-        .then(res => res.json())
-        .then(data => {
-          this.pages = data.articlesCount / 10;
-          this.articles = [...data.articles];
-        })
-        .catch(err => console.log(err));
+      this.articles = this.globalFeeds;
+      this.pages = this.globalPages;
+      this.activeTab = "global";
     } else {
       if (this.isToken) {
-        fetch(
-          `https://conduit.productionready.io/api/articles?author=${this.username}&limit=10`
-        )
-          .then(res => res.json())
-          .then(data => {
-            this.pages = data.articlesCount / 10;
-            this.articles = [...data.articles];
-          })
-          .catch(err => console.log(err));
+        this.articles = this.yourFeeds;
+        this.pages = this.yourPages;
+        this.activeTab = "your";
       }
     }
   }
 
   pageChange(e) {
     let offset = (e.target.innerText - 1) * 10;
-    fetch(
-      `https://conduit.productionready.io/api/articles?limit=10&offset=${offset}`
-    )
+    const fetchURL =
+      this.activeTab === "global"
+        ? `https://conduit.productionready.io/api/articles?limit=10&offset=${offset}`
+        : `https://conduit.productionready.io/api/articles?author=${this.username}&limit=10&offset=${offset}`;
+    fetch(fetchURL)
       .then(res => res.json())
       .then(data => {
         this.articles = [...data.articles];
         window.scrollTo(0, 0);
       })
       .catch(err => console.log(err));
+  }
+
+  likePost(e) {
+    console.log("like post haha");
   }
 
   render() {
@@ -246,14 +269,17 @@ class HomePage extends LitElement {
         <div>
           ${this.articles.map(value => {
             return html`
-              <div>
+              <div class="article-div">
                 <user-tag
                   username=${value.author.username}
                   postDate=${value.updatedAt}
                   userImg=${value.author.image}
-                  hearts=${value.favoritesCount}
                 ></user-tag>
-                <a href="/view-article/${value.slug}"><article-preview-tag
+                <heart-toggler
+                  .click=${this.likePost}
+                  hearts=${value.favoritesCount}
+                ></heart-toggler>
+                <article-preview-tag
                   title=${value.title}
                   description=${value.description}
                 ></article-preview-tag></a>

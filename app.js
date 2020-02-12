@@ -5,11 +5,7 @@ import "./src/pages/signup-page";
 import "./src/pages/article-page";
 import "./src/pages/yoursetting-page";
 import "./src/pages/article-view-page";
-<<<<<<< HEAD
-import "./src/pages/test";
 import "./src/pages/userprofile-page";
-=======
->>>>>>> 7660a2b045011e186b2e2bf0c84584a386f7a986
 
 
 const outlet = document.querySelector("main");

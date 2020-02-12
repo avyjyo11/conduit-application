@@ -6,6 +6,7 @@ import "./src/pages/article-page";
 import "./src/pages/yoursetting-page";
 import "./src/pages/article-view-page";
 import "./src/pages/test";
+import "./src/pages/userprofile-page";
 
 
 const outlet = document.querySelector("main");
@@ -16,6 +17,7 @@ router.setRoutes([
   { path: "/sign-up", component: "signup-tag" },
   { path: "/new-post", component: "article-page" },
   { path: "/setting", component: "yoursetting-tag" },
+  { path:"/profile",component:"userprofile-page"},
   { path: "/test/:id", component: "test-page" },
-  {path: "/view-article/:slug",component:"view-article"}
+  { path: "/view-article/:slug",component:"view-article"}
 ]);

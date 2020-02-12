@@ -103,7 +103,7 @@ class Navigation extends LitElement {
                     <li><a href="/new-post">New Post</a></li>
                     <li><a href="/setting">Setting</a></li>
                    
-                    <li><a href="/user"> <img src= ${this.userImage||"https://www.w3schools.com/howto/img_avatar.png"} alt="Avatar" class="avatar"> ${this.username}</a></li>
+                    <li><a href="/profile"> <img src= ${this.userImage||"https://www.w3schools.com/howto/img_avatar.png"} alt="Avatar" class="avatar"> ${this.username}</a></li>
                   `}
             </ul>
           </nav>

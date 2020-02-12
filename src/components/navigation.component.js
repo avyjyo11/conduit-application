@@ -4,7 +4,7 @@ class Navigation extends LitElement {
   constructor() {
     super();
     this.username = "username";
-    this.userImage=null;
+    this.userImage = null;
     this.isToken =
       window.localStorage.getItem("token") === null ||
       window.localStorage.getItem("token") === ""
@@ -71,14 +71,14 @@ class Navigation extends LitElement {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": `Token ${window.localStorage.getItem("token")}`
+          Accept: "application/json",
+          Authorization: `Token ${window.localStorage.getItem("token")}`
         }
       })
         .then(res => res.json())
         .then(data => {
           this.username = data.user.username;
-          this.userImage = data.user.image
+          this.userImage = data.user.image;
         })
         .catch(err => console.log(err));
     }
@@ -101,7 +101,17 @@ class Navigation extends LitElement {
                     <li><a href="/">Home</a></li>
                     <li><a href="/new-post">New Post</a></li>
                     <li><a href="/setting">Setting</a></li>
-                    <li><a href="/profile"> <img src= ${this.userImage||"https://www.w3schools.com/howto/img_avatar.png"} alt="Avatar" class="avatar"> ${this.username}</a></li>
+                    <li>
+                      <a href="/profile">
+                        <img
+                          src=${this.userImage ||
+                            "https://www.w3schools.com/howto/img_avatar.png"}
+                          alt="Avatar"
+                          class="avatar"
+                        />
+                        ${this.username}</a
+                      >
+                    </li>
                   `}
             </ul>
           </nav>
@@ -110,4 +120,5 @@ class Navigation extends LitElement {
     `;
   }
 }
-window.customElements.define("navigation-tag", Navigation);
+
+customElements.define("navigation-tag", Navigation);

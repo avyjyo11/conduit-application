@@ -24,13 +24,9 @@ class TagButton extends LitElement {
     `;
   }
 
-  handleClick(e) {
-    console.log(e.target);
-  }
-
   render() {
     return html`
-      <button class="tag-container" @click=${this.handleClick}>
+      <button class="tag-container" @click=${this.click}>
         ${this.name}
       </button>
     `;

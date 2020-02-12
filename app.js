@@ -20,11 +20,6 @@ router.setRoutes([
   { path: "/sign-up", component: "signup-tag" },
   { path: "/new-post", component: "article-page" },
   { path: "/setting", component: "yoursetting-tag" },
-<<<<<<< HEAD
-  { path:"/profile",component:"userprofile-page"},
-  { path: "/test/:id", component: "test-page" },
-  { path: "/view-article/:slug",component:"view-article"}
-=======
+  { path: "/profile",component:"userprofile-page"},
   {path: "/view-article/:slug",component:"view-article"}
->>>>>>> 7660a2b045011e186b2e2bf0c84584a386f7a986
 ]);

@@ -7,6 +7,7 @@ import "../components/article-preview.component";
 import "../components/page-indicator.component";
 import "../components/footer.component";
 import "../components/heart-toggler";
+import { get } from "../services/api.services";
 import { cssStyles } from "../styles/cssStyles";
 
 class HomePage extends LitElement {
@@ -25,11 +26,7 @@ class HomePage extends LitElement {
     this.pageChange = this.pageChange.bind(this);
     this.likePost = this.likePost.bind(this);
     this.tagClick = this.tagClick.bind(this);
-    this.isToken =
-      window.localStorage.getItem("token") === null ||
-      window.localStorage.getItem("token") === ""
-        ? false
-        : true;
+    this.isToken = window.localStorage.getItem("token") ? false : true;
   }
 
   static get properties() {
@@ -47,14 +44,9 @@ class HomePage extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-
-    fetch("https://conduit.productionready.io/api/articles?limit=10")
-      .then(res => {
-        console.log(res);
-       
-       return res.json()})
+    let url = `/articles?limit=10`;
+    get(url)
       .then(data => {
-        console.log(data);
         this.globalFeeds = [...data.articles];
         this.globalPages = data.articlesCount / 10;
         this.articles = this.globalFeeds;
@@ -62,8 +54,8 @@ class HomePage extends LitElement {
       })
       .catch(err => console.log(err));
 
-    fetch("https://conduit.productionready.io/api/tags?limit=20")
-      .then(res => res.json())
+    url = `/tags?limit=20`;
+    get(url)
       .then(data => {
         this.tags = [...data.tags];
       })

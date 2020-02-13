@@ -7,30 +7,30 @@ class TextArea extends LitElement{
         this.name="";
         this.placeholder="";
         this.value="";
+        this.disabled=false;
     }
     static get properties(){
         return {
             name:{type:String},
             placeholder: { type: String },
-            value:{ type:String}
+            value:{ type:String},
+            disabled:{type : Boolean}
         }
     }
     static get styles(){
         return css `
             textarea{
-                width: calc(100% - 40px);
+                width: 100%;
                 padding: 10px;
-                margin: 10px;
-
                 font-size: 15px;
-                border: 1px solid grey;
-                border-radius: 5px;
+                box-sizing: border-box;
+        
             }
         `;
     }
     render(){
         return html`
-            <textarea rows="5" placeholder=${this.placeholder} name="${this.name}" @input="${this.setValue}">${this.value}</textarea>
+            <textarea rows="5" ?disabled=${this.disabled} placeholder=${this.placeholder} name="${this.name}" @input="${this.setValue}">${this.value}</textarea>
         `;
     }
 }

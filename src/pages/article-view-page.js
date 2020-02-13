@@ -10,10 +10,7 @@ class ArticleView extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.slug = this.location.params.slug;
-    fetch("https://conduit.productionready.io/api/articles/" + this.slug, {
-      method: "GET",
-      headers: { "Content-Type": "application/json", Accept: "appication/json" }
-    })
+    fetch(`https://conduit.productionready.io/api/articles/${this.slug}`)
       .then(response => response.json())
       .then(data => {
         console.log("data >> ", data);

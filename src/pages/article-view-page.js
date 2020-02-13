@@ -183,7 +183,7 @@ class ArticleView extends LitElement{
               "Accept": "appication/json",
               "Authorization": `Token ${localStorage.getItem('token')}`
             },
-            body: JSON.stringify(commentData)
+             body: JSON.stringify(commentData)
             
           })
           .then(response => {

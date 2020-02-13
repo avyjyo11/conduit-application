@@ -18,8 +18,8 @@ class ArticleView extends LitElement{
         .then(response => response.json())
         .then(data => {
             this.data = data;
-            this.userImage=data.article.author.image;
             this.dataLoaded = true;
+            this.fetchUser();
             this.fetchComment();
           
             
@@ -45,7 +45,7 @@ class ArticleView extends LitElement{
           ? false
           : true;
         
-        this.isUser= window.localStorage.getItem("username");
+        this.username= "";
     
 
     }
@@ -109,7 +109,8 @@ class ArticleView extends LitElement{
     static get properties(){
         return {
             dataLoaded: {type:Boolean},
-            displayComments: {type:Array}
+            displayComments: {type:Array},
+            userImage:{type:String}
         }
     }
     handleChange(e){
@@ -135,6 +136,32 @@ class ArticleView extends LitElement{
          
             this.displayComments = data.comments;
             console.log("comments",this.displayComments);
+
+            
+            ; //redirect to the article page
+          })
+          .catch(error => console.error("Error", error))
+    }
+    fetchUser(){
+        fetch(`https://conduit.productionready.io/api/user`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "appication/json",
+              "Authorization": `Token ${localStorage.getItem('token')}`
+            },
+        
+            
+          })
+          .then(response => {
+            if (!response.ok) throw response;
+            return response.json();
+          })
+          .then(data => {
+            this.userImage=data.user.image;
+            this.username=data.user.username;
+         
+            console.log("comments",data);
 
             
             ; //redirect to the article page
@@ -247,9 +274,9 @@ class ArticleView extends LitElement{
                     name="comment">
                 </textarea-tag>
             <div class="belowComment-section">
-            <img src= ${this.userImage||"https://www.w3schools.com/howto/img_avatar.png"} alt="Avatar" class="avatar">
+            <img src= ${cmt.author.image||"https://www.w3schools.com/howto/img_avatar.png"} alt="Avatar" class="avatar">
             <span class="cmt-author">${cmt.author.username}</span>
-              ${this.isUser===cmt.author.username?html` 
+              ${this.username===cmt.author.username?html` 
               <div class="btn-wrapper"> 
                <btn-tag
                     className="btn-logout"

@@ -30,9 +30,9 @@ class UserInfo extends LitElement {
           width: 100%;
         }
         .user-image-holder {
-          width: 40px;
-          height: 40px;
-          margin: 0 auto;
+          width: 50px;
+          height: 50px;
+          margin: 5px auto;
         }
         .article-left {
           width: 5%;

@@ -148,6 +148,7 @@ class SignupComponent extends LitElement {
       .then(data => {
         console.log("Success:", data.user.token);
         localStorage.setItem("token", data.user.token);
+        localStorage.setItem('username',data.user.username);
         Router.go("/");
       })
       .catch(error => {

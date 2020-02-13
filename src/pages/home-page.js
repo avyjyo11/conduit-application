@@ -49,8 +49,12 @@ class HomePage extends LitElement {
     super.connectedCallback();
 
     fetch("https://conduit.productionready.io/api/articles?limit=10")
-      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+       
+       return res.json()})
       .then(data => {
+        console.log(data);
         this.globalFeeds = [...data.articles];
         this.globalPages = data.articlesCount / 10;
         this.articles = this.globalFeeds;

@@ -10,28 +10,44 @@ class ArticleView extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.slug = this.location.params.slug;
-    fetch(`https://conduit.productionready.io/api/articles/${this.slug}`)
+    fetch("https://conduit.productionready.io/api/articles/" + this.slug, {
+      method: "GET",
+      headers: { "Content-Type": "application/json", Accept: "appication/json" }
+    })
       .then(response => response.json())
       .then(data => {
-        console.log("data >> ", data);
-        this.data = { ...data };
+        this.data = data;
+        this.userImage = data.article.author.image;
         this.dataLoaded = true;
         this.fetchComment();
       });
   }
   constructor() {
     super();
-    this.slug = "";
     this.dataLoaded = false;
-    this.data = {};
-    this.comment = {};
-    this.displayComment = "";
+    this.data = "";
+    this.comment = "";
+
+    this.displayComments = [];
+    this.userImage = "";
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+
+    this.isToken =
+      window.localStorage.getItem("token") === null ||
+      window.localStorage.getItem("token") === ""
+        ? false
+        : true;
+
+    this.isUser = window.localStorage.getItem("username");
   }
 
   static get styles() {
     return css`
+      * {
+        margin: 0px;
+        padding: 0px;
+      }
       .article-info-container {
         background-color: #333333;
       }
@@ -41,6 +57,10 @@ class ArticleView extends LitElement {
         width: 80%;
         margin: 0 auto;
       }
+      .belowComment-section {
+        padding: 10px;
+        display: flex;
+      }
       .article-body-container {
         border-bottom: 1px solid grey;
         width: 80%;
@@ -48,28 +68,69 @@ class ArticleView extends LitElement {
         padding: 10px 0 50px 0;
       }
       .comment-section {
-        width: 50%;
-        margin: 0 auto;
+        width: 70%;
+        margin: 10px auto;
+        border-radius: 5px;
+        background-color: #f5f5f5;
+        border: 1px solid #888888bb;
       }
-      .right {
-        float: right;
+      .cmt-author {
+        vertical-align: middle;
+        padding-top: 8px;
+        padding-left: 6px;
+        font-size: 12px;
+      }
+      .avatar {
+        vertical-align: middle;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+      .btn-wrapper {
+        flex-grow: 1;
+        display: flex;
+        justify-content: flex-end;
       }
     `;
   }
 
   static get properties() {
     return {
-      dataLoaded: { type: Boolean }
+      dataLoaded: { type: Boolean },
+      displayComments: { type: Array }
     };
   }
   handleChange(e) {
     this[e.target.name] = e.target.value;
   }
+
   fetchComment() {
     fetch(
       `https://conduit.productionready.io/api/articles/${this.slug}/comments`,
       {
         method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "appication/json"
+        }
+      }
+    )
+      .then(response => {
+        if (!response.ok) throw response;
+        return response.json();
+      })
+      .then(data => {
+        this.displayComments = data.comments;
+        console.log("comments", this.displayComments); //redirect to the article page
+      })
+      .catch(error => console.error("Error", error));
+  }
+
+  deleteSubmit(cmtid) {
+    fetch(
+      `https://conduit.productionready.io/api/articles/${this.slug}/comments/${cmtid}`,
+      {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Accept: "appication/json",
@@ -82,11 +143,12 @@ class ArticleView extends LitElement {
         return response.json();
       })
       .then(data => {
-        console.log("comment added");
-        this.displayComment = data; //redirect to the article page
+        console.log(data);
+        this.fetchComment(); //redirect to the article page
       })
-      .catch(error => console.error("Error", error));
+      .catch(error => console.error("Error", error.json()));
   }
+
   handleSubmit() {
     const commentData = {
       comment: {
@@ -111,14 +173,16 @@ class ArticleView extends LitElement {
         return response.json();
       })
       .then(data => {
-        console.log("comment loaded");
-        console.log(data); //redirect to the article page
+        console.log("After Comment added", data);
+        this.fetchComment(); //redirect to the article page
       })
       .catch(error => console.error("Error", error));
   }
 
   render() {
     if (this.dataLoaded) {
+      console.log(this.data);
+
       return html`
         <navigation-tag></navigation-tag>
 
@@ -137,18 +201,72 @@ class ArticleView extends LitElement {
           <p>${this.data.article.body}</p>
         </div>
 
-        <div class="comment-section">
-          <textarea-tag
-            placeholder="Write a comment"
-            .setValue=${this.handleChange}
-            name="comment"
-          ></textarea-tag>
-          <btn-tag
-            buttonName="post comment"
-            class="right"
-            .handleClick=${this.handleSubmit}
-          ></btn-tag>
-        </div>
+        ${this.isToken
+          ? html`
+              <div class="comment-section">
+                <textarea-tag
+                  placeholder="Write a comment..."
+                  .setValue=${this.handleChange}
+                  name="comment"
+                >
+                </textarea-tag>
+                <div class="belowComment-section">
+                  <img
+                    src=${this.userImage ||
+                      "https://www.w3schools.com/howto/img_avatar.png"}
+                    alt="Avatar"
+                    class="avatar"
+                  />
+                  <div class="btn-wrapper">
+                    <btn-tag
+                      buttonName="post comment"
+                      .handleClick=${this.handleSubmit}
+                    >
+                    </btn-tag>
+                  </div>
+                </div>
+              </div>
+            `
+          : null}
+        ${this.displayComments.length === 0
+          ? null
+          : this.displayComments.map(
+              cmt => html`
+                <div class="comment-section">
+                  <textarea-tag
+                    value=${cmt.body}
+                    disabled=${true}
+                    .setValue=${this.handleChange}
+                    name="comment"
+                  >
+                  </textarea-tag>
+                  <div class="belowComment-section">
+                    <img
+                      src=${this.userImage ||
+                        "https://www.w3schools.com/howto/img_avatar.png"}
+                      alt="Avatar"
+                      class="avatar"
+                    />
+                    <span class="cmt-author">${cmt.author.username}</span>
+                    ${this.isUser === cmt.author.username
+                      ? html`
+                          <div class="btn-wrapper">
+                            <btn-tag
+                              className="btn-logout"
+                              buttonName="Delete"
+                              .handleClick=${this.deleteSubmit.bind(
+                                this,
+                                cmt.id
+                              )}
+                            >
+                            </btn-tag>
+                          </div>
+                        `
+                      : null}
+                  </div>
+                </div>
+              `
+            )}
       `;
     } else {
       return html`

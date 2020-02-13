@@ -16,6 +16,7 @@
     "@polymer/polymer": "^3.1.0",
     "@vaadin/router": "^1.6.0",
     "@webcomponents/webcomponentsjs": "^2.2.4",
+    "dotenv": "^8.2.0",
     "fa-icons": "^0.1.9",
     "lit-element": "^2.2.1",
     "lit-element-router": "^2.0.0-rc.16",

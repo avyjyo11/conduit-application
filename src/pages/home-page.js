@@ -27,11 +27,7 @@ class HomePage extends LitElement {
     this.likePost = this.likePost.bind(this);
     this.tagClick = this.tagClick.bind(this);
   this.isToken = window.localStorage.getItem("token") ? true : false;
-    // this.isToken =
-    // window.localStorage.getItem("token") === null ||
-    // window.localStorage.getItem("token") === ""
-    //   ? false
-    //   : true;
+
   }
 
   static get properties() {

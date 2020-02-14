@@ -60,6 +60,16 @@ class YourSetting extends LitElement {
 
     }
   }
+  getFormValidationError(errorObject) {
+    const errorList = [];
+
+    Object.keys(errorObject).forEach(key => {
+      errorObject[key].forEach(errorMessage => {
+        errorList.push(`${key + " " + errorMessage}`);
+      });
+    });
+    return errorList;
+  }
 
   static get styles() {
     return css`
@@ -185,7 +195,6 @@ class YourSetting extends LitElement {
     let url=`/user`;
     put(url,data)
     .then(data => {
-      console.log("Success:", data.user.token);
       localStorage.setItem("token", data.user.token);
       Router.go("/");
     })

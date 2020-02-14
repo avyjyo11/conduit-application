@@ -8,6 +8,7 @@ import "../components/heart-toggler";
 import "../components/footer.component";
 import { cssStyles } from "../styles/cssStyles";
 import { Router } from "@vaadin/router";
+import { get,getwithauth,put } from "../services/api.services";
 
 class UserProfile extends LitElement {
   constructor() {
@@ -25,11 +26,8 @@ class UserProfile extends LitElement {
     this.userImage = "https://www.w3schools.com/howto/img_avatar.png";
     this.pageChange = this.pageChange.bind(this);
 
-    this.isToken =
-      window.localStorage.getItem("token") === null ||
-      window.localStorage.getItem("token") === ""
-        ? false
-        : true;
+    this.isToken = window.localStorage.getItem("token") ? true: false;
+
   }
 
   static get properties() {
@@ -46,44 +44,31 @@ class UserProfile extends LitElement {
     super.connectedCallback();
     if (this.isToken) {
       try {
-        let { user } = await fetch(
-          `https://conduit.productionready.io/api/user`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Token ${window.localStorage.getItem("token")}`
-            }
-          }
-        ).then(res => res.json());
+        let url=`/user`;
+
+        let { user }= await getwithauth(url);
         this.username = user.username;
         this.userBio = user.bio;
         this.userImage = user.image;
 
-        let { tags } = await fetch(
-          "https://conduit.productionready.io/api/tags?limit=20"
-        ).then(res => res.json());
+          url=`/tags?limit=20`;
 
-        console.log(tags);
+        let { tags } = await get(url);
+
         this.tags = [...tags];
+        url=`/articles?author=${this.username}&limit=10`;
+        var { articles, articlesCount } = await get(url);
 
-        var { articles, articlesCount } = await fetch(
-          `https://conduit.productionready.io/api/articles?author=${this.username}&limit=10`
-        ).then(res => res.json());
         this.myArticles = [...articles];
         this.myPages = articlesCount / 10;
-        console.log("my >>", this.myPages);
 
-        var { articles, articlesCount } = await fetch(
-          `https://conduit.productionready.io/api/articles?favorited=${this.username}&limit=10`
-        ).then(res => res.json());
+        url =`/articles?favorited=${this.username}&limit=10`;
+        var { articles, articlesCount } = await get(url);
         this.favArticles = [...articles];
         this.favPages = articlesCount / 10;
         this.articles = this.myArticles;
         this.pages = this.myPages;
       } catch (error) {
-        console.log(error);
       }
     }
   }
@@ -233,15 +218,16 @@ class UserProfile extends LitElement {
     let offset = (e.target.innerText - 1) * 10;
     const fetchURL =
       this.activeTab === "my"
-        ? `https://conduit.productionready.io/api/articles?author=${this.username}&limit=10&offset=${offset}`
-        : `https://conduit.productionready.io/api/articles?favorited=${this.username}&limit=10&offset=${offset}`;
-    fetch(fetchURL)
-      .then(res => res.json())
-      .then(data => {
-        this.articles = [...data.articles];
-        window.scrollTo(0, 0);
-      })
-      .catch(err => console.log(err));
+        ? `/articles?author=${this.username}&limit=10&offset=${offset}`
+        : `/articles?favorited=${this.username}&limit=10&offset=${offset}`;
+
+        get(fetchURL)
+        .then(data => {
+          this.articles = [...data.articles];
+          window.scrollTo(0, 0);
+        })
+        .catch(err => console.log(err));
+      
   }
 
   editSettingsClick(e) {
@@ -259,7 +245,6 @@ class UserProfile extends LitElement {
     }
 
     const navbar = html`
-      <navigation-tag></navigation-tag>
     `;
 
     const banner = html`
@@ -345,7 +330,6 @@ class UserProfile extends LitElement {
     `;
 
     const footer = html`
-      <footer-section></footer-section>
     `;
 
     return html`

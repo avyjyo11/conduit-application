@@ -5,11 +5,12 @@ import "../components/input.component";
 import "../components/texrarea.component";
 import "../components/footer.component";
 import { Router } from "@vaadin/router";
+import { getwithauth,put } from "../services/api.services";
 
 class YourSetting extends LitElement {
   constructor() {
     super();
-    this._api = "https://conduit.productionready.io/api";
+   // this._api = "https://conduit.productionready.io/api";
 
     this._update = this._update.bind(this);
     this._handleChange = this._handleChange.bind(this);
@@ -23,11 +24,8 @@ class YourSetting extends LitElement {
     this.showError = false;
     this._errors;
 
-    this.isToken =
-      window.localStorage.getItem("token") === null ||
-      window.localStorage.getItem("token") === ""
-        ? false
-        : true;
+    this.isToken = window.localStorage.getItem("token") ? true: false;
+
   }
   static get properties() {
     return {
@@ -49,23 +47,17 @@ class YourSetting extends LitElement {
 
   getuser() {
     if (this.isToken) {
-      fetch(`https://conduit.productionready.io/api/user`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": `Token ${window.localStorage.getItem("token")}`
-        }
+      let url=`/user`;
+      getwithauth(url)
+      .then(data => {
+        console.log(data);
+        this._userbio = data.user.bio || "";
+        this._imagelink = data.user.image || "";
+        this._userName = data.user.username;
+        this._email = data.user.email;
       })
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-          this._userbio = data.user.bio || "";
-          this._imagelink = data.user.image || "";
-          this._userName = data.user.username;
-          this._email = data.user.email;
-        })
-        .catch(err => console.log(err));
+      .catch(err => console.log(err));
+
     }
   }
 
@@ -106,7 +98,6 @@ class YourSetting extends LitElement {
   }
   render() {
     return html`
-      <navigation-tag></navigation-tag>
       <div id="wrapper">
         <p id="yoursetting">Your Setting</p>
 
@@ -167,7 +158,6 @@ class YourSetting extends LitElement {
           ></btn-tag>
         </div>
       </div>
-      <footer-section></footer-section>
     `;
   }
 
@@ -182,7 +172,6 @@ class YourSetting extends LitElement {
   }
 
   _update(e) {
-    console.log("update >> ", this._newPassword);
     const data = {
       user: {
         username: this._userName,
@@ -193,35 +182,18 @@ class YourSetting extends LitElement {
       }
     };
 
-    fetch(`https://conduit.productionready.io/api/user`, {
-      method: "PUT", // or 'PUT'
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": `Token ${window.localStorage.getItem("token")}`
-      },
-      body: JSON.stringify(data)
+    let url=`/user`;
+    put(url,data)
+    .then(data => {
+      console.log("Success:", data.user.token);
+      localStorage.setItem("token", data.user.token);
+      Router.go("/");
     })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(error => {
-            throw error;
-          });
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log("Success:", data.user.token);
-        localStorage.setItem("token", data.user.token);
-        Router.go("/");
-      })
-      .catch(error => {
-        console.log(error.errors);
+    .catch(error => {
 
-        this._errors = error && error.errors;
-        console.log("Error:", this._errors);
-        this.showError = true;
-      });
+      this._errors = error && error.errors;
+      this.showError = true;
+    });
   }
 }
 

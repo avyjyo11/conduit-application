@@ -9,16 +9,10 @@ class Signup extends LitElement {
 
   render() {
     return html`
-      <navigation-tag></navigation-tag>
       <signupcomponent-tag></signupcomponent-tag>
     `;
   }
 
-  render() {
-    return html`
-      <navigation-tag></navigation-tag>
-      <signupcomponent-tag></signupcomponent-tag>
-    `;
-  }
+
 }
 customElements.define("signup-tag", Signup);

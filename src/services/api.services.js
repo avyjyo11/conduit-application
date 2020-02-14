@@ -51,6 +51,22 @@ export function post(endPoint, data) {
     });
 }
 
+export function postwithoutAuth(endPoint, data) {
+  return fetch(baseUrl+endPoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data)
+  })
+    .then(res => {
+      if (!res.ok) throw res;
+      return res.json();
+    })
+    .catch(err => {
+      throw err;
+    });
+}
 
 export function put(endPoint, data) {
   return fetch(baseUrl+endPoint, {

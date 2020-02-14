@@ -6,10 +6,7 @@ class Navigation extends LitElement {
     this.username = "username";
     this.userImage = null;
     this.isToken =
-      window.localStorage.getItem("token") === null ||
-      window.localStorage.getItem("token") === ""
-        ? false
-        : true;
+      window.localStorage.getItem("token") ? true : false;
 
   
   }

@@ -5,23 +5,22 @@ import { Router } from "@vaadin/router";
 class SignupComponent extends LitElement {
   constructor() {
     super();
-    this._api = "https://conduit.productionready.io/api";
 
-    this._userName = "";
-    this._email = "";
-    this._password = "";
+    this.userName = "";
+    this.email = "";
+    this.password = "";
 
     this.showError = false;
-    this._errors;
+    this.errors;
 
-    this._handleChange = this._handleChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
 
-    this._singUp = this._singUp.bind(this);
+    this.singUp = this.singUp.bind(this);
   }
   static get properties() {
     return {
       showError: { type: Boolean },
-      _errors: { type: Array }
+      errors: { type: Array }
     };
   }
 
@@ -81,7 +80,7 @@ class SignupComponent extends LitElement {
         <p id="signin">Sign up</p>
         <p class="green">Already have an account</p>
         ${this.showError
-          ? this.getFormValidationError(this._errors).map(
+          ? this.getFormValidationError(this.errors).map(
               msg =>
                 html`
                   <li>${msg}</li>
@@ -90,23 +89,23 @@ class SignupComponent extends LitElement {
           : null}
         <form>
           <input-tag
-            .setValue="${this._handleChange}"
+            .setValue="${this.handleChange}"
             placeholder="Username"
-            name="_userName"
+            name="userName"
           ></input-tag>
           <input-tag
-            .setValue="${this._handleChange}"
+            .setValue="${this.handleChange}"
             placeholder="Email"
-            name="_email"
+            name="email"
           ></input-tag>
           <input-tag
-            .setValue="${this._handleChange}"
+            .setValue="${this.handleChange}"
             placeholder="Password"
-            name="_password"
+            name="password"
           ></input-tag>
           <div id="btn-wrapper">
             <btn-tag
-              .handleClick="${this._singUp}"
+              .handleClick="${this.singUp}"
               buttonName="Sign up"
               className="btn"
             ></btn-tag>
@@ -116,21 +115,21 @@ class SignupComponent extends LitElement {
     `;
   }
 
-  _handleChange(e) {
+  handleChange(e) {
     this[e.target.name] = e.target.value;
   }
 
-  _singUp(e) {
-    console.log("singup", this._userName);
+  singUp(e) {
+    console.log("singup", this.userName);
     const data = {
       user: {
-        username: this._userName,
-        email: this._email,
-        password: this._password
+        username: this.userName,
+        email: this.email,
+        password: this.password
       }
     };
 
-    fetch(this._api + "/users", {
+    fetch(this.api + "/users", {
       method: "POST", // or 'PUT'
       headers: {
         "Content-Type": "application/json"
@@ -153,9 +152,9 @@ class SignupComponent extends LitElement {
       .catch(error => {
         this.showError = true;
         console.log(error.errors);
-        // this._errors= Object.entries(error.errors);
-        this._errors = error && error.errors;
-        console.log("Error:", this._errors);
+        // this.errors= Object.entries(error.errors);
+        this.errors = error && error.errors;
+        console.log("Error:", this.errors);
       });
   }
 }

@@ -1,11 +1,15 @@
 import { html, LitElement, css } from "lit-element";
 import { cssStyles } from "../styles/cssStyles";
+import {
+  DEFAULT_IMG as defaultImg,
+  DEFAULT_NAME as defaultName
+} from "../constants/defaults.config";
 class UserInfo extends LitElement {
   constructor() {
     super();
-    this.username = "";
+    this.username = defaultName;
     this.postDate = new Date().toString();
-    this.userImg = "http://pngimg.com/uploads/smiley/smiley_PNG36233.png";
+    this.userImg = defaultImg;
   }
 
   static get properties() {

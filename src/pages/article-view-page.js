@@ -231,7 +231,6 @@ class ArticleView extends LitElement{
             
         return html` 
         
-        <navigation-tag></navigation-tag>
         
             <div class="article-info-container">
                 <div class="article-title-container">

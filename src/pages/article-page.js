@@ -82,7 +82,6 @@ class ArticlePage extends LitElement {
   render() {
     return html`
       <div class="container">
-        <navigation-tag></navigation-tag>
         <form class="form-container" action="post">
           <input-tag
             placeholder="Article Title"

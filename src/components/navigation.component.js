@@ -10,12 +10,15 @@ class Navigation extends LitElement {
       window.localStorage.getItem("token") === ""
         ? false
         : true;
+
+  
   }
 
   static get properties() {
     return {
       isToken: { type: Boolean },
-      username: String
+      username: String,
+      
     };
   }
 
@@ -41,12 +44,14 @@ class Navigation extends LitElement {
           padding-left: 2px;
           padding-right: 2px;
         }
-
+        .active{
+          font-weight:bold;
+        }
         nav a:hover {
           font-weight: bold;
           padding: 0;
         }
-
+     
         .avatar {
           vertical-align: middle;
           width: 40px;
@@ -93,7 +98,7 @@ class Navigation extends LitElement {
             <ul>
               ${!this.isToken
                 ? html`
-                    <li><a href="/">Home</a></li>
+                    <li class="active"><a  href="/">Home</a></li>
                     <li><a href="/sign-in">Sign in</a></li>
                     <li><a href="/sign-up">Sign up</a></li>
                   `

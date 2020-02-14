@@ -26,7 +26,12 @@ class HomePage extends LitElement {
     this.pageChange = this.pageChange.bind(this);
     this.likePost = this.likePost.bind(this);
     this.tagClick = this.tagClick.bind(this);
-    this.isToken = window.localStorage.getItem("token") ? false : true;
+  this.isToken = window.localStorage.getItem("token") ? true : false;
+    // this.isToken =
+    // window.localStorage.getItem("token") === null ||
+    // window.localStorage.getItem("token") === ""
+    //   ? false
+    //   : true;
   }
 
   static get properties() {
@@ -62,23 +67,14 @@ class HomePage extends LitElement {
       .catch(err => console.log(err));
 
     if (this.isToken) {
-      fetch(`https://conduit.productionready.io/api/user`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Token ${window.localStorage.getItem("token")}`
-        }
-      })
-        .then(res => res.json())
-        .then(data => {
+     let url=`/user`
+      get(url)
+        .then(data=>{
           this.username = data.user.username;
-          return fetch(
-            `https://conduit.productionready.io/api/articles?author=${this.username}&limit=10`
-          );
+          let url=`/articles?author=${this.username}&limit=10`;
+          return get(url);
         })
-        .then(res => res.json())
-        .then(data => {
+        .then(data=>{
           this.yourPages = data.articlesCount / 10;
           this.yourFeeds = [...data.articles];
         })
@@ -208,31 +204,28 @@ class HomePage extends LitElement {
   pageChange(e) {
     let offset = (e.target.innerText - 1) * 10;
     let fetchURL;
+   
     if (this.activeTab === "global") {
       if (this.selectedTag === "") {
-        fetchURL = `https://conduit.productionready.io/api/articles?limit=10&offset=${offset}`;
+         fetchURL=`/articles?limit=10&offset=${offset}`;
       } else {
-        fetchURL = `https://conduit.productionready.io/api/articles?limit=10&offset=${offset}&tag=${this.selectedTag}`;
+          fetchURL=`/articles?limit=10&offset=${offset}&tag=${this.selectedTag}`
       }
     } else {
       if (this.selectedTag === "") {
-        fetchURL = `https://conduit.productionready.io/api/articles?author=${this.username}&limit=10&offset=${offset}`;
+        fetchURL=`/articles?author=${this.username}&limit=10&offset=${offset}`;
       } else {
-        fetchURL = `https://conduit.productionready.io/api/articles?author=${this.username}&limit=10&offset=${offset}&tag=${this.selectedTag}`;
+        fetchURL=`articles?author=${this.username}&limit=10&offset=${offset}&tag=${this.selectedTag}`;
       }
     }
-    // const fetchURL =
-    //   this.activeTab === "global"
-    //     ? `https://conduit.productionready.io/api/articles?limit=10&offset=${offset}`
-    //     : `https://conduit.productionready.io/api/articles?author=${this.username}&limit=10&offset=${offset}`;
+      
+    get(fetchURL)
+    .then(data => {
+      this.articles = [...data.articles];
+      window.scrollTo(0, 0);
+    })
+    .catch(err => console.log(err));
 
-    fetch(fetchURL)
-      .then(res => res.json())
-      .then(data => {
-        this.articles = [...data.articles];
-        window.scrollTo(0, 0);
-      })
-      .catch(err => console.log(err));
   }
 
   likePost(e) {
@@ -249,16 +242,17 @@ class HomePage extends LitElement {
     this.selectedTag = e.target.innerText;
     let url =
       this.activeTab === "global"
-        ? `https://conduit.productionready.io/api/articles?tag=${this.selectedTag}&limit=10`
-        : `https://conduit.productionready.io/api/articles?author=${this.username}&tag=${this.selectedTag}&limit=10`;
-    fetch(url)
-      .then(res => res.json())
+        ? `/articles?tag=${this.selectedTag}&limit=10`
+        : `articles?author=${this.username}&tag=${this.selectedTag}&limit=10`;
+   
+      get(url)
       .then(data => {
         this.articles = [...data.articles];
         this.pages = data.articlesCount / 10;
         console.log("tagclicked >>", this.articles);
       })
       .catch(err => console.log(err));
+
   }
 
   render() {
@@ -268,7 +262,6 @@ class HomePage extends LitElement {
     }
 
     const navbar = html`
-      <navigation-tag></navigation-tag>
     `;
 
     const banner = html`
@@ -358,7 +351,6 @@ class HomePage extends LitElement {
     `;
 
     const footer = html`
-      <footer-section></footer-section>
     `;
 
     return html`

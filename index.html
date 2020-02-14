@@ -5,11 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Conduit</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        font-size: 1em;
+        font-family: Arial, Helvetica, sans-serif;
+        box-sizing: border-box;
+      }
+    </style>
   </head>
-  <body>
-    <conduit-app></conduit-app>
 
-    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script type="module" src="src/components/conduit-app.js"></script>
+  <body>
+    <!-- <conduit-app></conduit-app> -->
+    <navigation-tag></navigation-tag>
+    <main></main>
+    <!-- <footer-section></footer-section> -->
+    <!-- <a href="/sign-in">Sign in</a> -->
+
+    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+    <script src="node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
+    <script src="/app.js" type="module"></script>
+    <script src="/src/components/navigation.component.js" type="module"></script>
+    <script src="/src/components/footer.component.js" type="module"></script>
   </body>
 </html>

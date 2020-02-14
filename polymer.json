@@ -1,6 +1,6 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/components/conduit-app.js",
+  "shell": "app.js",
   "sources": ["images/*"],
   "extraDependencies": ["node_modules/@webcomponents/webcomponentsjs/**"],
   "builds": [

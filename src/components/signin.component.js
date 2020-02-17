@@ -14,7 +14,7 @@ class SigninComponent extends LitElement {
     this.password = "";
 
     this.showError = false;
-    this.errors;
+    this.errors=[];
   }
   static get properties() {
     return {
@@ -112,35 +112,33 @@ class SigninComponent extends LitElement {
       }
     };
 
-    fetch("/users/login", {
-      method: "POST", // or 'PUT'
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
+    let url='/users/login'
+    postwithoutAuth(url,data)
+    .then((data) => {
+      this.showError=false;
+      this._errors=[];
+     
+   localStorage.setItem('token', data.user.token);
+   console.log('Success:', data.user.token);
+   
+   Router.go('/');
+   location.pathname = "/";
+   
     })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(error => {
-            throw error;
-          });
-        }
-        return response.json();
-      })
-      .then(data => {
-        this.showError = false;
-        this.errors = [];
+    .catch((error) => {
+      
+        error.then((data)=>
+        {   console.log(data);
+          this.errors= Object.values(data.errors);
+          this.showError=true;
+        
+        });
+  
+       
+    });
 
-        localStorage.setItem("token", data.user.token);
-        localStorage.setItem("username", data.user.username);
-        console.log("Success:", data.user.token);
-        Router.go("/");
-      })
-      .catch(error => {
-        this.showError = true;
-        this.errors = Object.values(error.errors);
-      });
-  }
+}
+  
 }
 
 customElements.define("signincomponent-tag", SigninComponent);

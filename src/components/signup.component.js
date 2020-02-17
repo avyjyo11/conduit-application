@@ -2,6 +2,7 @@ import { html, LitElement, css } from "lit-element";
 import "./button.component";
 import "./input.component";
 import { Router } from "@vaadin/router";
+import { postwithoutAuth } from "../services/api.services";
 class SignupComponent extends LitElement {
   constructor() {
     super();
@@ -16,12 +17,20 @@ class SignupComponent extends LitElement {
     this.handleChange = this.handleChange.bind(this);
 
     this.singUp = this.singUp.bind(this);
+    this.isToken = window.localStorage.getItem("token") ? true : false;
   }
   static get properties() {
     return {
       showError: { type: Boolean },
       errors: { type: Array }
     };
+  }
+  connectedCallback()
+  {
+    if(this.isToken)
+    {
+      Router.go('/');
+    }
   }
 
   getFormValidationError(errorObject) {
@@ -122,40 +131,34 @@ class SignupComponent extends LitElement {
   singUp(e) {
     console.log("singup", this.userName);
     const data = {
-      user: {
-        username: this.userName,
-        email: this.email,
-        password: this.password
+      "user": {
+        "username": this.userName ,
+        "email": this.email ,
+        "password": this.password
       }
     };
 
-    fetch(this.api + "/users", {
-      method: "POST", // or 'PUT'
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
+    console.log(data);
+    let url='/users';
+
+    postwithoutAuth(url,data)
+    .then((data) => {
+      this.showError=false;
+      this._errors=[];
+      localStorage.setItem('token', data.user.token);
+      console.log('Success:', data.user.token);
+       Router.go('/');
+       location.pathname = "/";
     })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(error => {
-            throw error;
-          });
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log("Success:", data.user.token);
-        localStorage.setItem("token", data.user.token);
-        Router.go("/");
-      })
-      .catch(error => {
-        this.showError = true;
-        console.log(error.errors);
-        // this.errors= Object.entries(error.errors);
-        this.errors = error && error.errors;
-        console.log("Error:", this.errors);
-      });
+    .catch((error) => {
+        error.then((data)=>
+        {   console.log(data);
+          this.errors= Object.values(data.errors);
+          this.showError=true;
+        
+        });
+    });
+
   }
 }
 

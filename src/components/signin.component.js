@@ -1,30 +1,25 @@
 import { html, LitElement, css } from "lit-element";
 import "./button.component";
 import "./input.component";
-import {Router} from '@vaadin/router';
-
-
-
+import { Router } from "@vaadin/router";
+import { postwithoutAuth } from "../services/api.services";
 
 class SigninComponent extends LitElement {
   constructor() {
     super();
-    this._api='https://conduit.productionready.io/api';
-    this._handleChange=this._handleChange.bind(this);
-    this._singIn=this._singIn.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.singIn = this.singIn.bind(this);
 
-    this._email = "";
-    this._password="";
+    this.email = "";
+    this.password = "";
 
-    this.showError=false;
-    this._errors;
-
+    this.showError = false;
+    this.errors;
   }
   static get properties() {
     return {
       showError: { type: Boolean },
-      _errors:{type:Array},
-      
+      errors: { type: Array }
     };
   }
 
@@ -34,12 +29,12 @@ class SigninComponent extends LitElement {
         margin: 0px;
         padding: 0px;
       }
-      li{
-        margin:15px;
-      
-        text-align:left;
+      li {
+        margin: 15px;
+
+        text-align: left;
         color: Red;
-    }
+      }
       #signin {
         padding-top: 20px;
         color: #373a3c;
@@ -69,41 +64,53 @@ class SigninComponent extends LitElement {
 
   render() {
     return html`
-        <div  id="wrapper">
-            <p id="signin"> Sign In </p>
-            <p class="green"> Need an account </p>
-            ${this.showError?this._errors.map(
-                 ( array,index) => {
-               
-                return array.map(msg => html`<li> Email or Password : ${msg}</li>`)
-                 }
-                  )
-                  :null}
-            <form>
-            <input-tag .setValue ="${this._handleChange}"placeholder="Email" name="_email"></input-tag>
-            <input-tag .setValue="${this._handleChange}"placeholder="Password" name="_password"></input-tag>
-            <div id="btn-wrapper">
-            <btn-tag .handleClick="${this._singIn}"  buttonName="Sign In" className="btn"></btn-tag>
+      <div id="wrapper">
+        <p id="signin">Sign In</p>
+        <p class="green">Need an account</p>
+        ${this.showError
+          ? this.errors.map((array, index) => {
+              return array.map(
+                msg =>
+                  html`
+                    <li>Email or Password : ${msg}</li>
+                  `
+              );
+            })
+          : null}
+        <form>
+          <input-tag
+            .setValue="${this.handleChange}"
+            placeholder="Email"
+            name="email"
+          ></input-tag>
+          <input-tag
+            .setValue="${this.handleChange}"
+            placeholder="Password"
+            name="password"
+          ></input-tag>
+          <div id="btn-wrapper">
+            <btn-tag
+              .handleClick="${this.singIn}"
+              buttonName="Sign In"
+              className="btn"
+            ></btn-tag>
           </div>
-        </form> 
-        </div>
-        `;
+        </form>
+      </div>
+    `;
   }
 
-  _handleChange(e)
-  {
-    this[e.target.name]=e.target.value;
-  
+  handleChange(e) {
+    this[e.target.name] = e.target.value;
   }
 
-  _singIn(e)
-  {
-    
-  const data = {   "user":{
-   
-    "email": this._email,
-    "password": this._password,
-  } };
+  singIn(e) {
+    const data = {
+      user: {
+        email: this.email,
+        password: this.password
+      }
+    };
 
   fetch(this._api+"/users/login", {
     method: 'POST', // or 'PUT'
@@ -136,4 +143,5 @@ class SigninComponent extends LitElement {
 }
   
 }
+
 customElements.define("signincomponent-tag", SigninComponent);

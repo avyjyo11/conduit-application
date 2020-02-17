@@ -34,14 +34,7 @@ class ArticlePage extends LitElement {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  insertData() {}
 
-  /**
-   *
-   *this function is called when the user press the Publish Article Button,
-   handleSubmit handle the fetch, and routing
-   * @memberof ArticlePage
-   */
   handleSubmit() {
     const token = localStorage.getItem("token");
     const data = {
@@ -51,12 +44,13 @@ class ArticlePage extends LitElement {
         body: this.body
       }
     };
+
     fetch("https://conduit.productionready.io/api/articles", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "appication/json",
-        "Authorization": `Token ${token}`
+        Accept: "appication/json",
+        Authorization: `Token ${token}`
       },
       body: JSON.stringify(data)
     })
@@ -70,15 +64,10 @@ class ArticlePage extends LitElement {
       .catch(error => console.error("Error", error));
   }
 
-  /**
-   *
-   *this function is called everytime when input value is changed
-   * @param {*} e event
-   * @memberof ArticlePage
-   */
   handleChange(e) {
     this[e.target.name] = e.target.value;
   }
+
   render() {
     return html`
       <div class="container">

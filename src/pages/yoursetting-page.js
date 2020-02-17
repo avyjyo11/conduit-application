@@ -10,7 +10,6 @@ import { getwithauth,put } from "../services/api.services";
 class YourSetting extends LitElement {
   constructor() {
     super();
-   // this._api = "https://conduit.productionready.io/api";
 
     this._update = this._update.bind(this);
     this._handleChange = this._handleChange.bind(this);

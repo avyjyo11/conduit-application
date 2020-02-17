@@ -1,21 +1,21 @@
 import { html, LitElement, css } from "lit-element";
 import { cssStyles } from "../styles/cssStyles";
+import {
+  DEFAULT_IMG as defaultImg,
+  DEFAULT_NAME as defaultName
+} from "../constants/defaults.config";
 class Navigation extends LitElement {
   constructor() {
     super();
-    this.username = "username";
-    this.userImage = null;
-    this.isToken =
-      window.localStorage.getItem("token") ? true : false;
-
-  
+    this.username = defaultName;
+    this.userImage = defaultImg;
+    this.isToken = window.localStorage.getItem("token") ? true : false;
   }
 
   static get properties() {
     return {
       isToken: { type: Boolean },
-      username: String,
-      
+      username: { type: String }
     };
   }
 
@@ -41,14 +41,14 @@ class Navigation extends LitElement {
           padding-left: 2px;
           padding-right: 2px;
         }
-        .active{
-          font-weight:bold;
+        .active {
+          font-weight: bold;
         }
         nav a:hover {
           font-weight: bold;
           padding: 0;
         }
-     
+
         .avatar {
           vertical-align: middle;
           width: 40px;
@@ -95,7 +95,7 @@ class Navigation extends LitElement {
             <ul>
               ${!this.isToken
                 ? html`
-                    <li class="active"><a  href="/">Home</a></li>
+                    <li class="active"><a href="/">Home</a></li>
                     <li><a href="/sign-in">Sign in</a></li>
                     <li><a href="/sign-up">Sign up</a></li>
                   `

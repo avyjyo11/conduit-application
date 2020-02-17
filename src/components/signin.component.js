@@ -125,7 +125,6 @@ class SigninComponent extends LitElement {
     this._errors=[];
    
  localStorage.setItem('token', data.user.token);
- localStorage.setItem('username',data.user.username);
  console.log('Success:', data.user.token);
  Router.go('/');
   })

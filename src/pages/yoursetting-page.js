@@ -173,7 +173,9 @@ class YourSetting extends LitElement {
   _logOut(e) {
     console.log("logout");
     localStorage.clear();
+   
     Router.go("/");
+    location.pathname = "/";
   }
 
   _handleChange(e) {
@@ -195,7 +197,9 @@ class YourSetting extends LitElement {
     put(url,data)
     .then(data => {
       localStorage.setItem("token", data.user.token);
+     
       Router.go("/");
+     
     })
     .catch(error => {
 

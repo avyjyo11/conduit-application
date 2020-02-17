@@ -14,7 +14,7 @@ class SigninComponent extends LitElement {
     this.password = "";
 
     this.showError = false;
-    this.errors;
+    this.errors=[];
   }
   static get properties() {
     return {
@@ -112,34 +112,31 @@ class SigninComponent extends LitElement {
       }
     };
 
-  fetch(this._api+"/users/login", {
-    method: 'POST', // or 'PUT'
-    headers: {
-      'Content-Type': 'application/json',
-    
-    },
-    body: JSON.stringify(data),
-  })
-  
-  .then((response) => {
-      if(!response.ok){
-       return response.json().then(error =>{ throw error });
-      };
-      return response.json()
-  })
-  .then((data) => {
-    this.showError=false;
-    this._errors=[];
-   
- localStorage.setItem('token', data.user.token);
- console.log('Success:', data.user.token);
- Router.go('/');
-  })
-  .catch((error) => {
-      this.showError=true;
-      this._errors= Object.values(error.errors);
+    let url='/users/login'
+    postwithoutAuth(url,data)
+    .then((data) => {
+      this.showError=false;
+      this._errors=[];
      
-  });
+   localStorage.setItem('token', data.user.token);
+   console.log('Success:', data.user.token);
+   
+   Router.go('/');
+   location.pathname = "/";
+   
+    })
+    .catch((error) => {
+      
+        error.then((data)=>
+        {   console.log(data);
+          this.errors= Object.values(data.errors);
+          this.showError=true;
+        
+        });
+  
+       
+    });
+
 }
   
 }

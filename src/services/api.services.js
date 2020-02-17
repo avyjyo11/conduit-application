@@ -41,10 +41,11 @@ export function post(endPoint, data) {
     body: JSON.stringify(data)
   })
     .then(res => {
-      if (!res.ok) throw res;
+      if (!res.ok) throw res.json();
       return res.json();
     })
     .catch(err => {
+     // console.log(err.json());
       throw err;
     });
 }
@@ -58,7 +59,7 @@ export function postwithoutAuth(endPoint, data) {
     body: JSON.stringify(data)
   })
     .then(res => {
-      if (!res.ok) throw res;
+      if (!res.ok) throw res.json();
       return res.json();
     })
     .catch(err => {

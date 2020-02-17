@@ -1,4 +1,3 @@
-
 import { html, LitElement, css } from "lit-element";
 
 class InputComponent extends LitElement {
@@ -6,15 +5,14 @@ class InputComponent extends LitElement {
     super();
     this.placeholder = "";
     this.name = "";
-    this.value="";
+    this.value = "";
   }
 
   static get properties() {
     return {
       placeholder: { type: String },
-      name : {type:String},
-      value: {type :String}
-      
+      name: { type: String },
+      value: { type: String }
     };
   }
 
@@ -33,10 +31,16 @@ class InputComponent extends LitElement {
 
   render() {
     return html`
-      <input type="text" value=${this.value} placeholder=${this.placeholder} name="${this.name}" @input="${this.setValue}"  class="textbox" />
+      <input
+        type="text"
+        value=${this.value}
+        placeholder=${this.placeholder}
+        name="${this.name}"
+        @input="${this.setValue}"
+        class="textbox"
+      />
     `;
   }
 }
 
 window.customElements.define("input-tag", InputComponent);
-

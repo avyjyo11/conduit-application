@@ -8,7 +8,11 @@ import "../components/heart-toggler";
 import "../components/footer.component";
 import { cssStyles } from "../styles/cssStyles";
 import { Router } from "@vaadin/router";
-import { get,getwithauth,put } from "../services/api.services";
+import { get, getwithauth, put } from "../services/api.services";
+import {
+  DEFAULT_IMG as defaultImg,
+  DEFAULT_NAME as defaultName
+} from "../constants/defaults.config";
 
 class UserProfile extends LitElement {
   constructor() {
@@ -21,13 +25,13 @@ class UserProfile extends LitElement {
     this.pages = 0;
     this.myPages = 0;
     this.favPages = 0;
-    this.username = "username";
-    this.userBio = "this is Bio";
-    this.userImage = "https://www.w3schools.com/howto/img_avatar.png";
+    this.username = defaultName;
+    this.userBio = "";
+    this.userImage = defaultImg;
+
     this.pageChange = this.pageChange.bind(this);
 
-    this.isToken = window.localStorage.getItem("token") ? true: false;
-
+    this.isToken = window.localStorage.getItem("token") ? true : false;
   }
 
   static get properties() {
@@ -44,32 +48,28 @@ class UserProfile extends LitElement {
     super.connectedCallback();
     if (this.isToken) {
       try {
-        let url=`/user`;
-
-        let { user }= await getwithauth(url);
+        let url = `/user`;
+        let { user } = await getwithauth(url);
         this.username = user.username;
         this.userBio = user.bio;
         this.userImage = user.image;
 
-          url=`/tags?limit=20`;
-
+        url = `/tags?limit=20`;
         let { tags } = await get(url);
-
         this.tags = [...tags];
-        url=`/articles?author=${this.username}&limit=10`;
-        var { articles, articlesCount } = await get(url);
 
+        url = `/articles?author=${this.username}&limit=10`;
+        var { articles, articlesCount } = await get(url);
         this.myArticles = [...articles];
         this.myPages = articlesCount / 10;
 
-        url =`/articles?favorited=${this.username}&limit=10`;
+        url = `/articles?favorited=${this.username}&limit=10`;
         var { articles, articlesCount } = await get(url);
         this.favArticles = [...articles];
         this.favPages = articlesCount / 10;
         this.articles = this.myArticles;
         this.pages = this.myPages;
-      } catch (error) {
-      }
+      } catch (error) {}
     }
   }
 
@@ -221,13 +221,12 @@ class UserProfile extends LitElement {
         ? `/articles?author=${this.username}&limit=10&offset=${offset}`
         : `/articles?favorited=${this.username}&limit=10&offset=${offset}`;
 
-        get(fetchURL)
-        .then(data => {
-          this.articles = [...data.articles];
-          window.scrollTo(0, 0);
-        })
-        .catch(err => console.log(err));
-      
+    get(fetchURL)
+      .then(data => {
+        this.articles = [...data.articles];
+        window.scrollTo(0, 0);
+      })
+      .catch(err => console.log(err));
   }
 
   editSettingsClick(e) {
@@ -244,8 +243,7 @@ class UserProfile extends LitElement {
       pagesArr.push(i);
     }
 
-    const navbar = html`
-    `;
+    const navbar = html``;
 
     const banner = html`
       <div class="jumbotron center">
@@ -329,8 +327,7 @@ class UserProfile extends LitElement {
       </div>
     `;
 
-    const footer = html`
-    `;
+    const footer = html``;
 
     return html`
       ${navbar} ${banner} ${allContent} ${footer}

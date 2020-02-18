@@ -31,9 +31,9 @@ class TextArea extends LitElement {
       <textarea
         rows="5"
         ?disabled=${this.disabled}
-        placeholder=${this.placeholder}
+        placeholder="${this.placeholder}"
         name="${this.name}"
-        @input="${this.setValue}"
+        @input=${this.setValue}
       >
     ${this.value}</textarea
       >

@@ -5,7 +5,7 @@ import "../components/input.component";
 import "../components/texrarea.component";
 import "../components/footer.component";
 import { Router } from "@vaadin/router";
-import { getwithauth,put } from "../services/api.services";
+import { getwithauth, put } from "../services/api.services";
 
 class YourSetting extends LitElement {
   constructor() {
@@ -23,8 +23,7 @@ class YourSetting extends LitElement {
     this.showError = false;
     this._errors;
 
-    this.isToken = window.localStorage.getItem("token") ? true: false;
-
+    this.isToken = window.localStorage.getItem("token") ? true : false;
   }
   static get properties() {
     return {
@@ -46,17 +45,16 @@ class YourSetting extends LitElement {
 
   getuser() {
     if (this.isToken) {
-      let url=`/user`;
+      let url = `/user`;
       getwithauth(url)
-      .then(data => {
-        console.log(data);
-        this._userbio = data.user.bio || "";
-        this._imagelink = data.user.image || "";
-        this._userName = data.user.username;
-        this._email = data.user.email;
-      })
-      .catch(err => console.log(err));
-
+        .then(data => {
+          console.log(data);
+          this._userbio = data.user.bio || "";
+          this._imagelink = data.user.image || "";
+          this._userName = data.user.username;
+          this._email = data.user.email;
+        })
+        .catch(err => console.log(err));
     }
   }
   getFormValidationError(errorObject) {
@@ -173,7 +171,7 @@ class YourSetting extends LitElement {
   _logOut(e) {
     console.log("logout");
     localStorage.clear();
-   
+
     Router.go("/");
     location.pathname = "/";
   }
@@ -193,20 +191,18 @@ class YourSetting extends LitElement {
       }
     };
 
-    let url=`/user`;
-    put(url,data)
-    .then(data => {
-      localStorage.setItem("token", data.user.token);
-     
-      Router.go("/");
-     
-    })
-    .catch(error => {
+    let url = `/user`;
+    put(url, data)
+      .then(data => {
+        localStorage.setItem("token", data.user.token);
 
-      this._errors = error && error.errors;
-      this.showError = true;
-    });
+        Router.go("/");
+      })
+      .catch(error => {
+        this._errors = error && error.errors;
+        this.showError = true;
+      });
   }
 }
 
-customElements.define("yoursetting-tag", YourSetting);
+customElements.define("your-setting-tag", YourSetting);

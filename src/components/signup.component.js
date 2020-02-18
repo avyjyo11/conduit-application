@@ -14,9 +14,39 @@ class SignupComponent extends LitElement {
     this.showError = false;
     this.errors;
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleChange=(e)=> {
+      this[e.target.name] = e.target.value;
+    }
 
-    this.singUp = this.singUp.bind(this);
+    this.singUp=()=> {
+      const data = {
+        "user": {
+          "username": this.userName ,
+          "email": this.email ,
+          "password": this.password
+        }
+      };
+  
+      let url='/users';
+  
+      postwithoutAuth(url,data)
+      .then((data) => {
+        this.showError=false;
+        this._errors=[];
+        localStorage.setItem('token', data.user.token);
+         Router.go('/');
+         location.pathname = "/";
+      })
+      .catch((error) => {
+          error.then((data)=>
+          {   
+            this.errors= Object.values(data.errors);
+            this.showError=true;
+          
+          });
+      });
+    }
+
     this.isToken = window.localStorage.getItem("token") ? true : false;
   }
   static get properties() {
@@ -117,37 +147,9 @@ class SignupComponent extends LitElement {
     `;
   }
 
-  handleChange(e) {
-    this[e.target.name] = e.target.value;
-  }
 
-  singUp(e) {
-    console.log("singup", this.userName);
-    const data = {
-      user: {
-        username: this.userName,
-        email: this.email,
-        password: this.password
-      }
-    };
 
-    console.log(data);
-    let url = "/users";
-
-    postwithoutAuth(url, data)
-      .then(data => {
-        this.showError = false;
-        localStorage.setItem("token", data.user.token);
-        Router.go("/");
-        location.pathname = "/";
-      })
-      .catch(error => {
-        error.then(data => {
-          this.errors = { ...data.errors };
-          this.showError = true;
-        });
-      });
-  }
+ 
 }
 
 customElements.define("signup-component-tag", SignupComponent);

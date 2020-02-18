@@ -25,13 +25,6 @@ class SignupComponent extends LitElement {
       errors: { type: Array }
     };
   }
-  connectedCallback()
-  {
-    if(this.isToken)
-    {
-      Router.go('/');
-    }
-  }
 
   getFormValidationError(errorObject) {
     const errorList = [];
@@ -131,34 +124,32 @@ class SignupComponent extends LitElement {
   singUp(e) {
     console.log("singup", this.userName);
     const data = {
-      "user": {
-        "username": this.userName ,
-        "email": this.email ,
-        "password": this.password
+      user: {
+        username: this.userName,
+        email: this.email,
+        password: this.password
       }
     };
 
     console.log(data);
-    let url='/users';
+    let url = "/users";
 
-    postwithoutAuth(url,data)
-    .then((data) => {
-      this.showError=false;
-      this._errors=[];
-      localStorage.setItem('token', data.user.token);
-      console.log('Success:', data.user.token);
-       Router.go('/');
-       location.pathname = "/";
-    })
-    .catch((error) => {
-        error.then((data)=>
-        {   console.log(data);
-          this.errors= Object.values(data.errors);
-          this.showError=true;
-        
+    postwithoutAuth(url, data)
+      .then(data => {
+        this.showError = false;
+        this._errors = [];
+        localStorage.setItem("token", data.user.token);
+        console.log("Success:", data.user.token);
+        Router.go("/");
+        location.pathname = "/";
+      })
+      .catch(error => {
+        error.then(data => {
+          console.log(data);
+          this.errors = Object.values(data.errors);
+          this.showError = true;
         });
-    });
-
+      });
   }
 }
 

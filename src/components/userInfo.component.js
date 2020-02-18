@@ -99,7 +99,7 @@ class UserInfo extends LitElement {
       <div class="article-holder">
         <div class="article-left">
           <div class="user-image-holder">
-            <img src=${this.userImg} />
+            <img src="${this.userImg}" />
           </div>
         </div>
         <div class="article-right">

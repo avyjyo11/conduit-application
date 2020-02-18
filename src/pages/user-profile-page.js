@@ -335,4 +335,4 @@ class UserProfile extends LitElement {
   }
 }
 
-customElements.define("userprofile-page", UserProfile);
+customElements.define("user-profile-page", UserProfile);

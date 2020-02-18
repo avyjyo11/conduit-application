@@ -21,19 +21,19 @@ class SignupComponent extends LitElement {
   }
   static get properties() {
     return {
-      showError: { type: Boolean },
-      errors: { type: Array }
+      showError: { type: Boolean }
     };
   }
 
   getFormValidationError(errorObject) {
     const errorList = [];
-
+    console.log(errorObject);
     Object.keys(errorObject).forEach(key => {
       errorObject[key].forEach(errorMessage => {
         errorList.push(`${key + " " + errorMessage}`);
       });
     });
+    console.log(errorList);
     return errorList;
   }
 
@@ -91,23 +91,23 @@ class SignupComponent extends LitElement {
           : null}
         <form>
           <input-tag
-            .setValue="${this.handleChange}"
+            .setValue=${this.handleChange}
             placeholder="Username"
             name="userName"
           ></input-tag>
           <input-tag
-            .setValue="${this.handleChange}"
+            .setValue=${this.handleChange}
             placeholder="Email"
             name="email"
           ></input-tag>
           <input-tag
-            .setValue="${this.handleChange}"
+            .setValue=${this.handleChange}
             placeholder="Password"
             name="password"
           ></input-tag>
           <div id="btn-wrapper">
             <btn-tag
-              .handleClick="${this.singUp}"
+              .handleClick=${this.singUp}
               buttonName="Sign up"
               className="btn"
             ></btn-tag>
@@ -137,20 +137,17 @@ class SignupComponent extends LitElement {
     postwithoutAuth(url, data)
       .then(data => {
         this.showError = false;
-        this._errors = [];
         localStorage.setItem("token", data.user.token);
-        console.log("Success:", data.user.token);
         Router.go("/");
         location.pathname = "/";
       })
       .catch(error => {
         error.then(data => {
-          console.log(data);
-          this.errors = Object.values(data.errors);
+          this.errors = { ...data.errors };
           this.showError = true;
         });
       });
   }
 }
 
-customElements.define("signupcomponent-tag", SignupComponent);
+customElements.define("signup-component-tag", SignupComponent);

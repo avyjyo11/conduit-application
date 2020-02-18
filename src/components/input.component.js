@@ -33,8 +33,8 @@ class InputComponent extends LitElement {
     return html`
       <input
         type="text"
-        value=${this.value}
-        placeholder=${this.placeholder}
+        value="${this.value}"
+        placeholder="${this.placeholder}"
         name="${this.name}"
         @input="${this.setValue}"
         class="textbox"

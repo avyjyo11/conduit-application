@@ -106,8 +106,8 @@ class Navigation extends LitElement {
                     <li>
                       <a href="/profile">
                         <img
-                          src=${this.userImage ||
-                            "https://www.w3schools.com/howto/img_avatar.png"}
+                          src="${this.userImage ||
+                            "https://www.w3schools.com/howto/img_avatar.png"}"
                           alt="Avatar"
                           class="avatar"
                         />

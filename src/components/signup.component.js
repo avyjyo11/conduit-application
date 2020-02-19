@@ -37,7 +37,7 @@ class SignupComponent extends LitElement {
         this._errors=[];
         localStorage.setItem('token', data.user.token);
          Router.go(HOME);
-         location.pathname = "/";
+         location.pathname = HOME;
       })
       .catch((error) => {
           error.then((data)=>

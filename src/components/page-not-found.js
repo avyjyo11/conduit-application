@@ -4,9 +4,10 @@ import "./input.component";
 import { Router } from "@vaadin/router";
 import { postwithoutAuth } from "../services/api.services";
 import{ HOME } from "../constants/routes.config.js";
+import { cssStyles } from "../styles/cssStyles";
 
 
-class SigninComponent extends LitElement {
+class PageNotfound extends LitElement {
   constructor() {
     super();
     this.handleChange=(e) =>{
@@ -28,7 +29,7 @@ class SigninComponent extends LitElement {
        
      localStorage.setItem('token', data.user.token);
      Router.go(HOME);
-     location.pathname = HOME;
+     location.pathname = "/";
       })
       .catch((error) => { 
           error.then((data)=>
@@ -53,19 +54,46 @@ class SigninComponent extends LitElement {
   }
 
   static get styles() {
-    return css`
+    return [cssStyles, css `
       * {
         margin: 0px;
         padding: 0px;
       }
+
+      .jumbotron {
+        padding: 30px;
+        background-color: var(--theme-color);
+        color: #fff;
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      .jumbotron h2 {
+        font-size: 3em;
+        font-weight: bold;
+        padding: 0;
+        margin: 0;
+        margin-bottom: 10px;
+      }
+
+      .jumbotron p {
+        font-size: 1.4em;
+        font-weight: 200;
+        padding: 0;
+        margin: 0;
+        margin-bottom: 10px;
+      }
+
       li {
         margin: 15px;
 
         text-align: left;
         color: Red;
       }
-      #signin {
-        padding-top: 20px;
+      #pagenotfound {
+        padding-top: 100px;
         color: #373a3c;
         font-size: 40px;
         margin-bottom: 8px;
@@ -88,43 +116,17 @@ class SigninComponent extends LitElement {
       .green:hover {
         text-decoration: underline;
       }
-    `;
+    `];
   }
 
   render() {
     return html`
+     <div class="jumbotron center">
+        <h2>conduit</h2>
+        <p>A place to share your knowledge</p>
+      </div>
       <div id="wrapper">
-        <p id="signin">Sign In</p>
-        <p class="green">Need an account</p>
-        ${this.showError
-          ? this.errors.map((array) => {
-              return array.map(
-                msg =>
-                  html`
-                    <li>Email or Password : ${msg}</li>
-                  `
-              );
-            })
-          : null}
-        <form>
-          <input-tag
-            .setValue="${this.handleChange}"
-            placeholder="Email"
-            name="email"
-          ></input-tag>
-          <input-tag
-            .setValue="${this.handleChange}"
-            placeholder="Password"
-            name="password"
-          ></input-tag>
-          <div id="btn-wrapper">
-            <btn-tag
-              .handleClick="${this.singIn}"
-              buttonName="Sign In"
-              className="btn"
-            ></btn-tag>
-          </div>
-        </form>
+        <p id="pagenotfound">Page not found</p>
       </div>
     `;
   }
@@ -133,4 +135,4 @@ class SigninComponent extends LitElement {
   
 }
 
-customElements.define("signin-component-tag", SigninComponent);
+customElements.define("pagenotfound-component-tag", PageNotfound);

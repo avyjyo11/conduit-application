@@ -45,7 +45,6 @@ export function post(endPoint, data) {
       return res.json();
     })
     .catch(err => {
-      // console.log(err.json());
       throw err;
     });
 }

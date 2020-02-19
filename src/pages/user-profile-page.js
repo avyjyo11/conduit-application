@@ -10,7 +10,7 @@ import { cssStyles } from "../styles/cssStyles";
 import { Router } from "@vaadin/router";
 import { get, getwithauth, put } from "../services/api.services";
 import { DEFAULT_IMG, DEFAULT_NAME } from "../constants/defaults.config";
-import { VIEW_ARTICLE } from "../constants/routesj.config";
+import { VIEW_ARTICLE, SETTING } from "../constants/routes.config.js";
 
 class UserProfile extends LitElement {
   constructor() {
@@ -39,7 +39,7 @@ class UserProfile extends LitElement {
           this.articles = [...data.articles];
           window.scrollTo(0, 0);
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
     };
 
     this.isToken = window.localStorage.getItem("token") ? true : false;
@@ -63,7 +63,7 @@ class UserProfile extends LitElement {
         let { user } = await getwithauth(url);
         this.username = user.username;
         this.userBio = user.bio;
-        this.userImage = user.image;
+        this.userImage = user.image || DEFAULT_IMG;
 
         url = `/tags?limit=20`;
         let { tags } = await get(url);

@@ -6,7 +6,7 @@ import "../components/texrarea.component";
 import "../components/footer.component";
 import { Router } from "@vaadin/router";
 import { getwithauth, put } from "../services/api.services";
-import { HOME } from "../constants/routesj.config";
+import { HOME } from "../constants/routes.config";
 
 class YourSetting extends LitElement {
   constructor() {

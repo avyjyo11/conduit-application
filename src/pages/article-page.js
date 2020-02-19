@@ -5,7 +5,7 @@ import "../components/input.component.js";
 import "../components/texrarea.component.js";
 import { Router } from "@vaadin/router";
 import { post } from "../services/api.services";
-import { VIEW_ARTICLE } from "../constants/routesj.config.js";
+import { VIEW_ARTICLE } from "../constants/routes.config.js";
 
 class ArticlePage extends LitElement {
   static get styles() {

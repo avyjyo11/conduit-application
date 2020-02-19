@@ -7,7 +7,6 @@ import {
   SIGN_UP,
   NEW_POST,
   PROFILE,
-  VIEW_ARTICLE,
   HOME
 } from "../constants/routes.config.js";
 

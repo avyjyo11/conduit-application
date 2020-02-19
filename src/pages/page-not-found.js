@@ -1,9 +1,9 @@
 import { html, LitElement } from "lit-element";
 import "../components/navigation.component";
 import "../components/signin.component";
-import "../components/page-not-found";
+import "../components/page-not-found.component";
 
-class pagenotfound extends LitElement {
+class PageNotFound extends LitElement {
   constructor() {
     super();
   }
@@ -14,4 +14,4 @@ class pagenotfound extends LitElement {
     `;
   }
 }
-customElements.define("pagenotfound-page", pagenotfound);
+customElements.define("pagenotfound-page", PageNotFound);

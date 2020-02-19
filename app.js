@@ -13,7 +13,7 @@ import {
   SIGN_UP,
   NEW_POST,
   PROFILE,
-  VIEW_ARTICLE,
+  VIEW_ARTICLE_SLUG,
   HOME,
   PAGE_NOT_FOUND
 } from "./src/constants/routes.config";
@@ -26,6 +26,6 @@ router.setRoutes([
   { path: NEW_POST, component: "article-page" },
   { path: SETTING, component: "your-setting-tag" },
   { path: PROFILE, component: "user-profile-page" },
-  { path: VIEW_ARTICLE, component: "view-article" },
+  { path: VIEW_ARTICLE_SLUG, component: "view-article" },
   { path: PAGE_NOT_FOUND, component: "pagenotfound-page" }
 ]);

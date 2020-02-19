@@ -6,7 +6,7 @@ import { postwithoutAuth } from "../services/api.services";
 import { HOME } from "../constants/routes.config.js";
 import { cssStyles } from "../styles/cssStyles";
 
-class PageNotfound extends LitElement {
+class PageNotfoundComp extends LitElement {
   constructor() {
     super();
     this.handleChange = e => {
@@ -133,4 +133,4 @@ class PageNotfound extends LitElement {
   }
 }
 
-customElements.define("pagenotfound-component-tag", PageNotfound);
+customElements.define("pagenotfound-component-tag", PageNotfoundComp);

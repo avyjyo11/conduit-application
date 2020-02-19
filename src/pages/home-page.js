@@ -9,7 +9,7 @@ import "../components/footer.component";
 import "../components/heart-toggler";
 import { get, getwithauth } from "../services/api.services";
 import { cssStyles } from "../styles/cssStyles";
-import { SIGN_IN, VIEW_ARTICLE } from "../constants/routesj.config";
+import { SIGN_IN, VIEW_ARTICLE } from "../constants/routes.config.js";
 
 class HomePage extends LitElement {
   constructor() {

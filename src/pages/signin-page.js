@@ -9,8 +9,7 @@ class Signin extends LitElement {
 
   render() {
     return html`
-      <navigation-tag></navigation-tag>
-      <signincomponent-tag></signincomponent-tag>
+      <signin-component-tag></signin-component-tag>
     `;
   }
 }

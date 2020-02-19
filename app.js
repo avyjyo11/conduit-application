@@ -3,17 +3,29 @@ import "./src/pages/signin-page";
 import "./src/pages/home-page";
 import "./src/pages/signup-page";
 import "./src/pages/article-page";
-import "./src/pages/yoursetting-page";
+import "./src/pages/your-setting-page";
 import "./src/pages/article-view-page";
-
-
+import "./src/pages/page-not-found";
+import "./src/pages/user-profile-page";
+import {
+  SETTING,
+  SIGN_IN,
+  SIGN_UP,
+  NEW_POST,
+  PROFILE,
+  VIEW_ARTICLE_SLUG,
+  HOME,
+  PAGE_NOT_FOUND
+} from "./src/constants/routes.config";
 const outlet = document.querySelector("main");
 const router = new Router(outlet);
 router.setRoutes([
-  { path: "/", component: "home-page" },
-  { path: "/sign-in", component: "signin-tag" },
-  { path: "/sign-up", component: "signup-tag" },
-  { path: "/new-post", component: "article-page" },
-  { path: "/setting", component: "yoursetting-tag" },
-  {path: "/view-article/:slug",component:"view-article"}
+  { path: HOME, component: "home-page" },
+  { path: SIGN_IN, component: "signin-tag" },
+  { path: SIGN_UP, component: "signup-tag" },
+  { path: NEW_POST, component: "article-page" },
+  { path: SETTING, component: "your-setting-tag" },
+  { path: PROFILE, component: "user-profile-page" },
+  { path: VIEW_ARTICLE_SLUG, component: "view-article" },
+  { path: PAGE_NOT_FOUND, component: "pagenotfound-page" }
 ]);

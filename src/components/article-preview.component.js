@@ -51,16 +51,12 @@ class ArticlePreview extends LitElement {
     `;
   }
 
-  readMore(e) {
-    console.log(e);
-  }
-
   render() {
     return html`
       <div class="article-preview-container">
         <h3>${this.title}</h3>
         <p>${this.description}</p>
-        <button @click=${this.readMore}>Read more...</button>
+        <button>Read more...</button>
         <hr />
       </div>
     `;

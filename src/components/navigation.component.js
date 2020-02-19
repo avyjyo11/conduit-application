@@ -1,21 +1,28 @@
 import { html, LitElement, css } from "lit-element";
 import { cssStyles } from "../styles/cssStyles";
+import { getwithauth } from "../services/api.services";
+import {
+  SETTING,
+  SIGN_IN,
+  SIGN_UP,
+  NEW_POST,
+  PROFILE,
+  HOME
+} from "../constants/routes.config.js";
+
+import { DEFAULT_IMG, DEFAULT_NAME } from "../constants/defaults.config";
 class Navigation extends LitElement {
   constructor() {
     super();
-    this.username = "username";
-    this.userImage=null;
-    this.isToken =
-      window.localStorage.getItem("token") === null ||
-      window.localStorage.getItem("token") === ""
-        ? false
-        : true;
+    this.username = DEFAULT_NAME;
+    this.userImage = DEFAULT_IMG;
+    this.isToken = window.localStorage.getItem("token") ? true : false;
   }
 
   static get properties() {
     return {
       isToken: { type: Boolean },
-      username: String
+      username: { type: String }
     };
   }
 
@@ -41,7 +48,9 @@ class Navigation extends LitElement {
           padding-left: 2px;
           padding-right: 2px;
         }
-
+        .active {
+          font-weight: bold;
+        }
         nav a:hover {
           font-weight: bold;
           padding: 0;
@@ -67,20 +76,13 @@ class Navigation extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     if (this.isToken) {
-      fetch(`https://conduit.productionready.io/api/user`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": `Token ${window.localStorage.getItem("token")}`
-        }
-      })
-        .then(res => res.json())
+      let url = "/user";
+      getwithauth(url)
         .then(data => {
           this.username = data.user.username;
-          this.userImage = data.user.image
+          this.userImage = data.user.image;
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
     }
   }
 
@@ -93,15 +95,24 @@ class Navigation extends LitElement {
             <ul>
               ${!this.isToken
                 ? html`
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/sign-in">Sign in</a></li>
-                    <li><a href="/sign-up">Sign up</a></li>
+                    <li><a class="active" href="${HOME}">Home</a></li>
+                    <li><a href="${SIGN_IN}">Sign in</a></li>
+                    <li><a href="${SIGN_UP}">Sign up</a></li>
                   `
                 : html`
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/new-post">New Post</a></li>
-                    <li><a href="/setting">Setting</a></li>
-                    <li><a href="/user"> <img src= ${this.userImage||"https://www.w3schools.com/howto/img_avatar.png"} alt="Avatar" class="avatar"> ${this.username}</a></li>
+                    <li><a href="${HOME}">Home</a></li>
+                    <li><a href="${NEW_POST}">New Post</a></li>
+                    <li><a href="${SETTING}">Setting</a></li>
+                    <li>
+                      <a href="${PROFILE}">
+                        <img
+                          src="${this.userImage || DEFAULT_IMG}"
+                          alt="Avatar"
+                          class="avatar"
+                        />
+                        ${this.username}</a
+                      >
+                    </li>
                   `}
             </ul>
           </nav>
@@ -110,4 +121,5 @@ class Navigation extends LitElement {
     `;
   }
 }
-window.customElements.define("navigation-tag", Navigation);
+
+customElements.define("navigation-tag", Navigation);

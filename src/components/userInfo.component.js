@@ -1,11 +1,15 @@
 import { html, LitElement, css } from "lit-element";
 import { cssStyles } from "../styles/cssStyles";
+import {
+  DEFAULT_IMG as defaultImg,
+  DEFAULT_NAME as defaultName
+} from "../constants/defaults.config";
 class UserInfo extends LitElement {
   constructor() {
     super();
-    this.username = "";
+    this.username = defaultName;
     this.postDate = new Date().toString();
-    this.userImg = "http://pngimg.com/uploads/smiley/smiley_PNG36233.png";
+    this.userImg = defaultImg;
   }
 
   static get properties() {
@@ -30,9 +34,9 @@ class UserInfo extends LitElement {
           width: 100%;
         }
         .user-image-holder {
-          width: 40px;
-          height: 40px;
-          margin: 0 auto;
+          width: 50px;
+          height: 50px;
+          margin: 5px auto;
         }
         .article-left {
           width: 5%;
@@ -95,7 +99,7 @@ class UserInfo extends LitElement {
       <div class="article-holder">
         <div class="article-left">
           <div class="user-image-holder">
-            <img src=${this.userImg} />
+            <img src="${this.userImg}" />
           </div>
         </div>
         <div class="article-right">

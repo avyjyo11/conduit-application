@@ -2,37 +2,67 @@ import { html, LitElement, css } from "lit-element";
 import "./button.component";
 import "./input.component";
 import { Router } from "@vaadin/router";
+import { postwithoutAuth } from "../services/api.services";
+import { HOME } from "../constants/routes.config.js";
+
 class SignupComponent extends LitElement {
   constructor() {
     super();
-    this._api = "https://conduit.productionready.io/api";
 
-    this._userName = "";
-    this._email = "";
-    this._password = "";
+    this.userName = "";
+    this.email = "";
+    this.password = "";
 
     this.showError = false;
-    this._errors;
+    this.errors;
 
-    this._handleChange = this._handleChange.bind(this);
+    this.handleChange = e => {
+      this[e.target.name] = e.target.value;
+    };
 
-    this._singUp = this._singUp.bind(this);
+    this.singUp = () => {
+      const data = {
+        user: {
+          username: this.userName,
+          email: this.email,
+          password: this.password
+        }
+      };
+
+      let url = "/users";
+
+      postwithoutAuth(url, data)
+        .then(data => {
+          this.showError = false;
+          this._errors = [];
+          localStorage.setItem("token", data.user.token);
+          Router.go(HOME);
+          location.pathname = HOME;
+        })
+        .catch(error => {
+          error.then(data => {
+            this.errors = Object.values(data.errors);
+            this.showError = true;
+          });
+        });
+    };
+
+    this.isToken = window.localStorage.getItem("token") ? true : false;
   }
   static get properties() {
     return {
-      showError: { type: Boolean },
-      _errors: { type: Array }
+      showError: { type: Boolean }
     };
   }
 
   getFormValidationError(errorObject) {
     const errorList = [];
-
     Object.keys(errorObject).forEach(key => {
       errorObject[key].forEach(errorMessage => {
         errorList.push(`${key + " " + errorMessage}`);
       });
     });
+
     return errorList;
   }
 
@@ -81,7 +111,7 @@ class SignupComponent extends LitElement {
         <p id="signin">Sign up</p>
         <p class="green">Already have an account</p>
         ${this.showError
-          ? this.getFormValidationError(this._errors).map(
+          ? this.getFormValidationError(this.errors).map(
               msg =>
                 html`
                   <li>${msg}</li>
@@ -90,23 +120,23 @@ class SignupComponent extends LitElement {
           : null}
         <form>
           <input-tag
-            .setValue="${this._handleChange}"
+            .setValue=${this.handleChange}
             placeholder="Username"
-            name="_userName"
+            name="userName"
           ></input-tag>
           <input-tag
-            .setValue="${this._handleChange}"
+            .setValue=${this.handleChange}
             placeholder="Email"
-            name="_email"
+            name="email"
           ></input-tag>
           <input-tag
-            .setValue="${this._handleChange}"
+            .setValue=${this.handleChange}
             placeholder="Password"
-            name="_password"
+            name="password"
           ></input-tag>
           <div id="btn-wrapper">
             <btn-tag
-              .handleClick="${this._singUp}"
+              .handleClick=${this.singUp}
               buttonName="Sign up"
               className="btn"
             ></btn-tag>
@@ -115,49 +145,6 @@ class SignupComponent extends LitElement {
       </div>
     `;
   }
-
-  _handleChange(e) {
-    this[e.target.name] = e.target.value;
-  }
-
-  _singUp(e) {
-    console.log("singup", this._userName);
-    const data = {
-      user: {
-        username: this._userName,
-        email: this._email,
-        password: this._password
-      }
-    };
-
-    fetch(this._api + "/users", {
-      method: "POST", // or 'PUT'
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(error => {
-            throw error;
-          });
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log("Success:", data.user.token);
-        localStorage.setItem("token", data.user.token);
-        Router.go("/");
-      })
-      .catch(error => {
-        this.showError = true;
-        console.log(error.errors);
-        // this._errors= Object.entries(error.errors);
-        this._errors = error && error.errors;
-        console.log("Error:", this._errors);
-      });
-  }
 }
 
-customElements.define("signupcomponent-tag", SignupComponent);
+customElements.define("signup-component-tag", SignupComponent);

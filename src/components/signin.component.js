@@ -1,29 +1,52 @@
 import { html, LitElement, css } from "lit-element";
 import "./button.component";
 import "./input.component";
-import {Router} from '@vaadin/router';
-
-
+import { Router } from "@vaadin/router";
+import { postwithoutAuth } from "../services/api.services";
+import { HOME } from "../constants/routes.config.js";
 
 class SigninComponent extends LitElement {
   constructor() {
     super();
-    this._api='https://conduit.productionready.io/api';
-    this._handleChange=this._handleChange.bind(this);
-    this._singIn=this._singIn.bind(this);
+    this.handleChange = e => {
+      this[e.target.name] = e.target.value;
+    };
+    this.singIn = e => {
+      const data = {
+        user: {
+          email: this.email,
+          password: this.password
+        }
+      };
 
-    this._email = "";
-    this._password="";
+      let url = "/users/login";
+      postwithoutAuth(url, data)
+        .then(data => {
+          this.showError = false;
+          this._errors = [];
 
-    this.showError=false;
-    this._errors;
+          localStorage.setItem("token", data.user.token);
+          Router.go(HOME);
+          location.pathname = HOME;
+        })
+        .catch(error => {
+          error.then(data => {
+            this.errors = Object.values(data.errors);
+            this.showError = true;
+          });
+        });
+    };
 
+    this.email = "";
+    this.password = "";
+
+    this.showError = false;
+    this.errors = [];
   }
   static get properties() {
     return {
       showError: { type: Boolean },
-      _errors:{type:Array},
-      
+      errors: { type: Array }
     };
   }
 
@@ -33,12 +56,12 @@ class SigninComponent extends LitElement {
         margin: 0px;
         padding: 0px;
       }
-      li{
-        margin:15px;
-      
-        text-align:left;
+      li {
+        margin: 15px;
+
+        text-align: left;
         color: Red;
-    }
+      }
       #signin {
         padding-top: 20px;
         color: #373a3c;
@@ -68,71 +91,41 @@ class SigninComponent extends LitElement {
 
   render() {
     return html`
-        <div  id="wrapper">
-            <p id="signin"> Sign In </p>
-            <p class="green"> Need an account </p>
-            ${this.showError?this._errors.map(
-                 ( array,index) => {
-               
-                return array.map(msg => html`<li> Email or Password : ${msg}</li>`)
-                 }
-                  )
-                  :null}
-            <form>
-            <input-tag .setValue ="${this._handleChange}"placeholder="Email" name="_email"></input-tag>
-            <input-tag .setValue="${this._handleChange}"placeholder="Password" name="_password"></input-tag>
-            <div id="btn-wrapper">
-            <btn-tag .handleClick="${this._singIn}"  buttonName="Sign In" className="btn"></btn-tag>
+      <div id="wrapper">
+        <p id="signin">Sign In</p>
+        <p class="green">Need an account</p>
+        ${this.showError
+          ? this.errors.map(array => {
+              return array.map(
+                msg =>
+                  html`
+                    <li>Email or Password : ${msg}</li>
+                  `
+              );
+            })
+          : null}
+        <form>
+          <input-tag
+            .setValue="${this.handleChange}"
+            placeholder="Email"
+            name="email"
+          ></input-tag>
+          <input-tag
+            .setValue="${this.handleChange}"
+            placeholder="Password"
+            name="password"
+          ></input-tag>
+          <div id="btn-wrapper">
+            <btn-tag
+              .handleClick="${this.singIn}"
+              buttonName="Sign In"
+              className="btn"
+            ></btn-tag>
           </div>
-        </form> 
-        </div>
-        `;
+        </form>
+      </div>
+    `;
   }
-
-  _handleChange(e)
-  {
-    this[e.target.name]=e.target.value;
-  
-  }
-
-  _singIn(e)
-  {
-    
-  const data = {   "user":{
-   
-    "email": this._email,
-    "password": this._password,
-  } };
-
-  fetch(this._api+"/users/login", {
-    method: 'POST', // or 'PUT'
-    headers: {
-      'Content-Type': 'application/json',
-    
-    },
-    body: JSON.stringify(data),
-  })
-  
-  .then((response) => {
-      if(!response.ok){
-       return response.json().then(error =>{ throw error });
-      };
-      return response.json()
-  })
-  .then((data) => {
-    this.showError=false;
-    this._errors=[];
-   
- localStorage.setItem('token', data.user.token);
- console.log('Success:', data.user.token);
- Router.go('/');
-  })
-  .catch((error) => {
-      this.showError=true;
-      this._errors= Object.values(error.errors);
-     
-  });
 }
-  
-}
-customElements.define("signincomponent-tag", SigninComponent);
+
+customElements.define("signin-component-tag", SigninComponent);

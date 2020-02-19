@@ -1,74 +1,45 @@
 import { LitElement, html, css } from "lit-element";
-import { Router } from "@vaadin/router";
 import "../components/navigation.component";
 import "../components/tag-button.component";
 import "../components/userInfo.component";
 import "../components/article-preview.component";
 import "../components/page-indicator.component";
-import "../components/footer.component";
 import "../components/heart-toggler";
-import { get, getwithauth } from "../services/api.services";
+import "../components/footer.component";
 import { cssStyles } from "../styles/cssStyles";
-import { SIGN_IN, VIEW_ARTICLE } from "../constants/routes.config.js";
+import { Router } from "@vaadin/router";
+import { get, getwithauth, put } from "../services/api.services";
+import { DEFAULT_IMG, DEFAULT_NAME } from "../constants/defaults.config";
+import { VIEW_ARTICLE, SETTING } from "../constants/routes.config.js";
 
-class HomePage extends LitElement {
+class UserProfile extends LitElement {
   constructor() {
     super();
-    this.activeTab = "global";
+    this.activeTab = "my";
     this.tags = [];
-    this.selectedTag = null;
-    this.globalFeeds = [];
-    this.yourFeeds = [];
     this.articles = [];
-    this.globalPages = 0;
-    this.yourPages = 0;
+    this.myArticles = [];
+    this.favArticles = [];
     this.pages = 0;
-    this.username = "username";
+    this.myPages = 0;
+    this.favPages = 0;
+    this.username = DEFAULT_NAME;
+    this.userBio = "";
+    this.userImage = DEFAULT_IMG;
+
     this.pageChange = e => {
       let offset = (e.target.innerText - 1) * 10;
-      let fetchURL;
-
-      if (this.activeTab === "global") {
-        if (this.selectedTag) {
-          fetchURL = `/articles?limit=10&offset=${offset}&tag=${this.selectedTag}`;
-        } else {
-          fetchURL = `/articles?limit=10&offset=${offset}`;
-        }
-      } else {
-        if (this.selectedTag) {
-          fetchURL = `articles?author=${this.username}&limit=10&offset=${offset}&tag=${this.selectedTag}`;
-        } else {
-          fetchURL = `/articles?author=${this.username}&limit=10&offset=${offset}`;
-        }
-      }
+      const fetchURL =
+        this.activeTab === "my"
+          ? `/articles?author=${this.username}&limit=10&offset=${offset}`
+          : `/articles?favorited=${this.username}&limit=10&offset=${offset}`;
 
       get(fetchURL)
         .then(data => {
           this.articles = [...data.articles];
           window.scrollTo(0, 0);
         })
-        .catch(err => console.log(err));
-    };
-
-    this.likePost = e => {
-      if (!this.isToken) {
-        Router.go(`${SIGN_IN}`);
-      }
-    };
-
-    this.tagClick = e => {
-      this.selectedTag = e.target.innerText;
-      let url =
-        this.activeTab === "global"
-          ? `/articles?tag=${this.selectedTag}&limit=10`
-          : `articles?author=${this.username}&tag=${this.selectedTag}&limit=10`;
-
-      get(url)
-        .then(data => {
-          this.articles = [...data.articles];
-          this.pages = data.articlesCount / 10;
-        })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
     };
 
     this.isToken = window.localStorage.getItem("token") ? true : false;
@@ -77,48 +48,41 @@ class HomePage extends LitElement {
   static get properties() {
     return {
       articles: { type: Array },
-      yourFeeds: { type: Array },
       tags: { type: Array },
       pages: Number,
-      yourPages: Number,
-      activeTab: String,
       isToken: { type: Boolean },
-      selectedTag: String
+      activeTab: String
     };
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     super.connectedCallback();
-    let url = `/articles?limit=10`;
-    get(url)
-      .then(data => {
-        this.globalFeeds = [...data.articles];
-        this.globalPages = data.articlesCount / 10;
-        this.articles = this.globalFeeds;
-        this.pages = this.globalPages;
-      })
-      .catch(err => console.log(err));
-
-    url = `/tags?limit=20`;
-    get(url)
-      .then(data => {
-        this.tags = [...data.tags];
-      })
-      .catch(err => console.log(err));
-
     if (this.isToken) {
-      url = `/user`;
-      getwithauth(url)
-        .then(data => {
-          this.username = data.user.username;
-          let url = `/articles?author=${this.username}&limit=10`;
-          return get(url);
-        })
-        .then(data => {
-          this.yourPages = data.articlesCount / 10;
-          this.yourFeeds = [...data.articles];
-        })
-        .catch(err => console.log(err));
+      try {
+        let url = `/user`;
+        let { user } = await getwithauth(url);
+        this.username = user.username;
+        this.userBio = user.bio;
+        this.userImage = user.image || DEFAULT_IMG;
+
+        url = `/tags?limit=20`;
+        let { tags } = await get(url);
+        this.tags = [...tags];
+
+        url = `/articles?author=${this.username}&limit=10`;
+        var { articles, articlesCount } = await get(url);
+        this.myArticles = [...articles];
+        this.myPages = articlesCount / 10;
+
+        url = `/articles?favorited=${this.username}&limit=10`;
+        var { articles, articlesCount } = await get(url);
+        this.favArticles = [...articles];
+        this.favPages = articlesCount / 10;
+        this.articles = this.myArticles;
+        this.pages = this.myPages;
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
@@ -126,30 +90,32 @@ class HomePage extends LitElement {
     return [
       cssStyles,
       css`
+        * {
+          margin: 0px;
+          padding: 0px;
+        }
         .jumbotron {
           padding: 30px;
-          background-color: var(--theme-color);
-          color: #fff;
+          background-color: #f3f3f3;
         }
 
         .center {
           text-align: center;
         }
 
-        .jumbotron h2 {
-          font-size: 3em;
-          font-weight: bold;
-          padding: 0;
-          margin: 0;
-          margin-bottom: 10px;
+        .jumbotron #bio {
+          font-size: 12px;
+          font-weight: light;
+
+          color: #777;
         }
 
-        .jumbotron p {
-          font-size: 1.4em;
-          font-weight: 200;
+        .jumbotron #name {
+          font-size: 1.5em;
+          margin: 5px;
+          font-weight: 600;
           padding: 0;
-          margin: 0;
-          margin-bottom: 10px;
+          color: Black;
         }
 
         .all-content-div {
@@ -189,13 +155,15 @@ class HomePage extends LitElement {
           background-color: #fff;
         }
 
-        .feed-buttons button:focus {
-          outline: none;
-        }
-
         .feed-buttons .active {
           border-bottom: 2px solid var(--theme-color);
           color: var(--theme-color);
+        }
+        .avatar {
+          vertical-align: middle;
+          width: 125px;
+          height: 125px;
+          border-radius: 50%;
         }
 
         .content-section hr {
@@ -217,6 +185,25 @@ class HomePage extends LitElement {
         .article-div {
           position: relative;
         }
+
+        .jumbotron-wrap {
+          position: relative;
+        }
+
+        .edit-settings {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          padding: 6px 10px;
+          border: 1px solid #777aa1;
+          color: #777aa1;
+          cursor: pointer;
+        }
+
+        .edit-settings:hover {
+          background-color: #777aa1;
+          color: #fff;
+        }
       `
     ];
   }
@@ -226,19 +213,22 @@ class HomePage extends LitElement {
     buttons[0].classList.remove("active");
     buttons[1].classList.remove("active");
     e.target.classList.add("active");
-    this.selectedTag = null;
 
-    if (e.target.innerText === "Global Feed") {
-      this.articles = this.globalFeeds;
-      this.pages = this.globalPages;
-      this.activeTab = "global";
-    } else {
-      if (this.isToken) {
-        this.articles = this.yourFeeds;
-        this.pages = this.yourPages;
-        this.activeTab = "your";
+    if (this.isToken) {
+      if (e.target.innerText === "My Articles") {
+        this.articles = this.myArticles;
+        this.pages = this.myPages;
+        this.activeTab = "my";
+      } else {
+        this.articles = this.favArticles;
+        this.pages = this.favPages;
+        this.activeTab = "fav";
       }
     }
+  }
+
+  editSettingsClick(e) {
+    Router.go(`${SETTING}`);
   }
 
   articleView(slug) {
@@ -251,12 +241,16 @@ class HomePage extends LitElement {
       pagesArr.push(i);
     }
 
-    const navbar = html``;
-
     const banner = html`
       <div class="jumbotron center">
-        <h2>conduit</h2>
-        <p>A place to share your knowledge</p>
+        <div class="wrapper jumbotron-wrap">
+          <img src=${this.userImage} alt="Avatar" class="avatar" />
+          <p id="name">${this.username}</p>
+          <p id="bio">${this.userBio}</p>
+          <button class="edit-settings" @click=${this.editSettingsClick}>
+            Edit Your Settings
+          </button>
+        </div>
       </div>
     `;
 
@@ -267,7 +261,7 @@ class HomePage extends LitElement {
           ${this.tags.map(
             val =>
               html`
-                <tag-button .click=${this.tagClick} name=${val}></tag-button>
+                <tag-button name=${val}></tag-button>
               `
           )}
         </div>
@@ -277,29 +271,19 @@ class HomePage extends LitElement {
     const contentSection = html`
       <div class="content-section">
         <div class="feed-buttons">
-          ${this.isToken
-            ? html`
-                <button class="" @click=${this.tabsChange}>Your Feed</button>
-              `
-            : null}
-          <button class="active" @click=${this.tabsChange}>Global Feed</button>
+          <button class="active" @click=${this.tabsChange}>My Articles</button>
+          <button class="" @click=${this.tabsChange}>
+            Favorited Articles
+          </button>
         </div>
         <hr />
         <div>
-          ${this.selectedTag
-            ? html`
-                Selected Tag: ${this.selectedTag}
-                <hr />
-              `
-            : null}
-        </div>
-        <div>
           ${this.articles.map(value => {
             return html`
-              <div class="article-div" @click=${this.articleView.bind(
-                this,
-                value.slug
-              )}>
+              <div
+                class="article-div"
+                @click=${this.articleView.bind(this, value.slug)}
+              >
                 <user-tag
                   username=${value.author.username}
                   postDate=${value.updatedAt}
@@ -312,7 +296,7 @@ class HomePage extends LitElement {
                 <article-preview-tag
                   title=${value.title}
                   description=${value.description}
-                ></article-preview-tag></a>
+                ></article-preview-tag>
               </div>
             `;
           })}
@@ -342,9 +326,9 @@ class HomePage extends LitElement {
     const footer = html``;
 
     return html`
-      ${navbar} ${banner} ${allContent} ${footer}
+      ${banner} ${allContent} ${footer}
     `;
   }
 }
 
-window.customElements.define("home-page", HomePage);
+customElements.define("user-profile-page", UserProfile);

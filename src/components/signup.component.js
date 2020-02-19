@@ -57,13 +57,12 @@ class SignupComponent extends LitElement {
 
   getFormValidationError(errorObject) {
     const errorList = [];
-    console.log(errorObject);
     Object.keys(errorObject).forEach(key => {
       errorObject[key].forEach(errorMessage => {
         errorList.push(`${key + " " + errorMessage}`);
       });
     });
-    console.log(errorList);
+    
     return errorList;
   }
 

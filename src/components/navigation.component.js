@@ -2,14 +2,14 @@ import { html, LitElement, css } from "lit-element";
 import { cssStyles } from "../styles/cssStyles";
 import { getwithauth} from "../services/api.services";
 import {
-  DEFAULT_IMG as defaultImg,
-  DEFAULT_NAME as defaultName
+  DEFAULT_IMG ,
+  DEFAULT_NAME 
 } from "../constants/defaults.config";
 class Navigation extends LitElement {
   constructor() {
     super();
-    this.username = defaultName;
-    this.userImage = defaultImg;
+    this.username = DEFAULT_NAME;
+    this.userImage = DEFAULT_IMG;
     this.isToken = window.localStorage.getItem("token") ? true : false;
   }
 

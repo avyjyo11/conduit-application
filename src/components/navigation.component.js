@@ -1,6 +1,6 @@
 import { html, LitElement, css } from "lit-element";
 import { cssStyles } from "../styles/cssStyles";
-import { getwithauth} from "../services/api.services";
+import { getwithauth } from "../services/api.services";
 import {
   DEFAULT_IMG as defaultImg,
   DEFAULT_NAME as defaultName
@@ -67,18 +67,16 @@ class Navigation extends LitElement {
     ];
   }
 
- 
-
   connectedCallback() {
     super.connectedCallback();
     if (this.isToken) {
-      let url='/user';
+      let url = "/user";
       getwithauth(url)
-      .then(data => {
-        this.username = data.user.username;
-        this.userImage = data.user.image;
-      })
-      .catch(err => console.error(err));
+        .then(data => {
+          this.username = data.user.username;
+          this.userImage = data.user.image;
+        })
+        .catch(err => console.error(err));
     }
   }
 
@@ -91,7 +89,7 @@ class Navigation extends LitElement {
             <ul>
               ${!this.isToken
                 ? html`
-                    <li ><a class="active" href="/">Home</a></li>
+                    <li><a class="active" href="/">Home</a></li>
                     <li><a href="/sign-in">Sign in</a></li>
                     <li><a href="/sign-up">Sign up</a></li>
                   `

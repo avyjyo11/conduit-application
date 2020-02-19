@@ -6,23 +6,50 @@ import "../components/texrarea.component";
 import "../components/footer.component";
 import { Router } from "@vaadin/router";
 import { getwithauth, put } from "../services/api.services";
+import { HOME } from "../constants/routesj.config";
 
 class YourSetting extends LitElement {
   constructor() {
     super();
-    this.update = this.update.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+
+    this.updating = e => {
+      const data1 = {
+        user: {
+          username: this.userName,
+          email: this.email,
+          password: this.newpassword == "" ? null : this.newPassword,
+          bio: this.userbio,
+          image: this.imagelink
+        }
+      };
+
+      let url = `/user`;
+      put(url, data1)
+        .then(data => {
+          localStorage.setItem("token", data.user.token);
+          Router.go(`${HOME}`);
+        })
+        .catch(error => {
+          this.errors = error && error.errors;
+          this.showError = true;
+        });
+    };
+
+    this.handleChange = e => {
+      this[e.target.name] = e.target.value;
+    };
+
     this.imagelink = "";
     this.userName = "";
     this.userbio = "";
     this.email = "";
     this.newPassword = null;
+
     this.showError = false;
     this.errors;
 
     this.isToken = window.localStorage.getItem("token") ? true : false;
   }
-
   static get properties() {
     return {
       showError: { type: Boolean },
@@ -39,8 +66,6 @@ class YourSetting extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.getuser();
-    console.log("setting connectedcallback");
-    this.requestUpdate();
   }
 
   getuser() {
@@ -56,7 +81,6 @@ class YourSetting extends LitElement {
         .catch(err => console.log(err));
     }
   }
-
   getFormValidationError(errorObject) {
     const errorList = [];
 
@@ -105,11 +129,6 @@ class YourSetting extends LitElement {
   }
 
   render() {
-    console.log("render setting");
-    return html`
-      <div>Hello</div>
-    `;
-
     return html`
       <div id="wrapper">
         <p id="yoursetting">Your Setting</p>
@@ -124,39 +143,39 @@ class YourSetting extends LitElement {
           : null}
         <form>
           <input-tag
-            value="${this.imagelink}"
-            .setValue=${this.handleChange}
+            value=${this.imagelink}
+            .setValue="${this.handleChange}"
             placeholder="URL of profile picture"
             name="imagelink"
           ></input-tag>
           <input-tag
-            value="${this.userName}"
-            .setValue=${this.handleChange}
+            value=${this.userName}
+            .setValue="${this.handleChange}"
             placeholder="username"
             name="userName"
           ></input-tag>
           <textarea-tag
-            value="${this.userbio}"
-            .setValue=${this.handleChange}
+            value=${this.userbio}
+            .setValue="${this.handleChange}"
             placeholder="Short bio about you"
             name="userbio"
           ></textarea-tag>
 
           <input-tag
-            value="${this.email}"
-            .setValue=${this.handleChange}
+            value=${this.email}
+            .setValue="${this.handleChange}"
             placeholder="Email"
             name="email"
           ></input-tag>
           <input-tag
-            value="${this.newPassword || ""}"
-            .setValue=${this.handleChange}
+            value=${this.newPassword || ""}
+            .setValue="${this.handleChange}"
             placeholder="New Password"
             name="newPassword"
           ></input-tag>
           <div id="btn-wrapper">
             <btn-tag
-              .handleClick=${this.update}
+              .handleClick="${this.updating}"
               buttonName="Update"
               className="btn"
             ></btn-tag>
@@ -165,7 +184,7 @@ class YourSetting extends LitElement {
         <hr />
         <div id="btn-logout">
           <btn-tag
-            .handleClick=${this.logOut}
+            .handleClick="${this.logOut}"
             buttonName="or click here to logout"
             className="btn-logout"
           ></btn-tag>
@@ -175,38 +194,10 @@ class YourSetting extends LitElement {
   }
 
   logOut(e) {
-    console.log("logout");
     localStorage.clear();
 
-    Router.go("/");
-    location.pathname = "/";
-  }
-
-  handleChange(e) {
-    this[e.target.name] = e.target.value;
-  }
-
-  update(e) {
-    const data = {
-      user: {
-        username: this.userName,
-        email: this.email,
-        password: this.newpassword == "" ? null : this.newPassword,
-        bio: this.userbio,
-        image: this.imagelink
-      }
-    };
-
-    // let url = `/user`;
-    // put(url, data)
-    //   .then(data => {
-    //     localStorage.setItem("token", data.user.token);
-    //     Router.go("/");
-    //   })
-    //   .catch(error => {
-    //     this.errors = error && error.errors;
-    //     this.showError = true;
-    //   });
+    Router.go(`${HOME}`);
+    location.pathname = `${HOME}`;
   }
 }
 

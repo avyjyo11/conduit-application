@@ -10,6 +10,7 @@ import { cssStyles } from "../styles/cssStyles";
 import { Router } from "@vaadin/router";
 import { get, getwithauth, put } from "../services/api.services";
 import { DEFAULT_IMG, DEFAULT_NAME } from "../constants/defaults.config";
+import { VIEW_ARTICLE } from "../constants/routesj.config";
 
 class UserProfile extends LitElement {
   constructor() {
@@ -79,7 +80,9 @@ class UserProfile extends LitElement {
         this.favPages = articlesCount / 10;
         this.articles = this.myArticles;
         this.pages = this.myPages;
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
@@ -225,11 +228,11 @@ class UserProfile extends LitElement {
   }
 
   editSettingsClick(e) {
-    Router.go("/setting");
+    Router.go(`${SETTING}`);
   }
 
   articleView(slug) {
-    Router.go(`/view-article/${slug}`);
+    Router.go(`${VIEW_ARTICLE}/${slug}`);
   }
 
   render() {
@@ -237,8 +240,6 @@ class UserProfile extends LitElement {
     for (var i = 1; i <= this.pages; i++) {
       pagesArr.push(i);
     }
-
-    const navbar = html``;
 
     const banner = html`
       <div class="jumbotron center">
@@ -325,7 +326,7 @@ class UserProfile extends LitElement {
     const footer = html``;
 
     return html`
-      ${navbar} ${banner} ${allContent} ${footer}
+      ${banner} ${allContent} ${footer}
     `;
   }
 }

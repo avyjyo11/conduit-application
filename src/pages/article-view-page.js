@@ -4,7 +4,8 @@ import "../components/button.component";
 import "../components/texrarea.component";
 import "../components/navigation.component";
 import "../components/userInfo.component";
-import { get } from "../services/api.services";
+import { get, getwithauth, del, post } from "../services/api.services";
+import { DEFAULT_IMG } from "../constants/defaults.config";
 
 class ArticleView extends LitElement {
   connectedCallback() {
@@ -34,25 +35,9 @@ class ArticleView extends LitElement {
         }
       };
 
-      fetch(
-        `https://conduit.productionready.io/api/articles/${this.slug}/comments`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "appication/json",
-            Authorization: `Token ${localStorage.getItem("token")}`
-          },
-          body: JSON.stringify(commentData)
-        }
-      )
-        .then(response => {
-          if (!response.ok) throw response;
-          return response.json();
-        })
+      post(`/articles/${this.slug}/comments`, commentData)
         .then(data => {
-          console.log("After Comment added", data);
-          this.fetchComment(); //redirect to the article page
+          this.fetchComment();
         })
         .catch(error => console.error("Error", error));
     };
@@ -123,76 +108,32 @@ class ArticleView extends LitElement {
   }
 
   fetchComment() {
-    fetch(
-      `https://conduit.productionready.io/api/articles/${this.slug}/comments`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "appication/json"
-        }
-      }
-    )
-      .then(response => {
-        if (!response.ok) throw response;
-        return response.json();
-      })
+    get(`/articles/${this.slug}/comments`)
       .then(data => {
         this.displayComments = data.comments;
-        console.log("comments", this.displayComments); //redirect to the article page
       })
       .catch(error => console.error("Error", error));
   }
 
   fetchUser() {
-    fetch(`https://conduit.productionready.io/api/user`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "appication/json",
-        Authorization: `Token ${localStorage.getItem("token")}`
-      }
-    })
-      .then(response => {
-        if (!response.ok) throw response;
-        return response.json();
-      })
+    getwithauth(`/user`)
       .then(data => {
         this.userImage = data.user.image;
         this.username = data.user.username;
-
-        console.log("comments", data); //redirect to the article page
       })
       .catch(error => console.error("Error", error));
   }
 
   deleteSubmit(cmtid) {
-    fetch(
-      `https://conduit.productionready.io/api/articles/${this.slug}/comments/${cmtid}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "appication/json",
-          Authorization: `Token ${localStorage.getItem("token")}`
-        }
-      }
-    )
-      .then(response => {
-        if (!response.ok) throw response;
-        return response.json();
-      })
+    del(`/articles/${this.slug}/comments/${cmtid}`)
       .then(data => {
-        console.log(data);
-        this.fetchComment(); //redirect to the article page
+        this.fetchComment();
       })
       .catch(error => console.error("Error", error.json()));
   }
 
   render() {
     if (this.dataLoaded) {
-      console.log(this.data);
-
       return html`
         <div class="article-info-container">
           <div class="article-title-container">
@@ -220,8 +161,7 @@ class ArticleView extends LitElement {
                 </textarea-tag>
                 <div class="belowComment-section">
                   <img
-                    src="${this.userImage ||
-                      "https://www.w3schools.com/howto/img_avatar.png"}"
+                    src="${this.userImage || DEFAULT_IMG}"
                     alt="Avatar"
                     class="avatar"
                   />
@@ -236,9 +176,8 @@ class ArticleView extends LitElement {
               </div>
             `
           : null}
-        ${this.displayComments.length === 0
-          ? null
-          : this.displayComments.map(
+        ${this.displayComments.length
+          ? this.displayComments.map(
               cmt => html`
                 <div class="comment-section">
                   <textarea-tag
@@ -250,8 +189,7 @@ class ArticleView extends LitElement {
                   </textarea-tag>
                   <div class="belowComment-section">
                     <img
-                      src=${cmt.author.image ||
-                        "https://www.w3schools.com/howto/img_avatar.png"}
+                      src=${cmt.author.image || DEFAULT_IMG}
                       alt="Avatar"
                       class="avatar"
                     />
@@ -274,7 +212,8 @@ class ArticleView extends LitElement {
                   </div>
                 </div>
               `
-            )}
+            )
+          : null}
       `;
     } else {
       return html`

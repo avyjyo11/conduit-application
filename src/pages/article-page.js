@@ -5,6 +5,7 @@ import "../components/input.component.js";
 import "../components/texrarea.component.js";
 import { Router } from "@vaadin/router";
 import { post } from "../services/api.services";
+import { VIEW_ARTICLE } from "../constants/routesj.config.js";
 
 class ArticlePage extends LitElement {
   static get styles() {
@@ -47,7 +48,7 @@ class ArticlePage extends LitElement {
 
       post("/articles", data)
         .then(data => {
-          Router.go(`/view-article/${data.article.slug}`); //redirect to the article page
+          Router.go(`${VIEW_ARTICLE}/${data.article.slug}`);
         })
         .catch(error => console.error("Error", error));
     };

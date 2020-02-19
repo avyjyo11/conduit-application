@@ -9,10 +9,8 @@ import "../components/footer.component";
 import { cssStyles } from "../styles/cssStyles";
 import { Router } from "@vaadin/router";
 import { get, getwithauth, put } from "../services/api.services";
-import {
-  DEFAULT_IMG as defaultImg,
-  DEFAULT_NAME as defaultName
-} from "../constants/defaults.config";
+import { DEFAULT_IMG, DEFAULT_NAME } from "../constants/defaults.config";
+import { VIEW_ARTICLE, SETTING } from "../constants/routes.config.js";
 
 class UserProfile extends LitElement {
   constructor() {
@@ -25,11 +23,24 @@ class UserProfile extends LitElement {
     this.pages = 0;
     this.myPages = 0;
     this.favPages = 0;
-    this.username = defaultName;
+    this.username = DEFAULT_NAME;
     this.userBio = "";
-    this.userImage = defaultImg;
+    this.userImage = DEFAULT_IMG;
 
-    this.pageChange = this.pageChange.bind(this);
+    this.pageChange = e => {
+      let offset = (e.target.innerText - 1) * 10;
+      const fetchURL =
+        this.activeTab === "my"
+          ? `/articles?author=${this.username}&limit=10&offset=${offset}`
+          : `/articles?favorited=${this.username}&limit=10&offset=${offset}`;
+
+      get(fetchURL)
+        .then(data => {
+          this.articles = [...data.articles];
+          window.scrollTo(0, 0);
+        })
+        .catch(err => console.error(err));
+    };
 
     this.isToken = window.localStorage.getItem("token") ? true : false;
   }
@@ -52,7 +63,7 @@ class UserProfile extends LitElement {
         let { user } = await getwithauth(url);
         this.username = user.username;
         this.userBio = user.bio;
-        this.userImage = user.image;
+        this.userImage = user.image || DEFAULT_IMG;
 
         url = `/tags?limit=20`;
         let { tags } = await get(url);
@@ -69,7 +80,9 @@ class UserProfile extends LitElement {
         this.favPages = articlesCount / 10;
         this.articles = this.myArticles;
         this.pages = this.myPages;
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
@@ -214,27 +227,12 @@ class UserProfile extends LitElement {
     }
   }
 
-  pageChange(e) {
-    let offset = (e.target.innerText - 1) * 10;
-    const fetchURL =
-      this.activeTab === "my"
-        ? `/articles?author=${this.username}&limit=10&offset=${offset}`
-        : `/articles?favorited=${this.username}&limit=10&offset=${offset}`;
-
-    get(fetchURL)
-      .then(data => {
-        this.articles = [...data.articles];
-        window.scrollTo(0, 0);
-      })
-      .catch(err => console.log(err));
-  }
-
   editSettingsClick(e) {
-    Router.go("/setting");
+    Router.go(`${SETTING}`);
   }
 
   articleView(slug) {
-    Router.go(`/view-article/${slug}`);
+    Router.go(`${VIEW_ARTICLE}/${slug}`);
   }
 
   render() {
@@ -242,8 +240,6 @@ class UserProfile extends LitElement {
     for (var i = 1; i <= this.pages; i++) {
       pagesArr.push(i);
     }
-
-    const navbar = html``;
 
     const banner = html`
       <div class="jumbotron center">
@@ -330,7 +326,7 @@ class UserProfile extends LitElement {
     const footer = html``;
 
     return html`
-      ${navbar} ${banner} ${allContent} ${footer}
+      ${banner} ${allContent} ${footer}
     `;
   }
 }

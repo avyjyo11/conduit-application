@@ -6,35 +6,60 @@ import "../components/texrarea.component";
 import "../components/footer.component";
 import { Router } from "@vaadin/router";
 import { getwithauth, put } from "../services/api.services";
+import { HOME } from "../constants/routes.config";
 
 class YourSetting extends LitElement {
   constructor() {
     super();
 
-    this._update = this._update.bind(this);
-    this._handleChange = this._handleChange.bind(this);
+    this.updating = e => {
+      const data1 = {
+        user: {
+          username: this.userName,
+          email: this.email,
+          password: this.newpassword == "" ? null : this.newPassword,
+          bio: this.userbio,
+          image: this.imagelink
+        }
+      };
 
-    this._imagelink = "";
-    this._userName = "";
-    this._userbio = "";
-    this._email = "";
-    this._newPassword = null;
+      let url = `/user`;
+      put(url, data1)
+        .then(data => {
+          localStorage.setItem("token", data.user.token);
+          Router.go(`${HOME}`);
+        })
+        .catch(error => {
+          this.errors = error && error.errors;
+          this.showError = true;
+        });
+    };
+
+    this.handleChange = e => {
+      this[e.target.name] = e.target.value;
+    };
+
+    this.imagelink = "";
+    this.userName = "";
+    this.userbio = "";
+    this.email = "";
+    this.newPassword = null;
 
     this.showError = false;
-    this._errors;
+    this.errors;
 
     this.isToken = window.localStorage.getItem("token") ? true : false;
   }
   static get properties() {
     return {
       showError: { type: Boolean },
-      _errors: { type: Array },
+      errors: { type: Array },
       isToken: { type: Boolean },
-      _imagelink: { type: String },
-      _userName: { type: String },
-      _userbio: { type: String },
-      _email: { type: String },
-      _newPassword: { type: String }
+      imagelink: { type: String },
+      userName: { type: String },
+      userbio: { type: String },
+      email: { type: String },
+      newPassword: { type: String }
     };
   }
 
@@ -48,11 +73,10 @@ class YourSetting extends LitElement {
       let url = `/user`;
       getwithauth(url)
         .then(data => {
-          console.log(data);
-          this._userbio = data.user.bio || "";
-          this._imagelink = data.user.image || "";
-          this._userName = data.user.username;
-          this._email = data.user.email;
+          this.userbio = data.user.bio || "";
+          this.imagelink = data.user.image || "";
+          this.userName = data.user.username;
+          this.email = data.user.email;
         })
         .catch(err => console.log(err));
     }
@@ -103,13 +127,14 @@ class YourSetting extends LitElement {
       }
     `;
   }
+
   render() {
     return html`
       <div id="wrapper">
         <p id="yoursetting">Your Setting</p>
 
         ${this.showError
-          ? this.getFormValidationError(this._errors).map(
+          ? this.getFormValidationError(this.errors).map(
               msg =>
                 html`
                   <li>${msg}</li>
@@ -118,39 +143,39 @@ class YourSetting extends LitElement {
           : null}
         <form>
           <input-tag
-            value=${this._imagelink}
-            .setValue="${this._handleChange}"
+            value=${this.imagelink}
+            .setValue="${this.handleChange}"
             placeholder="URL of profile picture"
-            name="_imagelink"
+            name="imagelink"
           ></input-tag>
           <input-tag
-            value=${this._userName}
-            .setValue="${this._handleChange}"
+            value=${this.userName}
+            .setValue="${this.handleChange}"
             placeholder="username"
-            name="_userName"
+            name="userName"
           ></input-tag>
           <textarea-tag
-            value=${this._userbio}
-            .setValue="${this._handleChange}"
+            value=${this.userbio}
+            .setValue="${this.handleChange}"
             placeholder="Short bio about you"
-            name="_userbio"
+            name="userbio"
           ></textarea-tag>
 
           <input-tag
-            value=${this._email}
-            .setValue="${this._handleChange}"
+            value=${this.email}
+            .setValue="${this.handleChange}"
             placeholder="Email"
-            name="_email"
+            name="email"
           ></input-tag>
           <input-tag
-            value=${this._newPassword || ""}
-            .setValue="${this._handleChange}"
+            value=${this.newPassword || ""}
+            .setValue="${this.handleChange}"
             placeholder="New Password"
-            name="_newPassword"
+            name="newPassword"
           ></input-tag>
           <div id="btn-wrapper">
             <btn-tag
-              .handleClick="${this._update}"
+              .handleClick="${this.updating}"
               buttonName="Update"
               className="btn"
             ></btn-tag>
@@ -159,7 +184,7 @@ class YourSetting extends LitElement {
         <hr />
         <div id="btn-logout">
           <btn-tag
-            .handleClick="${this._logOut}"
+            .handleClick="${this.logOut}"
             buttonName="or click here to logout"
             className="btn-logout"
           ></btn-tag>
@@ -168,40 +193,11 @@ class YourSetting extends LitElement {
     `;
   }
 
-  _logOut(e) {
-    console.log("logout");
+  logOut(e) {
     localStorage.clear();
 
-    Router.go("/");
-    location.pathname = "/";
-  }
-
-  _handleChange(e) {
-    this[e.target.name] = e.target.value;
-  }
-
-  _update(e) {
-    const data = {
-      user: {
-        username: this._userName,
-        email: this._email,
-        password: this._newpassword == "" ? null : this._newPassword,
-        bio: this._userbio,
-        image: this._imagelink
-      }
-    };
-
-    let url = `/user`;
-    put(url, data)
-      .then(data => {
-        localStorage.setItem("token", data.user.token);
-
-        Router.go("/");
-      })
-      .catch(error => {
-        this._errors = error && error.errors;
-        this.showError = true;
-      });
+    Router.go(`${HOME}`);
+    location.pathname = `${HOME}`;
   }
 }
 

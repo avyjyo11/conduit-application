@@ -7,15 +7,16 @@ import "../components/article-preview.component";
 import "../components/page-indicator.component";
 import "../components/footer.component";
 import "../components/heart-toggler";
-import { get } from "../services/api.services";
+import { get, getwithauth } from "../services/api.services";
 import { cssStyles } from "../styles/cssStyles";
+import { SIGN_IN, VIEW_ARTICLE } from "../constants/routes.config.js";
 
 class HomePage extends LitElement {
   constructor() {
     super();
     this.activeTab = "global";
     this.tags = [];
-    this.selectedTag = "";
+    this.selectedTag = null;
     this.globalFeeds = [];
     this.yourFeeds = [];
     this.articles = [];
@@ -23,11 +24,54 @@ class HomePage extends LitElement {
     this.yourPages = 0;
     this.pages = 0;
     this.username = "username";
-    this.pageChange = this.pageChange.bind(this);
-    this.likePost = this.likePost.bind(this);
-    this.tagClick = this.tagClick.bind(this);
-  this.isToken = window.localStorage.getItem("token") ? true : false;
+    this.pageChange = e => {
+      let offset = (e.target.innerText - 1) * 10;
+      let fetchURL;
 
+      if (this.activeTab === "global") {
+        if (this.selectedTag) {
+          fetchURL = `/articles?limit=10&offset=${offset}&tag=${this.selectedTag}`;
+        } else {
+          fetchURL = `/articles?limit=10&offset=${offset}`;
+        }
+      } else {
+        if (this.selectedTag) {
+          fetchURL = `articles?author=${this.username}&limit=10&offset=${offset}&tag=${this.selectedTag}`;
+        } else {
+          fetchURL = `/articles?author=${this.username}&limit=10&offset=${offset}`;
+        }
+      }
+
+      get(fetchURL)
+        .then(data => {
+          this.articles = [...data.articles];
+          window.scrollTo(0, 0);
+        })
+        .catch(err => console.log(err));
+    };
+
+    this.likePost = e => {
+      if (!this.isToken) {
+        Router.go(`${SIGN_IN}`);
+      }
+    };
+
+    this.tagClick = e => {
+      this.selectedTag = e.target.innerText;
+      let url =
+        this.activeTab === "global"
+          ? `/articles?tag=${this.selectedTag}&limit=10`
+          : `articles?author=${this.username}&tag=${this.selectedTag}&limit=10`;
+
+      get(url)
+        .then(data => {
+          this.articles = [...data.articles];
+          this.pages = data.articlesCount / 10;
+        })
+        .catch(err => console.log(err));
+    };
+
+    this.isToken = window.localStorage.getItem("token") ? true : false;
   }
 
   static get properties() {
@@ -63,14 +107,14 @@ class HomePage extends LitElement {
       .catch(err => console.log(err));
 
     if (this.isToken) {
-     let url=`/user`
-      get(url)
-        .then(data=>{
+      url = `/user`;
+      getwithauth(url)
+        .then(data => {
           this.username = data.user.username;
-          let url=`/articles?author=${this.username}&limit=10`;
+          let url = `/articles?author=${this.username}&limit=10`;
           return get(url);
         })
-        .then(data=>{
+        .then(data => {
           this.yourPages = data.articlesCount / 10;
           this.yourFeeds = [...data.articles];
         })
@@ -182,7 +226,7 @@ class HomePage extends LitElement {
     buttons[0].classList.remove("active");
     buttons[1].classList.remove("active");
     e.target.classList.add("active");
-    this.selectedTag = "";
+    this.selectedTag = null;
 
     if (e.target.innerText === "Global Feed") {
       this.articles = this.globalFeeds;
@@ -197,58 +241,8 @@ class HomePage extends LitElement {
     }
   }
 
-  pageChange(e) {
-    let offset = (e.target.innerText - 1) * 10;
-    let fetchURL;
-   
-    if (this.activeTab === "global") {
-      if (this.selectedTag === "") {
-         fetchURL=`/articles?limit=10&offset=${offset}`;
-      } else {
-          fetchURL=`/articles?limit=10&offset=${offset}&tag=${this.selectedTag}`
-      }
-    } else {
-      if (this.selectedTag === "") {
-        fetchURL=`/articles?author=${this.username}&limit=10&offset=${offset}`;
-      } else {
-        fetchURL=`articles?author=${this.username}&limit=10&offset=${offset}&tag=${this.selectedTag}`;
-      }
-    }
-      
-    get(fetchURL)
-    .then(data => {
-      this.articles = [...data.articles];
-      window.scrollTo(0, 0);
-    })
-    .catch(err => console.log(err));
-
-  }
-
-  likePost(e) {
-    if (!this.isToken) {
-      Router.go("/sign-in");
-    }
-  }
-
   articleView(slug) {
-    Router.go(`/view-article/${slug}`);
-  }
-
-  tagClick(e) {
-    this.selectedTag = e.target.innerText;
-    let url =
-      this.activeTab === "global"
-        ? `/articles?tag=${this.selectedTag}&limit=10`
-        : `articles?author=${this.username}&tag=${this.selectedTag}&limit=10`;
-   
-      get(url)
-      .then(data => {
-        this.articles = [...data.articles];
-        this.pages = data.articlesCount / 10;
-        console.log("tagclicked >>", this.articles);
-      })
-      .catch(err => console.log(err));
-
+    Router.go(`${VIEW_ARTICLE}/${slug}`);
   }
 
   render() {
@@ -257,8 +251,7 @@ class HomePage extends LitElement {
       pagesArr.push(i);
     }
 
-    const navbar = html`
-    `;
+    const navbar = html``;
 
     const banner = html`
       <div class="jumbotron center">
@@ -293,12 +286,12 @@ class HomePage extends LitElement {
         </div>
         <hr />
         <div>
-          ${this.selectedTag === ""
-            ? null
-            : html`
+          ${this.selectedTag
+            ? html`
                 Selected Tag: ${this.selectedTag}
                 <hr />
-              `}
+              `
+            : null}
         </div>
         <div>
           ${this.articles.map(value => {
@@ -346,8 +339,7 @@ class HomePage extends LitElement {
       </div>
     `;
 
-    const footer = html`
-    `;
+    const footer = html``;
 
     return html`
       ${navbar} ${banner} ${allContent} ${footer}

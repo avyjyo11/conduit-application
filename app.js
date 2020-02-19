@@ -7,16 +7,25 @@ import "./src/pages/your-setting-page";
 import "./src/pages/article-view-page";
 import "./src/pages/page-not-found";
 import "./src/pages/user-profile-page";
-import{SETTING,SIGN_IN,SIGN_UP,NEW_POST,PROFILE,VIEW_ARTICLE, HOME,PAGE_NOT_FOUND } from "./src/constants/routes.config";
+import {
+  SETTING,
+  SIGN_IN,
+  SIGN_UP,
+  NEW_POST,
+  PROFILE,
+  VIEW_ARTICLE_SLUG,
+  HOME,
+  PAGE_NOT_FOUND
+} from "./src/constants/routes.config";
 const outlet = document.querySelector("main");
 const router = new Router(outlet);
 router.setRoutes([
-  { path: HOME,  component: "home-page" },
+  { path: HOME, component: "home-page" },
   { path: SIGN_IN, component: "signin-tag" },
-  { path:  SIGN_UP, component: "signup-tag" },
+  { path: SIGN_UP, component: "signup-tag" },
   { path: NEW_POST, component: "article-page" },
   { path: SETTING, component: "your-setting-tag" },
   { path: PROFILE, component: "user-profile-page" },
-  { path: VIEW_ARTICLE, component: "view-article" },
-  { path: PAGE_NOT_FOUND,component:"pagenotfound-page"}
+  { path: VIEW_ARTICLE_SLUG, component: "view-article" },
+  { path: PAGE_NOT_FOUND, component: "pagenotfound-page" }
 ]);

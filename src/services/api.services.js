@@ -1,10 +1,10 @@
-import { API_BASE_URL as baseUrl } from "../constants/url.config";
+import { API_BASE_URL } from "../constants/url.config";
 const token = window.localStorage.getItem("token");
 
 export function get(endPoint) {
-  return fetch(baseUrl + endPoint)
+  return fetch(API_BASE_URL + endPoint)
     .then(res => {
-      if (!res.ok) throw res;
+      if (!res.ok) throw res.json();
       return res.json();
     })
     .catch(err => {
@@ -13,7 +13,7 @@ export function get(endPoint) {
 }
 
 export function getwithauth(endPoint) {
-  return fetch(baseUrl + endPoint, {
+  return fetch(API_BASE_URL + endPoint, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -22,7 +22,7 @@ export function getwithauth(endPoint) {
     }
   })
     .then(res => {
-      if (!res.ok) throw res;
+      if (!res.ok) throw res.json();
       return res.json();
     })
     .catch(err => {
@@ -31,7 +31,7 @@ export function getwithauth(endPoint) {
 }
 
 export function post(endPoint, data) {
-  return fetch(baseUrl + endPoint, {
+  return fetch(API_BASE_URL + endPoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -45,16 +45,15 @@ export function post(endPoint, data) {
       return res.json();
     })
     .catch(err => {
-     // console.log(err.json());
       throw err;
     });
 }
 
 export function postwithoutAuth(endPoint, data) {
-  return fetch(baseUrl+endPoint, {
+  return fetch(API_BASE_URL + endPoint, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
     body: JSON.stringify(data)
   })
@@ -68,7 +67,7 @@ export function postwithoutAuth(endPoint, data) {
 }
 
 export function put(endPoint, data) {
-  return fetch(baseUrl + endPoint, {
+  return fetch(API_BASE_URL + endPoint, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -78,7 +77,7 @@ export function put(endPoint, data) {
     body: JSON.stringify(data)
   })
     .then(res => {
-      if (!res.ok) throw res;
+      if (!res.ok) throw res.json();
       return res.json();
     })
     .catch(err => {
@@ -87,7 +86,7 @@ export function put(endPoint, data) {
 }
 
 export function del(endPoint) {
-  return fetch(baseUrl + endPoint, {
+  return fetch(API_BASE_URL + endPoint, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

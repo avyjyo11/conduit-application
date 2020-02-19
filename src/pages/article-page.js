@@ -4,6 +4,8 @@ import "../components/button.component.js";
 import "../components/input.component.js";
 import "../components/texrarea.component.js";
 import { Router } from "@vaadin/router";
+import { post } from "../services/api.services";
+import { VIEW_ARTICLE } from "../constants/routes.config.js";
 
 class ArticlePage extends LitElement {
   static get styles() {
@@ -31,41 +33,25 @@ class ArticlePage extends LitElement {
     this.title = "";
     this.description = "";
     this.body = "";
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleSubmit() {
-    const token = localStorage.getItem("token");
-    const data = {
-      article: {
-        title: this.title,
-        description: this.description,
-        body: this.body
-      }
+    this.handleChange = e => {
+      this[e.target.name] = e.target.value;
     };
+    this.handleSubmit = e => {
+      const token = localStorage.getItem("token");
+      const data = {
+        article: {
+          title: this.title,
+          description: this.description,
+          body: this.body
+        }
+      };
 
-    fetch("https://conduit.productionready.io/api/articles", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "appication/json",
-        Authorization: `Token ${token}`
-      },
-      body: JSON.stringify(data)
-    })
-      .then(response => {
-        if (!response.ok) throw response;
-        return response.json();
-      })
-      .then(data => {
-        Router.go(`/view-article/${data.article.slug}`); //redirect to the article page
-      })
-      .catch(error => console.error("Error", error));
-  }
-
-  handleChange(e) {
-    this[e.target.name] = e.target.value;
+      post("/articles", data)
+        .then(data => {
+          Router.go(`${VIEW_ARTICLE}/${data.article.slug}`);
+        })
+        .catch(error => console.error("Error", error));
+    };
   }
 
   render() {

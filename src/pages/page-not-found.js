@@ -1,18 +1,17 @@
 import { html, LitElement } from "lit-element";
 import "../components/navigation.component";
 import "../components/signin.component";
-import "../components/page-not-found";
+import "../components/page-not-found.component";
 
-
-class pagenotfound extends LitElement {
+class PageNotFound extends LitElement {
   constructor() {
     super();
   }
 
   render() {
     return html`
-     <pagenotfound-component-tag></pagenotfound-component-tag>
+      <pagenotfound-component-tag></pagenotfound-component-tag>
     `;
   }
 }
-customElements.define("pagenotfound-page", pagenotfound);
+customElements.define("pagenotfound-page", PageNotFound);

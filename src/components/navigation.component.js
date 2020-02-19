@@ -1,12 +1,16 @@
 import { html, LitElement, css } from "lit-element";
 import { cssStyles } from "../styles/cssStyles";
-import { getwithauth} from "../services/api.services";
-import{SETTING,SIGN_IN,SIGN_UP,NEW_POST,PROFILE,VIEW_ARTICLE, HOME } from "../constants/routes.config.js";
-
+import { getwithauth } from "../services/api.services";
 import {
-  DEFAULT_IMG ,
-  DEFAULT_NAME 
-} from "../constants/defaults.config";
+  SETTING,
+  SIGN_IN,
+  SIGN_UP,
+  NEW_POST,
+  PROFILE,
+  HOME
+} from "../constants/routes.config.js";
+
+import { DEFAULT_IMG, DEFAULT_NAME } from "../constants/defaults.config";
 class Navigation extends LitElement {
   constructor() {
     super();
@@ -69,18 +73,16 @@ class Navigation extends LitElement {
     ];
   }
 
- 
-
   connectedCallback() {
     super.connectedCallback();
     if (this.isToken) {
-      let url='/user';
+      let url = "/user";
       getwithauth(url)
-      .then(data => {
-        this.username = data.user.username;
-        this.userImage = data.user.image;
-      })
-      .catch(err => console.error(err));
+        .then(data => {
+          this.username = data.user.username;
+          this.userImage = data.user.image;
+        })
+        .catch(err => console.error(err));
     }
   }
 
@@ -93,7 +95,7 @@ class Navigation extends LitElement {
             <ul>
               ${!this.isToken
                 ? html`
-                    <li ><a class="active" href="${HOME}">Home</a></li>
+                    <li><a class="active" href="${HOME}">Home</a></li>
                     <li><a href="${SIGN_IN}">Sign in</a></li>
                     <li><a href="${SIGN_UP}">Sign up</a></li>
                   `
@@ -104,8 +106,7 @@ class Navigation extends LitElement {
                     <li>
                       <a href="${PROFILE}">
                         <img
-                          src="${this.userImage ||
-                           DEFAULT_IMG}"
+                          src="${this.userImage || DEFAULT_IMG}"
                           alt="Avatar"
                           class="avatar"
                         />

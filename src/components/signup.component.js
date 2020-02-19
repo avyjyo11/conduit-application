@@ -3,7 +3,7 @@ import "./button.component";
 import "./input.component";
 import { Router } from "@vaadin/router";
 import { postwithoutAuth } from "../services/api.services";
-import{ HOME } from "../constants/routes.config.js";
+import { HOME } from "../constants/routes.config.js";
 
 class SignupComponent extends LitElement {
   constructor() {
@@ -16,38 +16,36 @@ class SignupComponent extends LitElement {
     this.showError = false;
     this.errors;
 
-    this.handleChange=(e)=> {
+    this.handleChange = e => {
       this[e.target.name] = e.target.value;
-    }
+    };
 
-    this.singUp=()=> {
+    this.singUp = () => {
       const data = {
-        "user": {
-          "username": this.userName ,
-          "email": this.email ,
-          "password": this.password
+        user: {
+          username: this.userName,
+          email: this.email,
+          password: this.password
         }
       };
-  
-      let url='/users';
-  
-      postwithoutAuth(url,data)
-      .then((data) => {
-        this.showError=false;
-        this._errors=[];
-        localStorage.setItem('token', data.user.token);
-         Router.go(HOME);
-         location.pathname = HOME;
-      })
-      .catch((error) => {
-          error.then((data)=>
-          {   
-            this.errors= Object.values(data.errors);
-            this.showError=true;
-          
+
+      let url = "/users";
+
+      postwithoutAuth(url, data)
+        .then(data => {
+          this.showError = false;
+          this._errors = [];
+          localStorage.setItem("token", data.user.token);
+          Router.go(HOME);
+          location.pathname = HOME;
+        })
+        .catch(error => {
+          error.then(data => {
+            this.errors = Object.values(data.errors);
+            this.showError = true;
           });
-      });
-    }
+        });
+    };
 
     this.isToken = window.localStorage.getItem("token") ? true : false;
   }
@@ -64,7 +62,7 @@ class SignupComponent extends LitElement {
         errorList.push(`${key + " " + errorMessage}`);
       });
     });
-    
+
     return errorList;
   }
 
@@ -147,10 +145,6 @@ class SignupComponent extends LitElement {
       </div>
     `;
   }
-
-
-
- 
 }
 
 customElements.define("signup-component-tag", SignupComponent);

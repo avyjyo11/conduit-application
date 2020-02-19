@@ -7,14 +7,41 @@ import { postwithoutAuth } from "../services/api.services";
 class SigninComponent extends LitElement {
   constructor() {
     super();
-    this.handleChange = this.handleChange.bind(this);
-    this.singIn = this.singIn.bind(this);
+    this.handleChange=(e) =>{
+      this[e.target.name] = e.target.value;
+    }
+    this.singIn=(e)=> {
+      const data = {
+        user: {
+          email: this.email,
+          password: this.password
+        }
+      };
+  
+      let url='/users/login'
+      postwithoutAuth(url,data)
+      .then((data) => {
+        this.showError=false;
+        this._errors=[];
+       
+     localStorage.setItem('token', data.user.token);
+     Router.go('/');
+     location.pathname = "/";
+      })
+      .catch((error) => { 
+          error.then((data)=>
+          {  
+            this.errors= Object.values(data.errors);
+            this.showError=true;
+          }); 
+      });
+  }
 
     this.email = "";
     this.password = "";
 
     this.showError = false;
-    this.errors = [];
+    this.errors=[];
   }
   static get properties() {
     return {
@@ -68,26 +95,29 @@ class SigninComponent extends LitElement {
         <p id="signin">Sign In</p>
         <p class="green">Need an account</p>
         ${this.showError
-          ? this.errors.map(msg => {
-              return html`
-                <li>Email or Password : ${msg}</li>
-              `;
+          ? this.errors.map((array) => {
+              return array.map(
+                msg =>
+                  html`
+                    <li>Email or Password : ${msg}</li>
+                  `
+              );
             })
           : null}
         <form>
           <input-tag
-            .setValue=${this.handleChange}
+            .setValue="${this.handleChange}"
             placeholder="Email"
             name="email"
           ></input-tag>
           <input-tag
-            .setValue=${this.handleChange}
+            .setValue="${this.handleChange}"
             placeholder="Password"
             name="password"
           ></input-tag>
           <div id="btn-wrapper">
             <btn-tag
-              .handleClick=${this.singIn}
+              .handleClick="${this.singIn}"
               buttonName="Sign In"
               className="btn"
             ></btn-tag>
@@ -97,32 +127,8 @@ class SigninComponent extends LitElement {
     `;
   }
 
-  handleChange(e) {
-    this[e.target.name] = e.target.value;
-  }
 
-  singIn(e) {
-    const data = {
-      user: {
-        email: this.email,
-        password: this.password
-      }
-    };
-
-    let url = "/users/login";
-    postwithoutAuth(url, data)
-      .then(data => {
-        this.showError = false;
-        localStorage.setItem("token", data.user.token);
-        location.pathname = "/";
-      })
-      .catch(error => {
-        error.then(data => {
-          this.errors = Object.values(data.errors)[0];
-          this.showError = true;
-        });
-      });
-  }
+  
 }
 
 customElements.define("signin-component-tag", SigninComponent);

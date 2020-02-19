@@ -1,5 +1,6 @@
 import { html, LitElement, css } from "lit-element";
 import { cssStyles } from "../styles/cssStyles";
+import { getwithauth} from "../services/api.services";
 import {
   DEFAULT_IMG as defaultImg,
   DEFAULT_NAME as defaultName
@@ -66,23 +67,18 @@ class Navigation extends LitElement {
     ];
   }
 
+ 
+
   connectedCallback() {
     super.connectedCallback();
     if (this.isToken) {
-      fetch(`https://conduit.productionready.io/api/user`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Token ${window.localStorage.getItem("token")}`
-        }
+      let url='/user';
+      getwithauth(url)
+      .then(data => {
+        this.username = data.user.username;
+        this.userImage = data.user.image;
       })
-        .then(res => res.json())
-        .then(data => {
-          this.username = data.user.username;
-          this.userImage = data.user.image;
-        })
-        .catch(err => console.log(err));
+      .catch(err => console.error(err));
     }
   }
 
@@ -95,7 +91,7 @@ class Navigation extends LitElement {
             <ul>
               ${!this.isToken
                 ? html`
-                    <li class="active"><a href="/">Home</a></li>
+                    <li ><a class="active" href="/">Home</a></li>
                     <li><a href="/sign-in">Sign in</a></li>
                     <li><a href="/sign-up">Sign up</a></li>
                   `

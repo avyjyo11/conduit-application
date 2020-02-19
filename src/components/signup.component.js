@@ -3,6 +3,8 @@ import "./button.component";
 import "./input.component";
 import { Router } from "@vaadin/router";
 import { postwithoutAuth } from "../services/api.services";
+import{ HOME } from "../constants/routes.config.js";
+
 class SignupComponent extends LitElement {
   constructor() {
     super();
@@ -34,7 +36,7 @@ class SignupComponent extends LitElement {
         this.showError=false;
         this._errors=[];
         localStorage.setItem('token', data.user.token);
-         Router.go('/');
+         Router.go(HOME);
          location.pathname = "/";
       })
       .catch((error) => {

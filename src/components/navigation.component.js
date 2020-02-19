@@ -1,15 +1,17 @@
 import { html, LitElement, css } from "lit-element";
 import { cssStyles } from "../styles/cssStyles";
 import { getwithauth} from "../services/api.services";
+import{SETTING,SIGN_IN,SIGN_UP,NEW_POST,PROFILE,VIEW_ARTICLE, HOME } from "../constants/routes.config.js";
+
 import {
-  DEFAULT_IMG as defaultImg,
-  DEFAULT_NAME as defaultName
+  DEFAULT_IMG ,
+  DEFAULT_NAME 
 } from "../constants/defaults.config";
 class Navigation extends LitElement {
   constructor() {
     super();
-    this.username = defaultName;
-    this.userImage = defaultImg;
+    this.username = DEFAULT_NAME;
+    this.userImage = DEFAULT_IMG;
     this.isToken = window.localStorage.getItem("token") ? true : false;
   }
 
@@ -91,19 +93,19 @@ class Navigation extends LitElement {
             <ul>
               ${!this.isToken
                 ? html`
-                    <li ><a class="active" href="/">Home</a></li>
-                    <li><a href="/sign-in">Sign in</a></li>
-                    <li><a href="/sign-up">Sign up</a></li>
+                    <li ><a class="active" href="${HOME}">Home</a></li>
+                    <li><a href="${SIGN_IN}">Sign in</a></li>
+                    <li><a href="${SIGN_UP}">Sign up</a></li>
                   `
                 : html`
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/new-post">New Post</a></li>
-                    <li><a href="/setting">Setting</a></li>
+                    <li><a href="${HOME}">Home</a></li>
+                    <li><a href="${NEW_POST}">New Post</a></li>
+                    <li><a href="${SETTING}">Setting</a></li>
                     <li>
-                      <a href="/profile">
+                      <a href="${PROFILE}">
                         <img
                           src="${this.userImage ||
-                            "https://www.w3schools.com/howto/img_avatar.png"}"
+                           DEFAULT_IMG}"
                           alt="Avatar"
                           class="avatar"
                         />

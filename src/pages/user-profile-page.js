@@ -9,10 +9,7 @@ import "../components/footer.component";
 import { cssStyles } from "../styles/cssStyles";
 import { Router } from "@vaadin/router";
 import { get, getwithauth, put } from "../services/api.services";
-import {
-  DEFAULT_IMG as defaultImg,
-  DEFAULT_NAME as defaultName
-} from "../constants/defaults.config";
+import { DEFAULT_IMG, DEFAULT_NAME } from "../constants/defaults.config";
 
 class UserProfile extends LitElement {
   constructor() {
@@ -25,11 +22,24 @@ class UserProfile extends LitElement {
     this.pages = 0;
     this.myPages = 0;
     this.favPages = 0;
-    this.username = defaultName;
+    this.username = DEFAULT_NAME;
     this.userBio = "";
-    this.userImage = defaultImg;
+    this.userImage = DEFAULT_IMG;
 
-    this.pageChange = this.pageChange.bind(this);
+    this.pageChange = e => {
+      let offset = (e.target.innerText - 1) * 10;
+      const fetchURL =
+        this.activeTab === "my"
+          ? `/articles?author=${this.username}&limit=10&offset=${offset}`
+          : `/articles?favorited=${this.username}&limit=10&offset=${offset}`;
+
+      get(fetchURL)
+        .then(data => {
+          this.articles = [...data.articles];
+          window.scrollTo(0, 0);
+        })
+        .catch(err => console.log(err));
+    };
 
     this.isToken = window.localStorage.getItem("token") ? true : false;
   }
@@ -212,21 +222,6 @@ class UserProfile extends LitElement {
         this.activeTab = "fav";
       }
     }
-  }
-
-  pageChange(e) {
-    let offset = (e.target.innerText - 1) * 10;
-    const fetchURL =
-      this.activeTab === "my"
-        ? `/articles?author=${this.username}&limit=10&offset=${offset}`
-        : `/articles?favorited=${this.username}&limit=10&offset=${offset}`;
-
-    get(fetchURL)
-      .then(data => {
-        this.articles = [...data.articles];
-        window.scrollTo(0, 0);
-      })
-      .catch(err => console.log(err));
   }
 
   editSettingsClick(e) {

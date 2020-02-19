@@ -10,21 +10,19 @@ import { getwithauth, put } from "../services/api.services";
 class YourSetting extends LitElement {
   constructor() {
     super();
-
     this.update = this.update.bind(this);
     this.handleChange = this.handleChange.bind(this);
-
     this.imagelink = "";
     this.userName = "";
     this.userbio = "";
     this.email = "";
     this.newPassword = null;
-
     this.showError = false;
     this.errors;
 
     this.isToken = window.localStorage.getItem("token") ? true : false;
   }
+
   static get properties() {
     return {
       showError: { type: Boolean },
@@ -41,6 +39,8 @@ class YourSetting extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.getuser();
+    console.log("setting connectedcallback");
+    this.requestUpdate();
   }
 
   getuser() {
@@ -48,7 +48,6 @@ class YourSetting extends LitElement {
       let url = `/user`;
       getwithauth(url)
         .then(data => {
-          console.log(data);
           this.userbio = data.user.bio || "";
           this.imagelink = data.user.image || "";
           this.userName = data.user.username;
@@ -104,7 +103,13 @@ class YourSetting extends LitElement {
       }
     `;
   }
+
   render() {
+    console.log("render setting");
+    return html`
+      <div>Hello</div>
+    `;
+
     return html`
       <div id="wrapper">
         <p id="yoursetting">Your Setting</p>
@@ -192,17 +197,16 @@ class YourSetting extends LitElement {
       }
     };
 
-    let url = `/user`;
-    put(url, data)
-      .then(data => {
-        localStorage.setItem("token", data.user.token);
-
-        Router.go("/");
-      })
-      .catch(error => {
-        this.errors = error && error.errors;
-        this.showError = true;
-      });
+    // let url = `/user`;
+    // put(url, data)
+    //   .then(data => {
+    //     localStorage.setItem("token", data.user.token);
+    //     Router.go("/");
+    //   })
+    //   .catch(error => {
+    //     this.errors = error && error.errors;
+    //     this.showError = true;
+    //   });
   }
 }
 

@@ -4,23 +4,18 @@ import "../components/button.component";
 import "../components/texrarea.component";
 import "../components/navigation.component";
 import "../components/userInfo.component";
-import { Router } from "@vaadin/router";
+import { get } from "../services/api.services";
 
 class ArticleView extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.slug = this.location.params.slug;
-    fetch("https://conduit.productionready.io/api/articles/" + this.slug, {
-      method: "GET",
-      headers: { "Content-Type": "application/json", Accept: "appication/json" }
-    })
-      .then(response => response.json())
-      .then(data => {
-        this.data = data;
-        this.dataLoaded = true;
-        this.fetchUser();
-        this.fetchComment();
-      });
+    get("/articles/" + this.slug).then(data => {
+      this.data = data;
+      this.dataLoaded = true;
+      this.fetchUser();
+      this.fetchComment();
+    });
   }
   constructor() {
     super();

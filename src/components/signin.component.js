@@ -7,41 +7,40 @@ import { postwithoutAuth } from "../services/api.services";
 class SigninComponent extends LitElement {
   constructor() {
     super();
-    this.handleChange=(e) =>{
+    this.handleChange = e => {
       this[e.target.name] = e.target.value;
-    }
-    this.singIn=(e)=> {
+    };
+    this.singIn = e => {
       const data = {
         user: {
           email: this.email,
           password: this.password
         }
       };
-  
-      let url='/users/login'
-      postwithoutAuth(url,data)
-      .then((data) => {
-        this.showError=false;
-        this._errors=[];
-       
-     localStorage.setItem('token', data.user.token);
-     Router.go('/');
-     location.pathname = "/";
-      })
-      .catch((error) => { 
-          error.then((data)=>
-          {  
-            this.errors= Object.values(data.errors);
-            this.showError=true;
-          }); 
-      });
-  }
+
+      let url = "/users/login";
+      postwithoutAuth(url, data)
+        .then(data => {
+          this.showError = false;
+          this._errors = [];
+
+          localStorage.setItem("token", data.user.token);
+          Router.go("/");
+          location.pathname = "/";
+        })
+        .catch(error => {
+          error.then(data => {
+            this.errors = Object.values(data.errors);
+            this.showError = true;
+          });
+        });
+    };
 
     this.email = "";
     this.password = "";
 
     this.showError = false;
-    this.errors=[];
+    this.errors = [];
   }
   static get properties() {
     return {
@@ -95,7 +94,7 @@ class SigninComponent extends LitElement {
         <p id="signin">Sign In</p>
         <p class="green">Need an account</p>
         ${this.showError
-          ? this.errors.map((array) => {
+          ? this.errors.map(array => {
               return array.map(
                 msg =>
                   html`
@@ -126,9 +125,6 @@ class SigninComponent extends LitElement {
       </div>
     `;
   }
-
-
-  
 }
 
 customElements.define("signin-component-tag", SigninComponent);

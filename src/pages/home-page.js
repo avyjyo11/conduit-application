@@ -7,7 +7,7 @@ import "../components/article-preview.component";
 import "../components/page-indicator.component";
 import "../components/footer.component";
 import "../components/heart-toggler";
-import { get } from "../services/api.services";
+import { get, getwithauth } from "../services/api.services";
 import { cssStyles } from "../styles/cssStyles";
 
 class HomePage extends LitElement {
@@ -62,8 +62,8 @@ class HomePage extends LitElement {
       .catch(err => console.log(err));
 
     if (this.isToken) {
-      let url = `/user`;
-      get(url)
+      url = `/user`;
+      getwithauth(url)
         .then(data => {
           this.username = data.user.username;
           let url = `/articles?author=${this.username}&limit=10`;

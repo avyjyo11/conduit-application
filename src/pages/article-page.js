@@ -4,6 +4,7 @@ import "../components/button.component.js";
 import "../components/input.component.js";
 import "../components/texrarea.component.js";
 import { Router } from "@vaadin/router";
+import { post } from "../services/api.services";
 
 class ArticlePage extends LitElement {
   static get styles() {
@@ -44,19 +45,7 @@ class ArticlePage extends LitElement {
         }
       };
 
-      fetch("https://conduit.productionready.io/api/articles", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "appication/json",
-          Authorization: `Token ${token}`
-        },
-        body: JSON.stringify(data)
-      })
-        .then(response => {
-          if (!response.ok) throw response;
-          return response.json();
-        })
+      post("/articles", data)
         .then(data => {
           Router.go(`/view-article/${data.article.slug}`); //redirect to the article page
         })

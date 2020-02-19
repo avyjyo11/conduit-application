@@ -4,7 +4,7 @@ const token = window.localStorage.getItem("token");
 export function get(endPoint) {
   return fetch(baseUrl + endPoint)
     .then(res => {
-      if (!res.ok) throw res;
+      if (!res.ok) throw res.json();
       return res.json();
     })
     .catch(err => {
@@ -22,7 +22,7 @@ export function getwithauth(endPoint) {
     }
   })
     .then(res => {
-      if (!res.ok) throw res;
+      if (!res.ok) throw res.json();
       return res.json();
     })
     .catch(err => {
@@ -45,16 +45,16 @@ export function post(endPoint, data) {
       return res.json();
     })
     .catch(err => {
-     // console.log(err.json());
+      // console.log(err.json());
       throw err;
     });
 }
 
 export function postwithoutAuth(endPoint, data) {
-  return fetch(baseUrl+endPoint, {
+  return fetch(baseUrl + endPoint, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
     body: JSON.stringify(data)
   })
@@ -78,7 +78,7 @@ export function put(endPoint, data) {
     body: JSON.stringify(data)
   })
     .then(res => {
-      if (!res.ok) throw res;
+      if (!res.ok) throw res.json();
       return res.json();
     })
     .catch(err => {

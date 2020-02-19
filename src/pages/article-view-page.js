@@ -27,19 +27,44 @@ class ArticleView extends LitElement {
     this.dataLoaded = false;
     this.data = "";
     this.comment = "";
-
+    this.username = "";
     this.displayComments = [];
     this.userImage = "";
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.isToken = window.localStorage.getItem("token") ? true : false;
 
-    this.isToken =
-      window.localStorage.getItem("token") === null ||
-      window.localStorage.getItem("token") === ""
-        ? false
-        : true;
+    this.handleSubmit = () => {
+      const commentData = {
+        comment: {
+          body: this.comment
+        }
+      };
 
-    this.username = "";
+      fetch(
+        `https://conduit.productionready.io/api/articles/${this.slug}/comments`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "appication/json",
+            Authorization: `Token ${localStorage.getItem("token")}`
+          },
+          body: JSON.stringify(commentData)
+        }
+      )
+        .then(response => {
+          if (!response.ok) throw response;
+          return response.json();
+        })
+        .then(data => {
+          console.log("After Comment added", data);
+          this.fetchComment(); //redirect to the article page
+        })
+        .catch(error => console.error("Error", error));
+    };
+
+    this.handleChange = e => {
+      this[e.target.name] = e.target.value;
+    };
   }
 
   static get styles() {
@@ -101,9 +126,6 @@ class ArticleView extends LitElement {
       userImage: { type: String }
     };
   }
-  handleChange(e) {
-    this[e.target.name] = e.target.value;
-  }
 
   fetchComment() {
     fetch(
@@ -126,6 +148,7 @@ class ArticleView extends LitElement {
       })
       .catch(error => console.error("Error", error));
   }
+
   fetchUser() {
     fetch(`https://conduit.productionready.io/api/user`, {
       method: "GET",
@@ -171,36 +194,6 @@ class ArticleView extends LitElement {
       .catch(error => console.error("Error", error.json()));
   }
 
-  handleSubmit() {
-    const commentData = {
-      comment: {
-        body: this.comment
-      }
-    };
-
-    fetch(
-      `https://conduit.productionready.io/api/articles/${this.slug}/comments`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "appication/json",
-          Authorization: `Token ${localStorage.getItem("token")}`
-        },
-        body: JSON.stringify(commentData)
-      }
-    )
-      .then(response => {
-        if (!response.ok) throw response;
-        return response.json();
-      })
-      .then(data => {
-        console.log("After Comment added", data);
-        this.fetchComment(); //redirect to the article page
-      })
-      .catch(error => console.error("Error", error));
-  }
-
   render() {
     if (this.dataLoaded) {
       console.log(this.data);
@@ -232,8 +225,8 @@ class ArticleView extends LitElement {
                 </textarea-tag>
                 <div class="belowComment-section">
                   <img
-                    src=${this.userImage ||
-                      "https://www.w3schools.com/howto/img_avatar.png"}
+                    src="${this.userImage ||
+                      "https://www.w3schools.com/howto/img_avatar.png"}"
                     alt="Avatar"
                     class="avatar"
                   />
@@ -255,7 +248,7 @@ class ArticleView extends LitElement {
                 <div class="comment-section">
                   <textarea-tag
                     value=${cmt.body}
-                    disabled=${true}
+                    ?disabled=${true}
                     .setValue=${this.handleChange}
                     name="comment"
                   >

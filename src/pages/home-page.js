@@ -26,8 +26,7 @@ class HomePage extends LitElement {
     this.pageChange = this.pageChange.bind(this);
     this.likePost = this.likePost.bind(this);
     this.tagClick = this.tagClick.bind(this);
-  this.isToken = window.localStorage.getItem("token") ? true : false;
-
+    this.isToken = window.localStorage.getItem("token") ? true : false;
   }
 
   static get properties() {
@@ -63,14 +62,14 @@ class HomePage extends LitElement {
       .catch(err => console.log(err));
 
     if (this.isToken) {
-     let url=`/user`
+      let url = `/user`;
       get(url)
-        .then(data=>{
+        .then(data => {
           this.username = data.user.username;
-          let url=`/articles?author=${this.username}&limit=10`;
+          let url = `/articles?author=${this.username}&limit=10`;
           return get(url);
         })
-        .then(data=>{
+        .then(data => {
           this.yourPages = data.articlesCount / 10;
           this.yourFeeds = [...data.articles];
         })
@@ -200,28 +199,27 @@ class HomePage extends LitElement {
   pageChange(e) {
     let offset = (e.target.innerText - 1) * 10;
     let fetchURL;
-   
+
     if (this.activeTab === "global") {
       if (this.selectedTag === "") {
-         fetchURL=`/articles?limit=10&offset=${offset}`;
+        fetchURL = `/articles?limit=10&offset=${offset}`;
       } else {
-          fetchURL=`/articles?limit=10&offset=${offset}&tag=${this.selectedTag}`
+        fetchURL = `/articles?limit=10&offset=${offset}&tag=${this.selectedTag}`;
       }
     } else {
       if (this.selectedTag === "") {
-        fetchURL=`/articles?author=${this.username}&limit=10&offset=${offset}`;
+        fetchURL = `/articles?author=${this.username}&limit=10&offset=${offset}`;
       } else {
-        fetchURL=`articles?author=${this.username}&limit=10&offset=${offset}&tag=${this.selectedTag}`;
+        fetchURL = `articles?author=${this.username}&limit=10&offset=${offset}&tag=${this.selectedTag}`;
       }
     }
-      
-    get(fetchURL)
-    .then(data => {
-      this.articles = [...data.articles];
-      window.scrollTo(0, 0);
-    })
-    .catch(err => console.log(err));
 
+    get(fetchURL)
+      .then(data => {
+        this.articles = [...data.articles];
+        window.scrollTo(0, 0);
+      })
+      .catch(err => console.log(err));
   }
 
   likePost(e) {
@@ -240,15 +238,14 @@ class HomePage extends LitElement {
       this.activeTab === "global"
         ? `/articles?tag=${this.selectedTag}&limit=10`
         : `articles?author=${this.username}&tag=${this.selectedTag}&limit=10`;
-   
-      get(url)
+
+    get(url)
       .then(data => {
         this.articles = [...data.articles];
         this.pages = data.articlesCount / 10;
         console.log("tagclicked >>", this.articles);
       })
       .catch(err => console.log(err));
-
   }
 
   render() {
@@ -257,8 +254,7 @@ class HomePage extends LitElement {
       pagesArr.push(i);
     }
 
-    const navbar = html`
-    `;
+    const navbar = html``;
 
     const banner = html`
       <div class="jumbotron center">
@@ -346,8 +342,7 @@ class HomePage extends LitElement {
       </div>
     `;
 
-    const footer = html`
-    `;
+    const footer = html``;
 
     return html`
       ${navbar} ${banner} ${allContent} ${footer}

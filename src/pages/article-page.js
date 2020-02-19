@@ -31,41 +31,37 @@ class ArticlePage extends LitElement {
     this.title = "";
     this.description = "";
     this.body = "";
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleSubmit() {
-    const token = localStorage.getItem("token");
-    const data = {
-      article: {
-        title: this.title,
-        description: this.description,
-        body: this.body
-      }
+    this.handleChange = e => {
+      this[e.target.name] = e.target.value;
     };
+    this.handleSubmit = e => {
+      const token = localStorage.getItem("token");
+      const data = {
+        article: {
+          title: this.title,
+          description: this.description,
+          body: this.body
+        }
+      };
 
-    fetch("https://conduit.productionready.io/api/articles", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "appication/json",
-        Authorization: `Token ${token}`
-      },
-      body: JSON.stringify(data)
-    })
-      .then(response => {
-        if (!response.ok) throw response;
-        return response.json();
+      fetch("https://conduit.productionready.io/api/articles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "appication/json",
+          Authorization: `Token ${token}`
+        },
+        body: JSON.stringify(data)
       })
-      .then(data => {
-        Router.go(`/view-article/${data.article.slug}`); //redirect to the article page
-      })
-      .catch(error => console.error("Error", error));
-  }
-
-  handleChange(e) {
-    this[e.target.name] = e.target.value;
+        .then(response => {
+          if (!response.ok) throw response;
+          return response.json();
+        })
+        .then(data => {
+          Router.go(`/view-article/${data.article.slug}`); //redirect to the article page
+        })
+        .catch(error => console.error("Error", error));
+    };
   }
 
   render() {

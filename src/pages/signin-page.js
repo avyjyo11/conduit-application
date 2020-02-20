@@ -13,4 +13,5 @@ class Signin extends LitElement {
     `;
   }
 }
-customElements.define("signin-tag", Signin);
+
+window.customElements.define("signin-tag", Signin);

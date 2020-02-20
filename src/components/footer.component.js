@@ -26,4 +26,4 @@ class FooterSection extends LitElement {
   }
 }
 
-customElements.define("footer-section", FooterSection);
+window.customElements.define("footer-section", FooterSection);

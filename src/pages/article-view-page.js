@@ -6,6 +6,7 @@ import "../components/navigation.component";
 import "../components/userInfo.component";
 import { get, getwithauth, del, post } from "../services/api.services";
 import { DEFAULT_IMG } from "../constants/defaults.config";
+import { getTokenState } from "../services/storage.services";
 
 class ArticleView extends LitElement {
   connectedCallback() {
@@ -26,7 +27,7 @@ class ArticleView extends LitElement {
     this.username = "";
     this.displayComments = [];
     this.userImage = "";
-    this.isToken = window.localStorage.getItem("token") ? true : false;
+    this.isToken = getTokenState();
 
     this.handleSubmit = () => {
       const commentData = {
@@ -101,9 +102,9 @@ class ArticleView extends LitElement {
 
   static get properties() {
     return {
-      dataLoaded: { type: Boolean },
-      displayComments: { type: Array },
-      userImage: { type: String }
+      dataLoaded: Boolean,
+      displayComments: Array,
+      userImage: String
     };
   }
 

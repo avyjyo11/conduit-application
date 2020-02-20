@@ -7,6 +7,7 @@ import "../components/footer.component";
 import { Router } from "@vaadin/router";
 import { getwithauth, put } from "../services/api.services";
 import { HOME } from "../constants/routes.config";
+import { getTokenState } from "../services/storage.services";
 
 class YourSetting extends LitElement {
   constructor() {
@@ -48,18 +49,18 @@ class YourSetting extends LitElement {
     this.showError = false;
     this.errors;
 
-    this.isToken = window.localStorage.getItem("token") ? true : false;
+    this.isToken = getTokenState();
   }
   static get properties() {
     return {
-      showError: { type: Boolean },
-      errors: { type: Array },
-      isToken: { type: Boolean },
-      imagelink: { type: String },
-      userName: { type: String },
-      userbio: { type: String },
-      email: { type: String },
-      newPassword: { type: String }
+      showError: Boolean,
+      errors: Array,
+      isToken: Boolean,
+      imagelink: String,
+      userName: String,
+      userbio: String,
+      email: String,
+      newPassword: String
     };
   }
 
@@ -201,4 +202,4 @@ class YourSetting extends LitElement {
   }
 }
 
-customElements.define("your-setting-tag", YourSetting);
+window.customElements.define("your-setting-tag", YourSetting);

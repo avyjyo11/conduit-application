@@ -5,7 +5,7 @@ import "./src/pages/signup-page";
 import "./src/pages/article-page";
 import "./src/pages/your-setting-page";
 import "./src/pages/article-view-page";
-import "./src/pages/page-not-found";
+import "./src/pages/page-not-found-page";
 import "./src/pages/user-profile-page";
 import {
   SETTING,
@@ -27,5 +27,5 @@ router.setRoutes([
   { path: SETTING, component: "your-setting-tag" },
   { path: PROFILE, component: "user-profile-page" },
   { path: VIEW_ARTICLE_SLUG, component: "view-article" },
-  { path: PAGE_NOT_FOUND, component: "pagenotfound-page" }
+  { path: PAGE_NOT_FOUND, component: "page-not-found-page" }
 ]);

@@ -4,13 +4,14 @@ import "../components/tag-button.component";
 import "../components/userInfo.component";
 import "../components/article-preview.component";
 import "../components/page-indicator.component";
-import "../components/heart-toggler";
+import "../components/heart-toggler.component";
 import "../components/footer.component";
 import { cssStyles } from "../styles/cssStyles";
 import { Router } from "@vaadin/router";
 import { get, getwithauth, put } from "../services/api.services";
 import { DEFAULT_IMG, DEFAULT_NAME } from "../constants/defaults.config";
 import { VIEW_ARTICLE, SETTING } from "../constants/routes.config.js";
+import { getTokenState } from "../services/storage.services";
 
 class UserProfile extends LitElement {
   constructor() {
@@ -42,15 +43,15 @@ class UserProfile extends LitElement {
         .catch(err => console.error(err));
     };
 
-    this.isToken = window.localStorage.getItem("token") ? true : false;
+    this.isToken = getTokenState();
   }
 
   static get properties() {
     return {
-      articles: { type: Array },
-      tags: { type: Array },
+      articles: Array,
+      tags: Array,
       pages: Number,
-      isToken: { type: Boolean },
+      isToken: Boolean,
       activeTab: String
     };
   }
@@ -331,4 +332,4 @@ class UserProfile extends LitElement {
   }
 }
 
-customElements.define("user-profile-page", UserProfile);
+window.customElements.define("user-profile-page", UserProfile);

@@ -11,7 +11,7 @@ class SigninComponent extends LitElement {
     this.handleChange = e => {
       this[e.target.name] = e.target.value;
     };
-    this.singIn = e => {
+    this.signIn = e => {
       const data = {
         user: {
           email: this.email,
@@ -45,8 +45,8 @@ class SigninComponent extends LitElement {
   }
   static get properties() {
     return {
-      showError: { type: Boolean },
-      errors: { type: Array }
+      showError: Boolean,
+      errors: Array
     };
   }
 
@@ -117,7 +117,7 @@ class SigninComponent extends LitElement {
           ></input-tag>
           <div id="btn-wrapper">
             <btn-tag
-              .handleClick="${this.singIn}"
+              .handleClick="${this.signIn}"
               buttonName="Sign In"
               className="btn"
             ></btn-tag>
@@ -128,4 +128,4 @@ class SigninComponent extends LitElement {
   }
 }
 
-customElements.define("signin-component-tag", SigninComponent);
+window.customElements.define("signin-component-tag", SigninComponent);

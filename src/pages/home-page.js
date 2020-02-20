@@ -6,15 +6,17 @@ import "../components/userInfo.component";
 import "../components/article-preview.component";
 import "../components/page-indicator.component";
 import "../components/footer.component";
-import "../components/heart-toggler";
+import "../components/heart-toggler.component";
 import { get, getwithauth } from "../services/api.services";
+import { getTokenState } from "../services/storage.services";
 import { cssStyles } from "../styles/cssStyles";
 import { SIGN_IN, VIEW_ARTICLE } from "../constants/routes.config.js";
+import { DEFAULT_NAME, TAB_2, TAB_1 } from "../constants/defaults.config";
 
 class HomePage extends LitElement {
   constructor() {
     super();
-    this.activeTab = "global";
+    this.activeTab = TAB_1;
     this.tags = [];
     this.selectedTag = null;
     this.globalFeeds = [];
@@ -23,12 +25,14 @@ class HomePage extends LitElement {
     this.globalPages = 0;
     this.yourPages = 0;
     this.pages = 0;
-    this.username = "username";
+    this.loading = true;
+
+    this.username = DEFAULT_NAME;
     this.pageChange = e => {
       let offset = (e.target.innerText - 1) * 10;
       let fetchURL;
 
-      if (this.activeTab === "global") {
+      if (this.activeTab === TAB_1) {
         if (this.selectedTag) {
           fetchURL = `/articles?limit=10&offset=${offset}&tag=${this.selectedTag}`;
         } else {
@@ -59,7 +63,7 @@ class HomePage extends LitElement {
     this.tagClick = e => {
       this.selectedTag = e.target.innerText;
       let url =
-        this.activeTab === "global"
+        this.activeTab === TAB_1
           ? `/articles?tag=${this.selectedTag}&limit=10`
           : `articles?author=${this.username}&tag=${this.selectedTag}&limit=10`;
 
@@ -71,18 +75,18 @@ class HomePage extends LitElement {
         .catch(err => console.log(err));
     };
 
-    this.isToken = window.localStorage.getItem("token") ? true : false;
+    this.isToken = getTokenState();
   }
 
   static get properties() {
     return {
-      articles: { type: Array },
-      yourFeeds: { type: Array },
-      tags: { type: Array },
+      articles: Array,
+      yourFeeds: Array,
+      tags: Array,
       pages: Number,
       yourPages: Number,
       activeTab: String,
-      isToken: { type: Boolean },
+      isToken: Boolean,
       selectedTag: String
     };
   }
@@ -96,6 +100,7 @@ class HomePage extends LitElement {
         this.globalPages = data.articlesCount / 10;
         this.articles = this.globalFeeds;
         this.pages = this.globalPages;
+        this.loading = false;
       })
       .catch(err => console.log(err));
 
@@ -228,15 +233,15 @@ class HomePage extends LitElement {
     e.target.classList.add("active");
     this.selectedTag = null;
 
-    if (e.target.innerText === "Global Feed") {
+    if (e.target.innerText === TAB_1) {
       this.articles = this.globalFeeds;
       this.pages = this.globalPages;
-      this.activeTab = "global";
+      this.activeTab = TAB_1;
     } else {
       if (this.isToken) {
         this.articles = this.yourFeeds;
         this.pages = this.yourPages;
-        this.activeTab = "your";
+        this.activeTab = TAB_2;
       }
     }
   }
@@ -250,8 +255,6 @@ class HomePage extends LitElement {
     for (var i = 1; i <= this.pages; i++) {
       pagesArr.push(i);
     }
-
-    const navbar = html``;
 
     const banner = html`
       <div class="jumbotron center">
@@ -274,28 +277,39 @@ class HomePage extends LitElement {
       </div>
     `;
 
-    const contentSection = html`
-      <div class="content-section">
-        <div class="feed-buttons">
-          ${this.isToken
-            ? html`
-                <button class="" @click=${this.tabsChange}>Your Feed</button>
-              `
-            : null}
-          <button class="active" @click=${this.tabsChange}>Global Feed</button>
-        </div>
-        <hr />
-        <div>
-          ${this.selectedTag
-            ? html`
-                Selected Tag: ${this.selectedTag}
-                <hr />
-              `
-            : null}
-        </div>
-        <div>
-          ${this.articles.map(value => {
-            return html`
+    const contentSection = () => {
+      if (this.loading) {
+        return html`
+          <div class="content-section">
+            <h4>Loading...</h4>
+          </div>
+        `;
+      }
+
+      return html`
+        <div class="content-section">
+          <div class="feed-buttons">
+            <button class="active" @click=${this.tabsChange}>
+              ${TAB_1}
+            </button>
+            ${this.isToken
+              ? html`
+                  <button class="" @click=${this.tabsChange}>${TAB_2}</button>
+                `
+              : null}
+          </div>
+          <hr />
+          <div>
+            ${this.selectedTag
+              ? html`
+                  Selected Tag: ${this.selectedTag}
+                  <hr />
+                `
+              : null}
+          </div>
+          <div>
+            ${this.articles.map(value => {
+              return html`
               <div class="article-div" @click=${this.articleView.bind(
                 this,
                 value.slug
@@ -315,34 +329,33 @@ class HomePage extends LitElement {
                 ></article-preview-tag></a>
               </div>
             `;
-          })}
+            })}
+          </div>
+          <div class="pages-div">
+            ${pagesArr.map(
+              val =>
+                html`
+                  <page-indicator
+                    .pageChange=${this.pageChange}
+                    value=${val}
+                  ></page-indicator>
+                `
+            )}
+          </div>
         </div>
-        <div class="pages-div">
-          ${pagesArr.map(
-            val =>
-              html`
-                <page-indicator
-                  .pageChange=${this.pageChange}
-                  value=${val}
-                ></page-indicator>
-              `
-          )}
-        </div>
-      </div>
-    `;
+      `;
+    };
 
     const allContent = html`
       <div class="wrapper">
         <div class="all-content-div">
-          ${contentSection} ${tagSection}
+          ${contentSection()} ${tagSection}
         </div>
       </div>
     `;
 
-    const footer = html``;
-
     return html`
-      ${navbar} ${banner} ${allContent} ${footer}
+      ${banner} ${allContent}
     `;
   }
 }

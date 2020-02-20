@@ -11,7 +11,8 @@ class ButtonComponent extends LitElement {
   static get properties() {
     return {
       buttonName: String,
-      className: String
+      className: String,
+      handleClick: Function
     };
   }
 

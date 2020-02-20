@@ -10,9 +10,10 @@ class InputComponent extends LitElement {
 
   static get properties() {
     return {
-      placeholder: { type: String },
-      name: { type: String },
-      value: { type: String }
+      placeholder: String,
+      name: String,
+      value: String,
+      setValue: Function
     };
   }
 

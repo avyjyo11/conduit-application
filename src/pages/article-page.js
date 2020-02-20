@@ -22,9 +22,9 @@ class ArticlePage extends LitElement {
 
   static get properties() {
     return {
-      title: { type: String },
-      description: { type: String },
-      body: { type: String }
+      title: String,
+      description: String,
+      body: String
     };
   }
 

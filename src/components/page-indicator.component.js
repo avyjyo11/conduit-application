@@ -33,4 +33,4 @@ class PageIndicator extends LitElement {
   }
 }
 
-customElements.define("page-indicator", PageIndicator);
+window.customElements.define("page-indicator", PageIndicator);

@@ -9,8 +9,8 @@ class ArticlePreview extends LitElement {
 
   static get properties() {
     return {
-      title: { type: String },
-      description: { type: String }
+      title: String,
+      description: String
     };
   }
 
@@ -62,4 +62,5 @@ class ArticlePreview extends LitElement {
     `;
   }
 }
+
 window.customElements.define("article-preview-tag", ArticlePreview);

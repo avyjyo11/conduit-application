@@ -4,6 +4,7 @@ import "./input.component";
 import { Router } from "@vaadin/router";
 import { postwithoutAuth } from "../services/api.services";
 import { HOME } from "../constants/routes.config.js";
+import { setToken, getTokenState } from "../services/storage.services";
 
 class SignupComponent extends LitElement {
   constructor() {
@@ -20,7 +21,7 @@ class SignupComponent extends LitElement {
       this[e.target.name] = e.target.value;
     };
 
-    this.singUp = () => {
+    this.signUp = () => {
       const data = {
         user: {
           username: this.userName,
@@ -35,7 +36,7 @@ class SignupComponent extends LitElement {
         .then(data => {
           this.showError = false;
           this._errors = [];
-          localStorage.setItem("token", data.user.token);
+          setToken(data.user.token);
           Router.go(HOME);
           location.pathname = HOME;
         })
@@ -47,11 +48,12 @@ class SignupComponent extends LitElement {
         });
     };
 
-    this.isToken = window.localStorage.getItem("token") ? true : false;
+    this.isToken = getTokenState();
   }
+
   static get properties() {
     return {
-      showError: { type: Boolean }
+      showError: Boolean
     };
   }
 
@@ -136,7 +138,7 @@ class SignupComponent extends LitElement {
           ></input-tag>
           <div id="btn-wrapper">
             <btn-tag
-              .handleClick=${this.singUp}
+              .handleClick=${this.signUp}
               buttonName="Sign up"
               className="btn"
             ></btn-tag>
@@ -147,4 +149,4 @@ class SignupComponent extends LitElement {
   }
 }
 
-customElements.define("signup-component-tag", SignupComponent);
+window.customElements.define("signup-component-tag", SignupComponent);

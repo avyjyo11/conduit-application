@@ -7,7 +7,8 @@ class TagButton extends LitElement {
   }
   static get properties() {
     return {
-      name: String
+      name: String,
+      click: Function
     };
   }
   static get styles() {

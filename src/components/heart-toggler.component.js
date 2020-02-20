@@ -9,7 +9,7 @@ class HeartToggler extends LitElement {
 
   static get properties() {
     return {
-      hearts: { type: Number }
+      hearts: Number
     };
   }
 
@@ -61,4 +61,4 @@ class HeartToggler extends LitElement {
   }
 }
 
-customElements.define("heart-toggler", HeartToggler);
+window.customElements.define("heart-toggler", HeartToggler);

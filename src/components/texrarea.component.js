@@ -10,10 +10,11 @@ class TextArea extends LitElement {
   }
   static get properties() {
     return {
-      name: { type: String },
-      placeholder: { type: String },
-      value: { type: String },
-      disabled: { type: Boolean }
+      name: String,
+      placeholder: String,
+      value: String,
+      disabled: Boolean,
+      setValue: Function
     };
   }
   static get styles() {

@@ -11,18 +11,19 @@ import {
 } from "../constants/routes.config.js";
 
 import { DEFAULT_IMG, DEFAULT_NAME } from "../constants/defaults.config";
+import { getTokenState } from "../services/storage.services";
 class Navigation extends LitElement {
   constructor() {
     super();
     this.username = DEFAULT_NAME;
     this.userImage = DEFAULT_IMG;
-    this.isToken = window.localStorage.getItem("token") ? true : false;
+    this.isToken = getTokenState();
   }
 
   static get properties() {
     return {
-      isToken: { type: Boolean },
-      username: { type: String }
+      isToken: Boolean,
+      username: String
     };
   }
 
@@ -122,4 +123,4 @@ class Navigation extends LitElement {
   }
 }
 
-customElements.define("navigation-tag", Navigation);
+window.customElements.define("navigation-tag", Navigation);

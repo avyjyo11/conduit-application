@@ -1,5 +1,6 @@
 import { API_BASE_URL } from "../constants/url.config";
-const token = window.localStorage.getItem("token");
+import { getToken } from "./storage.services";
+const token = getToken();
 
 export function get(endPoint) {
   return fetch(API_BASE_URL + endPoint)

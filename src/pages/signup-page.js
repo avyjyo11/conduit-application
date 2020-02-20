@@ -13,4 +13,5 @@ class Signup extends LitElement {
     `;
   }
 }
-customElements.define("signup-tag", Signup);
+
+window.customElements.define("signup-tag", Signup);
